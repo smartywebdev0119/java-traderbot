@@ -49,6 +49,9 @@ dependencies {
 </dependency>
 ```
 
+## 🛠 Skills
+- Java
+
 ## Platforms available
 
 - **Binance**
@@ -153,9 +156,6 @@ AndroidPlatformAutoTrader trader = new AndroidPlatformAutoTrader(/*your keys and
 //Start autonomous trader flow 
 trader.start();
 ```
-
-## 🛠 Skills
-- Java
 
 ## Authors
 
