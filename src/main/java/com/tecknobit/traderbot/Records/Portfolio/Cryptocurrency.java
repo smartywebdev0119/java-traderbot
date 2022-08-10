@@ -20,123 +20,123 @@ import static java.lang.System.out;
 public class Cryptocurrency extends Token implements RecordDetails {
 
     /**
-     * {@code CRYPTOCURRENCY_KEY} is instance that memorize cryptocurrency key
+     * {@code CRYPTOCURRENCY_KEY} is instance that memorizes cryptocurrency key
      * **/
     public static final String CRYPTOCURRENCY_KEY = "cryptocurrency";
 
     /**
-     * {@code SYMBOL_KEY} is instance that memorize symbol key
+     * {@code SYMBOL_KEY} is instance that memorizes symbol key
      * **/
     public static final String SYMBOL_KEY = "symbol";
 
     /**
-     * {@code LAST_PRICE_KEY} is instance that memorize last price key
+     * {@code LAST_PRICE_KEY} is instance that memorizes last price key
      * **/
     public static final String LAST_PRICE_KEY = "last_price";
 
     /**
-     * {@code FIRST_PRICE_KEY} is instance that memorize last price key
+     * {@code FIRST_PRICE_KEY} is instance that memorizes last price key
      * **/
     public static final String FIRST_PRICE_KEY = "first_price";
 
     /**
-     * {@code TPTOP_INDEX_KEY} is instance that memorize tptop index key
+     * {@code TPTOP_INDEX_KEY} is instance that memorizes tptop index key
      * **/
     public static final String TPTOP_INDEX_KEY = "tptop_index";
 
     /**
-     * {@code CANDLE_GAP_KEY} is instance that memorize candle gap key
+     * {@code CANDLE_GAP_KEY} is instance that memorizes candle gap key
      * **/
     public static final String CANDLE_GAP_KEY = "candle_gap";
 
     /**
-     * {@code PRICE_CHANGE_PERCENT_KEY} is instance that memorize price change percent key
+     * {@code PRICE_CHANGE_PERCENT_KEY} is instance that memorizes price change percent key
      * **/
     public static final String PRICE_CHANGE_PERCENT_KEY = "price_change_percent";
 
     /**
-     * {@code QUOTE_ASSET_KEY} is instance that memorize quote asset key
+     * {@code QUOTE_ASSET_KEY} is instance that memorizes quote asset key
      * **/
     public static final String QUOTE_ASSET_KEY = "quote_asset";
 
     /**
-     * {@code INCOME_PERCENT_KEY} is instance that memorize income percent key
+     * {@code INCOME_PERCENT_KEY} is instance that memorizes income percent key
      * **/
     public static final String INCOME_PERCENT_KEY = "income_percent";
 
     /**
-     * {@code TRADING_CONFIG_KEY} is instance that memorize trading config key
+     * {@code TRADING_CONFIG_KEY} is instance that memorizes trading config key
      * **/
     public static final String TRADING_CONFIG_KEY = "trading_config";
 
     /**
-     * {@code FIRST_PRICES_SUM_KEY} is instance that memorize first prices size key
+     * {@code FIRST_PRICES_SUM_KEY} is instance that memorizes first prices size key
      * **/
     public static final String FIRST_PRICES_SUM_KEY = "first_prices_sum";
 
     /**
-     * {@code FIRST_PRICES_SIZE_KEY} is instance that memorize first prices size key
+     * {@code FIRST_PRICES_SIZE_KEY} is instance that memorizes first prices size key
      * **/
     public static final String FIRST_PRICES_SIZE_KEY = "first_prices_size";
 
     /**
-     * {@code symbol} is instance that memorize symbol of cryptocurrency es. BTCBUSD or BTC-USD
+     * {@code symbol} is instance that memorizes symbol of cryptocurrency es. BTCBUSD or BTC-USD
      * **/
     private final String symbol;
 
     /**
-     * {@code firstPrice} is instance that memorize first inserted price of cryptocurrency and not more changeable.
+     * {@code firstPrice} is instance that memorizes first inserted price of cryptocurrency and not more changeable
      * **/
     private final ArrayList<Double> firstPrices;
 
     /**
-     * {@code lastPrice} is instance that memorize last inserted price of cryptocurrency and is constantly refreshed.
+     * {@code lastPrice} is instance that memorizes last inserted price of cryptocurrency and is constantly refreshed
      * **/
     private double lastPrice;
 
     /**
-     * {@code tptopIndex} is instance that memorize forecast trend of cryptocurrency.
+     * {@code tptopIndex} is instance that memorizes forecast trend of cryptocurrency
      * **/
     private final double tptopIndex;
 
     /**
-     * {@code candleGap} is instance that memorize day gap for forecast trend of cryptocurrency.
+     * {@code candleGap} is instance that memorizes day gap for forecast trend of cryptocurrency
      * **/
     private final Object candleGap;
 
     /**
-     * {@code priceChangePercent} is instance that memorize previous day percent gap of trend of cryptocurrency.
+     * {@code priceChangePercent} is instance that memorizes previous day percent gap of trend of cryptocurrency
      * **/
     private double priceChangePercent;
 
     /**
-     * {@code quoteAsset} is instance that memorize quote asset to buy this cryptocurrency es. USD
+     * {@code quoteAsset} is instance that memorizes quote asset to buy this cryptocurrency es. USD
      * **/
     private final String quoteAsset;
 
     /**
-     * {@code incomePercent} is instance that memorize income percent of cryptocurrency and is constantly refreshed.
+     * {@code incomePercent} is instance that memorizes income percent of cryptocurrency and is constantly refreshed
      * **/
     private double incomePercent;
 
     /**
-     * {@code tradingConfig} is instance that memorize model of trading to use for this cryptocurrency.
+     * {@code tradingConfig} is instance that memorizes model of trading to use for this cryptocurrency
      * **/
     private final TradingConfig tradingConfig;
 
     /**
-     * {@code firstPricesSum} is instance that memorize sum of first prices of order for cryptocurrency.
+     * {@code firstPricesSum} is instance that memorizes sum of first prices of order for cryptocurrency
      * **/
     private final double firstPricesSum;
 
     /**
-     * {@code previousFirstPricesSize} is instance that memorize size of first prices of order for cryptocurrency <br>
+     * {@code previousFirstPricesSize} is instance that memorizes size of first prices of order for cryptocurrency <br>
      * passed by previous first prices list
      * **/
     private final int previousFirstPricesSize;
 
     /**
-     * {@code firstPricesSize} is instance that memorize size of first prices of order for cryptocurrency.
+     * {@code firstPricesSize} is instance that memorizes size of first prices of order for cryptocurrency
      * **/
     private int firstPricesSize;
 
@@ -281,12 +281,12 @@ public class Cryptocurrency extends Token implements RecordDetails {
     /**
      * This method is used to add new first price
      * @param firstPrice: first price to add at {@link #firstPrices} list <br>
-     * Any params.
      * **/
     public void addFirstPrice(double firstPrice) {
         if(firstPrice < 0)
             throw new IllegalArgumentException("First price cannot be less than 0");
-        firstPrices.add(firstPrice);
+        if(firstPrices != null)
+            firstPrices.add(firstPrice);
     }
 
     public double getLastPrice() {
@@ -302,6 +302,10 @@ public class Cryptocurrency extends Token implements RecordDetails {
         return tradingTools.roundValue(lastPrice, decimals);
     }
 
+    /** Method to set {@link #lastPrice}
+     * @param lastPrice: last price value
+     * @throws IllegalArgumentException when last price value is less than 0
+     * **/
     public void setLastPrice(double lastPrice) {
         if(lastPrice < 0)
             throw new IllegalArgumentException("Last price cannot be less than 0");
@@ -356,6 +360,10 @@ public class Cryptocurrency extends Token implements RecordDetails {
         return tradingTools.textualizeAssetPercent(tradingTools.roundValue(priceChangePercent, decimals));
     }
 
+    /** Method to set {@link #priceChangePercent}
+     * @param priceChangePercent: previous day percent gap of trend of cryptocurrency
+     * @throws IllegalArgumentException when price change percent value is less than 0
+     * **/
     public void setPriceChangePercent(double priceChangePercent) {
         if(priceChangePercent < -100)
             throw new IllegalArgumentException("Price change percent cannot be less than -100");
@@ -399,9 +407,13 @@ public class Cryptocurrency extends Token implements RecordDetails {
         return tradingTools.textualizeAssetPercent(tradingTools.roundValue(getIncomePercent(), decimals));
     }
 
+    /** Method to set {@link #incomePercent}
+     * @param incomePercent: income percent of cryptocurrency
+     * @throws IllegalArgumentException when income percent value is less than 0
+     * **/
     public void setIncomePercent(double incomePercent) {
         if(incomePercent < -100)
-            throw new IllegalArgumentException("Trend percent cannot be less than -100");
+            throw new IllegalArgumentException("Income percent cannot be less than -100");
         this.incomePercent = incomePercent;
     }
 
@@ -501,105 +513,126 @@ public class Cryptocurrency extends Token implements RecordDetails {
         return crypto;
     }
 
+    @Override
+    public String toString() {
+        return "Cryptocurrency{" +
+                "symbol='" + symbol + '\'' +
+                ", firstPrices=" + firstPrices +
+                ", lastPrice=" + lastPrice +
+                ", tptopIndex=" + tptopIndex +
+                ", candleGap=" + candleGap +
+                ", priceChangePercent=" + priceChangePercent +
+                ", quoteAsset='" + quoteAsset + '\'' +
+                ", incomePercent=" + incomePercent +
+                ", tradingConfig=" + tradingConfig +
+                ", firstPricesSum=" + firstPricesSum +
+                ", previousFirstPricesSize=" + previousFirstPricesSize +
+                ", firstPricesSize=" + firstPricesSize +
+                ", assetIndex='" + assetIndex + '\'' +
+                ", assetName='" + assetName + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
+
     /**
      * The {@code TradingConfig} class is useful for trading operation.<br>
      * Represent model to use for a {@link Cryptocurrency} in trading phases. (BUY and SELL)
      * @author Tecknobit N7ghtm4r3
      * **/
+
     public static final class TradingConfig{
 
         /**
-         * {@code MAX_FAILS_NUMBER} is instance that memorize max fails number key
+         * {@code MAX_FAILS_NUMBER} is instance that memorizes max fails number key
          * **/
         public static final int MAX_FAILS_NUMBER = 30;
 
         /**
-         * {@code MODEL_ID_KEY} is instance that memorize model id key
+         * {@code MODEL_ID_KEY} is instance that memorizes model id key
          * **/
         public static final String MODEL_ID_KEY = "model_id";
 
         /**
-         * {@code MARKET_PHASE_KEY} is instance that memorize market phase key
+         * {@code MARKET_PHASE_KEY} is instance that memorizes market phase key
          * **/
         public static final String MARKET_PHASE_KEY = "market_phase";
 
         /**
-         * {@code WASTE_RANGE_KEY} is instance that memorize waste range key
+         * {@code WASTE_RANGE_KEY} is instance that memorizes waste range key
          * **/
         public static final String WASTE_RANGE_KEY = "waste_range";
 
         /**
-         * {@code DAIS_GAP_KEY} is instance that memorize days gap key
+         * {@code DAIS_GAP_KEY} is instance that memorizes days gap key
          * **/
         public static final String DAIS_GAP_KEY = "days_gap";
 
         /**
-         * {@code MIN_GAIN_FOR_ORDER_KEY} is instance that memorize min gain for order key
+         * {@code MIN_GAIN_FOR_ORDER_KEY} is instance that memorizes min gain for order key
          * **/
         public static final String MIN_GAIN_FOR_ORDER_KEY = "min_gain_for_order";
 
         /**
-         * {@code MAX_LOSS_KEY} is instance that memorize max loss key
+         * {@code MAX_LOSS_KEY} is instance that memorizes max loss key
          * **/
         public static final String MAX_LOSS_KEY = "max_loss";
 
         /**
-         * {@code MAX_GAIN_KEY} is instance that memorize max gain key
+         * {@code MAX_GAIN_KEY} is instance that memorizes max gain key
          * **/
         public static final String MAX_GAIN_KEY = "max_gain";
 
         /**
-         * {@code MODEL_FAILED_KEY} is instance that memorize model failed key
+         * {@code MODEL_FAILED_KEY} is instance that memorizes model failed key
          * **/
         public static final String MODEL_FAILED_KEY = "model_failed";
 
         /**
-         * {@code modelId} is instance that memorize identifier of model of {@link TradingConfig}
+         * {@code modelId} is instance that memorizes identifier of model of {@link TradingConfig}
          * **/
         private final long modelId;
 
         /**
-         * {@code marketPhase} is instance that memorize market phase when buy a {@link Cryptocurrency}
+         * {@code marketPhase} is instance that memorizes market phase when buy a {@link Cryptocurrency}
          * **/
         private final double marketPhase;
 
         /**
-         * {@code wasteRange} is instance that memorize waste range gap to buy and to make forecast for {@link Cryptocurrency}
+         * {@code wasteRange} is instance that memorizes waste range gap to buy and to make forecast for {@link Cryptocurrency}
          * **/
         private final double wasteRange;
 
         /**
-         * {@code daysGap} is instance that memorize days gap to make forecast for {@link Cryptocurrency}
+         * {@code daysGap} is instance that memorizes days gap to make forecast for {@link Cryptocurrency}
          * **/
         private final int daysGap;
 
         /**
-         * {@code minGainForOrder} is instance that memorize minimum gain to obtain by an order. This is used in sell phase.
+         * {@code minGainForOrder} is instance that memorizes minimum gain to obtain by an order. This is used in sell phase.
          * **/
         private final double minGainForOrder;
 
         /**
-         * {@code maxLoss} is instance that memorize maximum loss for a {@link Cryptocurrency} and is used in buy phase to check <br>
+         * {@code maxLoss} is instance that memorizes maximum loss for a {@link Cryptocurrency} and is used in buy phase to check <br>
          * if a cryptocurrency is in correct range to be bought, and is used in sell phase to sell when cryptocurrency is dropping.
          * **/
         private final double maxLoss;
 
         /**
-         * {@code maxGain} is instance that memorize maximum gain for a {@link Cryptocurrency} and is used in buy phase to check
+         * {@code maxGain} is instance that memorizes maximum gain for a {@link Cryptocurrency} and is used in buy phase to check
          * if a cryptocurrency is in correct range to be bought.
          * **/
         private final double maxGain;
 
         /**
          * Constructor to init {@link TradingConfig}
-         *
          * @param modelId: identifier of model of {@link TradingConfig}
-         * @param marketPhase     : market phase when buy a {@link Cryptocurrency}
-         * @param wasteRange      : waste range gap to buy and to make forecast for {@link Cryptocurrency}
-         * @param daysGap         : days gap to make forecast for {@link Cryptocurrency}
-         * @param minGainForOrder : minimum gain to obtain by an order. This is used in sell phase.
-         * @param maxLoss         : maximum loss for a {@link Cryptocurrency}
-         * @param maxGain         : maximum gain for a {@link Cryptocurrency} in checking phase
+         * @param marketPhase: market phase when buy a {@link Cryptocurrency}
+         * @param wasteRange: waste range gap to buy and to make forecast for {@link Cryptocurrency}
+         * @param daysGap: days gap to make forecast for {@link Cryptocurrency}
+         * @param minGainForOrder: minimum gain to obtain by an order. This is used in sell phase.
+         * @param maxLoss: maximum loss for a {@link Cryptocurrency}
+         * @param maxGain: maximum gain for a {@link Cryptocurrency} in checking phase
          **/
         public TradingConfig(long modelId, double marketPhase, double wasteRange, int daysGap, double minGainForOrder,
                              double maxLoss, double maxGain) {
@@ -790,6 +823,19 @@ public class Cryptocurrency extends Token implements RecordDetails {
             config.put(MAX_LOSS_KEY, maxLoss);
             config.put(MAX_GAIN_KEY, maxGain);
             return config;
+        }
+
+        @Override
+        public String toString() {
+            return "TradingConfig{" +
+                    "modelId=" + modelId +
+                    ", marketPhase=" + marketPhase +
+                    ", wasteRange=" + wasteRange +
+                    ", daysGap=" + daysGap +
+                    ", minGainForOrder=" + minGainForOrder +
+                    ", maxLoss=" + maxLoss +
+                    ", maxGain=" + maxGain +
+                    '}';
         }
 
     }

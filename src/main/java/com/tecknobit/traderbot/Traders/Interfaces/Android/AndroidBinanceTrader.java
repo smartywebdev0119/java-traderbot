@@ -69,32 +69,32 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
     private final AndroidWorkflow androidWorkflow;
 
     /**
-     * {@code authToken} is instance that memorize identifier of server trader to log in and requests operations
+     * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
      * **/
     private final String authToken;
 
     /**
-     * {@code token} is instance that memorize identifier of user to log in and requests operations
+     * {@code token} is instance that memorizes identifier of user to log in and requests operations
      * **/
     private final String token;
 
     /**
-     * {@code ivSpec} is instance that memorize initialization vector used in server requests
+     * {@code ivSpec} is instance that memorizes initialization vector used in server requests
      * **/
     private final String ivSpec;
 
     /**
-     * {@code secretKey} is instance that memorize secret key used in server requests
+     * {@code secretKey} is instance that memorizes secret key used in server requests
      * **/
     private final String secretKey;
 
     /**
-     * {@code symbol} is instance that memorize symbol of cryptocurrency es. BTCBUSD or BTC-USD
+     * {@code symbol} is instance that memorizes symbol of cryptocurrency es. BTCBUSD or BTC-USD
      * **/
     private String symbol;
 
     /**
-     * {@code side} is instance that memorize side of order BUY or SELL
+     * {@code side} is instance that memorizes side of order BUY or SELL
      * **/
     private String side;
 
@@ -105,12 +105,12 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
     private final ConcurrentHashMap<String, Cryptocurrency> walletList;
 
     /**
-     * {@code runningTrader} is instance that memorize flag that indicates if the trader is running
+     * {@code runningTrader} is instance that memorizes flag that indicates if the trader is running
      * **/
     private boolean runningTrader;
 
     /**
-     * {@code baseCurrency} is instance that memorize base currency to get all amount value of traders routine es. EUR
+     * {@code baseCurrency} is instance that memorizes base currency to get all amount value of traders routine es. EUR
      * **/
     private String baseCurrency;
 
@@ -122,7 +122,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, Credentials credentials, boolean printRoutineMessages,
                                 String baseCurrency, int refreshPricesTime) throws Exception {
@@ -155,7 +155,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, String baseEndpoint, Credentials credentials,
                                 boolean printRoutineMessages, String baseCurrency, int refreshPricesTime) throws Exception {
@@ -187,7 +187,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, int refreshPricesTime, Credentials credentials,
                                 boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -220,7 +220,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, String baseEndpoint, int refreshPricesTime,
                                 Credentials credentials, boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -252,7 +252,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, ArrayList<String> quoteCurrencies, int refreshPricesTime,
                                 Credentials credentials, boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -285,7 +285,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 int refreshPricesTime, Credentials credentials, boolean printRoutineMessages,
@@ -318,7 +318,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public AndroidBinanceTrader(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 Credentials credentials, boolean printRoutineMessages, String baseCurrency,

@@ -30,67 +30,67 @@ import static java.lang.System.out;
 public final class TraderAccount extends Trader implements RecordDetails {
 
     /**
-     * {@code ACTIVATION_DATE_KEY} is instance that memorize activation date key
+     * {@code ACTIVATION_DATE_KEY} is instance that memorizes activation date key
      * **/
     public static final String ACTIVATION_DATE_KEY = "activation_date";
 
     /**
-     * {@code GAINS_KEY} is instance that memorize sales at gain key
+     * {@code GAINS_KEY} is instance that memorizes sales at gain key
      * **/
     public static final String GAINS_KEY = "sales_at_gain";
 
     /**
-     * {@code LOSSES_KEY} is instance that memorize sales at loss key
+     * {@code LOSSES_KEY} is instance that memorizes sales at loss key
      * **/
     public static final String LOSSES_KEY = "sales_at_loss";
 
     /**
-     * {@code PAIRS_KEY} is instance that memorize sales at pair key
+     * {@code PAIRS_KEY} is instance that memorizes sales at pair key
      * **/
     public static final String PAIRS_KEY = "sales_at_pair";
 
     /**
-     * {@code TOTAL_INCOME_KEY} is instance that memorize total income key
+     * {@code TOTAL_INCOME_KEY} is instance that memorizes total income key
      * **/
     public static final String TOTAL_INCOME_KEY = "total_income";
 
     /**
-     * {@code INCOMES_KEY} is instance that memorize incomes key
+     * {@code INCOMES_KEY} is instance that memorizes incomes key
      * **/
     public static final String INCOMES_KEY = "incomes";
 
     /**
-     * {@code salesAtLoss} is instance that memorize sales at loss for account
+     * {@code salesAtLoss} is instance that memorizes sales at loss for account
      * **/
     private int salesAtLoss;
 
     /**
-     * {@code salesAtGain} is instance that memorize sales at gain for account
+     * {@code salesAtGain} is instance that memorizes sales at gain for account
      * **/
     private int salesAtGain;
 
     /**
-     * {@code salesAtPair} is instance that memorize sales at pair for account
+     * {@code salesAtPair} is instance that memorizes sales at pair for account
      * **/
     private int salesAtPair;
 
     /**
-     * {@code activationDate} is instance that memorize activation date for account
+     * {@code activationDate} is instance that memorizes activation date for account
      * **/
     private long activationDate;
 
     /**
-     * {@code incomes} is instance that memorize list of incomes from orders
+     * {@code incomes} is instance that memorizes list of incomes from orders
      * **/
     private ArrayList<Double> incomes;
 
     /**
-     * {@code cryptocurrencies} is instance that memorize list of cryptocurrencies in your waller
+     * {@code cryptocurrencies} is instance that memorizes list of cryptocurrencies in your waller
      * **/
     private final ConcurrentHashMap<String, Cryptocurrency> cryptocurrencies;
 
     /**
-     * {@code totalIncome} is instance that memorize total income for account
+     * {@code totalIncome} is instance that memorizes total income for account
      * **/
     private double totalIncome;
 
@@ -409,6 +409,19 @@ public final class TraderAccount extends Trader implements RecordDetails {
         trader.put(PAIRS_KEY, salesAtPair);
         trader.put(TOTAL_INCOME_KEY, totalIncome);
         return trader;
+    }
+
+    @Override
+    public String toString() {
+        return "TraderAccount{" +
+                "salesAtLoss=" + salesAtLoss +
+                ", salesAtGain=" + salesAtGain +
+                ", salesAtPair=" + salesAtPair +
+                ", activationDate=" + activationDate +
+                ", incomes=" + incomes +
+                ", cryptocurrencies=" + cryptocurrencies +
+                ", totalIncome=" + totalIncome +
+                '}';
     }
 
 }

@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.BUY;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.SELL;
-import static com.tecknobit.traderbot.Records.Account.Trader.TraderManager.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.QUANTITY_KEY;
@@ -23,72 +22,72 @@ import static java.lang.System.out;
 public class Transaction implements RecordDetails {
 
     /**
-     * {@code TRANSACTION_KEY} is instance that memorize transaction key
+     * {@code TRANSACTION_KEY} is instance that memorizes transaction key
      * **/
     public static final String TRANSACTION_KEY = "transaction";
 
     /**
-     * {@code SIDE_KEY} is instance that memorize side key
+     * {@code SIDE_KEY} is instance that memorizes side key
      * **/
     public static final String SIDE_KEY = "side";
 
     /**
-     * {@code TRANSACTION_DATE_KEY} is instance that memorize transaction date key
+     * {@code TRANSACTION_DATE_KEY} is instance that memorizes transaction date key
      * **/
     public static final String TRANSACTION_DATE_KEY = "transaction_date";
 
     /**
-     * {@code VALUE_KEY} is instance that memorize value key
+     * {@code VALUE_KEY} is instance that memorizes value key
      * **/
     public static final String VALUE_KEY = "value";
 
     /**
-     * {@code TRANSACTION_TYPE_KEY} is instance that memorize transaction type key
+     * {@code TRANSACTION_TYPE_KEY} is instance that memorizes transaction type key
      * **/
     public static final String TRANSACTION_TYPE_KEY = "transaction_type";
 
     /**
-     * {@code symbol} is instance that memorize symbol of transaction es. BTCBUSD or BTC-USD
+     * {@code symbol} is instance that memorizes symbol of transaction es. BTCBUSD or BTC-USD
      * **/
     private final String symbol;
 
     /**
-     * {@code side} is instance that memorize side of transaction BUY or SELL
+     * {@code side} is instance that memorizes side of transaction BUY or SELL
      * **/
     private final String side;
 
     /**
-     * {@code transactionDate} is instance that memorize date of that transaction es 21:08:22 24/05/2022
+     * {@code transactionDate} is instance that memorizes date of that transaction es 21:08:22 24/05/2022
      * **/
     private final String transactionDate;
 
     /**
-     * {@code value} is instance that memorize value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * {@code value} is instance that memorizes value of symbol in fiat currency amount of transaction transfered es. 1235 USD
      * **/
     private final double value;
 
     /**
-     * {@code quantity} is instance that memorize value of quantity transfered in that transaction es. 1 BTC
+     * {@code quantity} is instance that memorizes value of quantity transfered in that transaction es. 1 BTC
      * **/
     private final double quantity;
 
     /**
-     * {@code quoteAsset} is instance that memorize quote asset used in that transaction es. EUR
+     * {@code quoteAsset} is instance that memorizes quote asset used in that transaction es. EUR
      * **/
     private final String quoteAsset;
 
     /**
-     * {@code baseAsset} is instance that memorize base asset used in that transaction es. BTC
+     * {@code baseAsset} is instance that memorizes base asset used in that transaction es. BTC
      * **/
     private final String baseAsset;
 
     /**
-     * {@code incomePercent} is instance that memorize income of that transaction es. +1.5%
+     * {@code incomePercent} is instance that memorizes income of that transaction es. +1.5%
      * **/
     private double incomePercent;
 
     /**
-     * {@code transactionType} is instance that memorize type of that transaction es. sold at gain, at loss or at pair
+     * {@code transactionType} is instance that memorizes type of that transaction es. sold at gain, at loss or at pair
      * **/
     private String transactionType;
 
@@ -231,12 +230,20 @@ public class Transaction implements RecordDetails {
         return tradingTools.roundValue(incomePercent, decimals);
     }
 
+    /** Method to set {@link #incomePercent}
+     * @param incomePercent: income percent of cryptocurrency
+     * @throws IllegalArgumentException when income percent value is less than 0
+     * **/
     public void setIncomePercent(double incomePercent) {
         if(incomePercent < -100)
-            throw new IllegalArgumentException("Income percent must be bigger than -100");
+            throw new IllegalArgumentException("Income percent cannot be less than -100");
         this.incomePercent = incomePercent;
     }
 
+    /** Method to set {@link #transactionType}
+     * @param transactionType: transaction es. sold at gain, at loss or at pair
+     * @throws IllegalArgumentException when time value is different from sales_at_loss,sales_at_gain and sales_at_pair
+     * **/
     public void setTransactionType(String transactionType) {
         if(!transactionType.equals(GAIN_SELL) && !transactionType.equals(LOSS_SELL)
                 && !transactionType.equals(PAIR_SELL))
@@ -290,6 +297,21 @@ public class Transaction implements RecordDetails {
         if(transactionType != null)
             transaction.put(TRANSACTION_TYPE_KEY, transactionType);
         return transaction;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "symbol='" + symbol + '\'' +
+                ", side='" + side + '\'' +
+                ", transactionDate='" + transactionDate + '\'' +
+                ", value=" + value +
+                ", quantity=" + quantity +
+                ", quoteAsset='" + quoteAsset + '\'' +
+                ", baseAsset='" + baseAsset + '\'' +
+                ", incomePercent=" + incomePercent +
+                ", transactionType='" + transactionType + '\'' +
+                '}';
     }
 
 }

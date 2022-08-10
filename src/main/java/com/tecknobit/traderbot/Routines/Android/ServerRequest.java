@@ -279,12 +279,12 @@ public final class ServerRequest {
     private volatile Socket socket;
 
     /**
-     * {@code authToken} is instance that memorize identifier of server trader to log in and requests operations
+     * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
      * **/
     private String authToken;
 
     /**
-     * {@code token} is instance that memorize identifier of user to log in and requests operations
+     * {@code token} is instance that memorizes identifier of user to log in and requests operations
      * **/
     private String token;
 

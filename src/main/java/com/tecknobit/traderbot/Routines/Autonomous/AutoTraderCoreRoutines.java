@@ -22,17 +22,17 @@ import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
 public interface AutoTraderCoreRoutines extends TraderManager, RoutineMessages {
 
     /**
-     * {@code CHECKING_GAP_TIME} is instance that memorize time gap for checking routine
+     * {@code CHECKING_GAP_TIME} is instance that memorizes time gap for checking routine
      * **/
     long CHECKING_GAP_TIME = 60000*5L;
 
     /**
-     * {@code BUYING_GAP_TIME} is instance that memorize time gap for buying routine
+     * {@code BUYING_GAP_TIME} is instance that memorizes time gap for buying routine
      * **/
     long BUYING_GAP_TIME = 1800*1000L;
 
     /**
-     * {@code UPDATING_GAP_TIME} is instance that memorize time gap for updating routine
+     * {@code UPDATING_GAP_TIME} is instance that memorizes time gap for updating routine
      * **/
     long UPDATING_GAP_TIME = 10000L;
 

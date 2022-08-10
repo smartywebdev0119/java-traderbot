@@ -12,129 +12,129 @@ import java.util.HashMap;
 public final class TraderDetails extends Trader{
 
     /**
-     * {@code CUSTOM_DEF_COLOR} is instance that memorize default color to use for example when asset is at pair
+     * {@code CUSTOM_DEF_COLOR} is instance that memorizes default color to use for example when asset is at pair
      * @implSpec not available for console color
      * **/
     public static final String CUSTOM_DEF_COLOR = "#A8A8A8";
 
     /**
-     * {@code CUSTOM_RED_COLOR} is instance that memorize red color to use for example when asset is at loss
+     * {@code CUSTOM_RED_COLOR} is instance that memorizes red color to use for example when asset is at loss
      * @implSpec not available for console color
      * **/
     public static final String CUSTOM_RED_COLOR = "#C3100C";
 
     /**
-     * {@code CUSTOM_GREEN_COLOR} is instance that memorize green color to use for example when asset is at gain
+     * {@code CUSTOM_GREEN_COLOR} is instance that memorizes green color to use for example when asset is at gain
      * @implSpec not available for console color
      * **/
     public static final String CUSTOM_GREEN_COLOR = "#24B82B";
 
     /**
-     * {@code BINANCE_COLOR} is instance that memorize Binance official color
+     * {@code BINANCE_COLOR} is instance that memorizes Binance official color
      * @implSpec not available for console color
      * **/
     public static final String BINANCE_COLOR = "#F3BA2F";
 
     /**
-     * {@code COINBASE_COLOR} is instance that memorize Coinbase official color
+     * {@code COINBASE_COLOR} is instance that memorizes Coinbase official color
      * @implSpec not available for console color
      * **/
     public static final String COINBASE_COLOR = "#1652f0";
 
     /**
-     * {@code TRADER_TYPE_AUTONOMOUS} is instance that memorize AUTONOMOUS trader type in use
+     * {@code TRADER_TYPE_AUTONOMOUS} is instance that memorizes AUTONOMOUS trader type in use
      * **/
     public static final String TRADER_TYPE_AUTONOMOUS = "AUTONOMOUS";
 
     /**
-     * {@code TRADER_TYPE_MANUAL} is instance that memorize MANUAL trader type in use
+     * {@code TRADER_TYPE_MANUAL} is instance that memorizes MANUAL trader type in use
      * **/
     public static final String TRADER_TYPE_MANUAL = "MANUAL";
 
     /**
-     * {@code BINANCE_TRADER_PLATFORM} is instance that memorize BINANCE trader platform in use
+     * {@code BINANCE_TRADER_PLATFORM} is instance that memorizes BINANCE trader platform in use
      * **/
     public static final String BINANCE_TRADER_PLATFORM = "BINANCE";
 
     /**
-     * {@code COINBASE_TRADER_PLATFORM} is instance that memorize COINBASE trader platform in use
+     * {@code COINBASE_TRADER_PLATFORM} is instance that memorizes COINBASE trader platform in use
      * **/
     public static final String COINBASE_TRADER_PLATFORM = "COINBASE";
 
     /**
-     * {@code RUNNING_TRADER_STATUS} is instance that memorize RUNNING trader current status
+     * {@code RUNNING_TRADER_STATUS} is instance that memorizes RUNNING trader current status
      * **/
     public static final String RUNNING_TRADER_STATUS = "RUNNING";
 
     /**
-     * {@code STOPPED_TRADER_STATUS} is instance that memorize STOPPED trader current status
+     * {@code STOPPED_TRADER_STATUS} is instance that memorizes STOPPED trader current status
      * **/
     public static final String STOPPED_TRADER_STATUS = "STOPPED";
 
     /**
-     * {@code TRADER_STATUS_KEY} is instance that memorize trader status key
+     * {@code TRADER_STATUS_KEY} is instance that memorizes trader status key
      * **/
     public static final String TRADER_STATUS_KEY = "trader_status";
 
     /**
-     * {@code TRADER_PLATFORM_KEY} is instance that memorize trader platform key
+     * {@code TRADER_PLATFORM_KEY} is instance that memorizes trader platform key
      * **/
     public static final String TRADER_PLATFORM_KEY = "trader_platform";
 
     /**
-     * {@code TRADER_TYPE_KEY} is instance that memorize trader type key
+     * {@code TRADER_TYPE_KEY} is instance that memorizes trader type key
      * **/
     public static final String TRADER_TYPE_KEY = "trader_type";
 
     /**
-     * {@code REFRESH_PRICES_TIME_KEY} is instance that memorize refresh time key
+     * {@code REFRESH_PRICES_TIME_KEY} is instance that memorizes refresh time key
      * **/
     public static final String REFRESH_PRICES_TIME_KEY = "refresh_time";
 
     /**
-     * {@code LAST_TRADER_ACTIVITY_KEY} is instance that memorize last trader activity key
+     * {@code LAST_TRADER_ACTIVITY_KEY} is instance that memorizes last trader activity key
      * **/
     public static final String LAST_TRADER_ACTIVITY_KEY = "last_trader_activity";
 
     /**
-     * {@code RUNNING_FROM_DATE_KEY} is instance that memorize running from date key
+     * {@code RUNNING_FROM_DATE_KEY} is instance that memorizes running from date key
      * **/
     public static final String RUNNING_FROM_DATE_KEY = "running_from_date";
 
     /**
-     * {@code lastTraderActivity} is instance that memorize last time when bot contact server
+     * {@code lastTraderActivity} is instance that memorizes last time when bot contact server
      * **/
     private String lastTraderActivity;
 
     /**
-     * {@code lastTraderActivityTimestamp} is instance that memorize last time when bot contact server in timestamp format
+     * {@code lastTraderActivityTimestamp} is instance that memorizes last time when bot contact server in timestamp format
      * **/
     private long lastTraderActivityTimestamp;
 
     /**
-     * {@code traderType} is instance that memorize type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
+     * {@code traderType} is instance that memorizes type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
      * **/
     private final String traderType;
 
     /**
-     * {@code traderStatus} is instance that memorize current status of trader {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
+     * {@code traderStatus} is instance that memorizes current status of trader {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
      * **/
     private String traderStatus;
 
     /**
-     * {@code traderPlatform} is instance that memorize platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
+     * {@code traderPlatform} is instance that memorizes platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
      * **/
     private final String traderPlatform;
 
     /**
-     * {@code refreshPricesTime} is instance that memorize time for refresh last prices
+     * {@code refreshPricesTime} is instance that memorizes time for refresh last prices
      * @implNote this param can customize with {@link #setRefreshPricesTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
      * **/
     private long refreshPricesTime;
 
     /**
-     * {@code traderPlatform} is instance that memorize time stamp of date when trader has been started
+     * {@code traderPlatform} is instance that memorizes timestamp of date when trader has been started
      * **/
     private long runningFromDate;
 
@@ -142,6 +142,7 @@ public final class TraderDetails extends Trader{
      * @param traderType: type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
      * @param traderPlatform: platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
      * @param runningFromDate: time stamp of date when trader has been started
+     * @throws IllegalArgumentException if parameters range is not respected
      * **/
     public TraderDetails(String traderType, String traderPlatform, long runningFromDate) {
         initTimeFormatters();
@@ -166,6 +167,7 @@ public final class TraderDetails extends Trader{
      * @param traderPlatform: platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
      * @param refreshPricesTime: time for refresh last prices
      * @param runningFromDate: date when trader has been started
+     * @throws IllegalArgumentException if parameters range is not respected
      * **/
     public TraderDetails(long lastTraderActivity, String traderType, String traderStatus, String traderPlatform,
                          int refreshPricesTime, long runningFromDate) {
@@ -210,6 +212,10 @@ public final class TraderDetails extends Trader{
         return lastTraderActivity;
     }
 
+    /** Method to set {@link #lastTraderActivity}
+     * @param lastTraderActivity: last time when bot contact server value
+     * @throws IllegalArgumentException when time value is less than 0
+     * **/
     public void setLastTraderActivity(long lastTraderActivity) {
         if(lastTraderActivity < 0)
             throw new IllegalArgumentException("Last trader activity timestamp cannot be less than 0");
@@ -225,6 +231,10 @@ public final class TraderDetails extends Trader{
         return traderStatus;
     }
 
+    /** Method to set {@link #traderStatus}
+     * @param traderStatus: current status of trader
+     * @throws IllegalArgumentException when time value is different from {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
+     * **/
     public void setTraderStatus(String traderStatus) {
         if(!traderStatus.equals(RUNNING_TRADER_STATUS) && !traderStatus.equals(STOPPED_TRADER_STATUS))
             throw new IllegalArgumentException("Trader status inserted is wrong value, can be RUNNING or STOPPED status");
@@ -252,6 +262,10 @@ public final class TraderDetails extends Trader{
         return refreshPricesTime;
     }
 
+    /** Method to set {@link #refreshPricesTime}
+     * @param refreshPricesTime: time for refresh last prices
+     * @throws IllegalArgumentException when time value is less from 5 second or more 3600 seconds
+     * **/
     public void setRefreshPricesTime(int refreshPricesTime) {
         if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
             this.refreshPricesTime = refreshPricesTime;
@@ -263,6 +277,10 @@ public final class TraderDetails extends Trader{
         return runningFromDate;
     }
 
+    /** Method to set {@link #runningFromDate}
+     * @param runningFromDate: timestamp of date when trader has been started
+     * @throws IllegalArgumentException when timestamp value is lesser than 0
+     * **/
     public void setRunningFromDate(long runningFromDate){
         if(runningFromDate < 0)
             throw new IllegalArgumentException("Running from date timestamp cannot be less than 0");
@@ -293,6 +311,19 @@ public final class TraderDetails extends Trader{
         trader.put(TRADER_PLATFORM_KEY, traderPlatform);
         trader.put(TRADER_STATUS_KEY, traderStatus);
         return trader;
+    }
+
+    @Override
+    public String toString() {
+        return "TraderDetails{" +
+                "lastTraderActivity='" + lastTraderActivity + '\'' +
+                ", lastTraderActivityTimestamp=" + lastTraderActivityTimestamp +
+                ", traderType='" + traderType + '\'' +
+                ", traderStatus='" + traderStatus + '\'' +
+                ", traderPlatform='" + traderPlatform + '\'' +
+                ", refreshPricesTime=" + refreshPricesTime +
+                ", runningFromDate=" + runningFromDate +
+                '}';
     }
 
 }

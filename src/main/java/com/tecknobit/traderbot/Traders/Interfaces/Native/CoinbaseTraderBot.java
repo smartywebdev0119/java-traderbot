@@ -73,7 +73,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param timeout: custom timeout for request
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              int timeout) throws Exception {
@@ -89,7 +89,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param timeout: custom timeout for request
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
@@ -104,7 +104,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
@@ -118,7 +118,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param apiKey: your Coinbase's api key
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
@@ -135,7 +135,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param timeout: custom timeout for request
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage, int timeout,
                              ArrayList<String> quoteCurrencies) throws Exception {
@@ -153,7 +153,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param passphrase: your Coinbase's api passphrase
      * @param timeout: custom timeout for request
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
                              ArrayList<String> quoteCurrencies) throws Exception {
@@ -171,7 +171,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              ArrayList<String> quoteCurrencies) throws Exception {
@@ -188,7 +188,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase,
                              ArrayList<String> quoteCurrencies) throws Exception {
@@ -208,7 +208,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param timeout: custom timeout for request
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              int timeout, int refreshPricesTime) throws Exception {
@@ -230,7 +230,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param timeout: custom timeout for request
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshPricesTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
@@ -251,7 +251,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              short refreshPricesTime) throws Exception {
@@ -272,7 +272,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param passphrase: your Coinbase's api passphrase
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, short refreshPricesTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
@@ -295,7 +295,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage, int timeout,
                              ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
@@ -319,7 +319,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
                              ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
@@ -343,7 +343,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
@@ -366,7 +366,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase,
                              ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
@@ -403,14 +403,10 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         for (CoinbaseAccount coin : coinbaseAccountManager.getCoinbaseWalletsList()){
             double balance = coin.getBalance();
             String index = coin.getCurrency();
-            boolean isTradingEnabled = balance != 0;
-            String name = cryptocurrencyTool.getCryptocurrencyName(index);
-            if(name == null)
-                name = index + "to add"; // TODO: 25/06/2022 FIX
             coins.put(index, new Coin(index,
-                    name,
+                    cryptocurrencyTool.getCryptocurrencyName(index),
                     balance,
-                    isTradingEnabled
+                    balance != 0
             ));
         }
         for (TradingPair tradingPair : coinbaseProductsManager.getAllTradingPairsList())

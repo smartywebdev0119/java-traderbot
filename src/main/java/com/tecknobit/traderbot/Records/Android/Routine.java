@@ -11,27 +11,27 @@ package com.tecknobit.traderbot.Records.Android;
 public final class Routine {
 
     /**
-     * {@code ROUTINES_KEY} is instance that memorize routines key
+     * {@code ROUTINES_KEY} is instance that memorizes routines key
      * **/
     public static final String ROUTINES_KEY = "routines";
 
     /**
-     * {@code ROUTINE_KEY} is instance that memorize routine key
+     * {@code ROUTINE_KEY} is instance that memorizes routine key
      * **/
     public static final String ROUTINE_KEY = "routine";
 
     /**
-     * {@code ROUTINE_EXTRA_VALUE_KEY} is instance that memorize extra value of routine key
+     * {@code ROUTINE_EXTRA_VALUE_KEY} is instance that memorizes extra value of routine key
      * **/
     public static final String ROUTINE_EXTRA_VALUE_KEY = "extra_value";
 
     /**
-     * {@code routine} is instance that memorize routine that trader has to do
+     * {@code routine} is instance that memorizes routine that trader has to do
      * **/
     private final String routine;
 
     /**
-     * {@code extraValue} is instance that memorize extra value that trader has to compute
+     * {@code extraValue} is instance that memorizes extra value that trader has to compute
      * **/
     private final String extraValue;
 
@@ -50,6 +50,14 @@ public final class Routine {
 
     public String getExtraValue() {
         return extraValue;
+    }
+
+    @Override
+    public String toString() {
+        return "Routine{" +
+                "routine='" + routine + '\'' +
+                ", extraValue='" + extraValue + '\'' +
+                '}';
     }
 
 }

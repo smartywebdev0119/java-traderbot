@@ -38,7 +38,7 @@ import static java.lang.System.currentTimeMillis;
 public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTraderCoreRoutines, MarketOrder {
 
     /**
-     * {@code TraderAccount} is instance that memorize and manage account information and trading reports of auto trader
+     * {@code TraderAccount} is instance that memorizes and manage account information and trading reports of auto trader
      * account
      * **/
     protected final TraderAccount traderAccount;
@@ -68,57 +68,57 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     protected final HashMap<String, Cryptocurrency> checkingList;
 
     /**
-     * {@code tradingConfig} is instance that memorize model of trading to use for trading routines
+     * {@code tradingConfig} is instance that memorizes model of trading to use for trading routines
      * **/
     protected TradingConfig tradingConfig;
 
     /**
-     * {@code sendStatsReport} is instance that memorize flag to insert to send or not reports
+     * {@code sendStatsReport} is instance that memorizes flag to insert to send or not reports
      * **/
     protected boolean sendStatsReport;
 
     /**
-     * {@code printRoutineMessages} is instance that memorize flag to insert to print or not routine messages
+     * {@code printRoutineMessages} is instance that memorizes flag to insert to print or not routine messages
      * **/
     protected boolean printRoutineMessages;
 
     /**
-     * {@code runningTrader} is instance that memorize flag that indicates if the trader is running
+     * {@code runningTrader} is instance that memorizes flag that indicates if the trader is running
      * **/
     protected boolean runningTrader;
 
     /**
-     * {@code previousChecking} is instance that memorize previous timestamp when {@link #checkCryptocurrencies()} is called
+     * {@code previousChecking} is instance that memorizes previous timestamp when {@link #checkCryptocurrencies()} is called
      * **/
     protected long previousChecking;
 
     /**
-     * {@code previousBuying} is instance that memorize previous timestamp when {@link #buyCryptocurrencies()} is called
+     * {@code previousBuying} is instance that memorizes previous timestamp when {@link #buyCryptocurrencies()} is called
      * **/
     protected long previousBuying;
 
     /**
-     * {@code previousUpdating} is instance that memorize previous timestamp when {@link #updateWallet()} is called
+     * {@code previousUpdating} is instance that memorizes previous timestamp when {@link #updateWallet()} is called
      * **/
     protected long previousUpdating;
 
     /**
-     * {@code previousTradingConfigFetching} is instance that memorize previous trading confing fetching
+     * {@code previousTradingConfigFetching} is instance that memorizes previous trading confing fetching
      * **/
     protected long previousTradingConfigFetching;
 
     /**
-     * {@code baseCurrency} is instance that memorize base currency to get all amount value of traders routine es. EUR
+     * {@code baseCurrency} is instance that memorizes base currency to get all amount value of traders routine es. EUR
      * **/
     protected String baseCurrency;
 
     /**
-     * {@code cryptocurrencySold} is instance that memorize cryptocurrency that is being sold
+     * {@code cryptocurrencySold} is instance that memorizes cryptocurrency that is being sold
      * **/
     protected Cryptocurrency cryptocurrencySold;
 
     /**
-     * {@code USING_WALLET_LIST} is instance that memorize if wallet list is being using
+     * {@code USING_WALLET_LIST} is instance that memorizes if wallet list is being using
      * **/
     protected volatile boolean USING_WALLET_LIST = false;
 
@@ -130,7 +130,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, TraderAccount traderAccount, boolean sendStatsReport,
                                 boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -152,7 +152,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, TraderAccount traderAccount,
                                 boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -175,7 +175,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, int refreshPricesTime, TraderAccount traderAccount,
                                 boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -199,7 +199,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshPricesTime,
                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
@@ -224,7 +224,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies, int refreshPricesTime,
                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
@@ -250,7 +250,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 int refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
@@ -273,7 +273,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies, TraderAccount traderAccount,
                                 boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
@@ -296,7 +296,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
@@ -475,7 +475,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
         USING_WALLET_LIST = false;
         checkingList.clear();
         if(printRoutineMessages) {
-            System.out.println("### Transactions");
+            printRed("### Transactions");
             for (Transaction transaction : getAllTransactions(true))
                 transaction.printDetails();
         }
@@ -534,7 +534,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
                                 }
                                 USING_WALLET_LIST = false;
                                 if(printRoutineMessages){
-                                    System.out.println("### Wallet");
+                                    printRed("### Wallet");
                                     for (Cryptocurrency cryptocurrency : walletList.values())
                                         cryptocurrency.printDetails();
                                     System.out.println("## Balance amount: " + getWalletBalance(baseCurrency,

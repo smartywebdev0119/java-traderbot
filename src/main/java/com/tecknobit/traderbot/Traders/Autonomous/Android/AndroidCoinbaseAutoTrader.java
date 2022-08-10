@@ -67,22 +67,22 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     private final AndroidWorkflow androidWorkflow;
 
     /**
-     * {@code authToken} is instance that memorize identifier of server trader to log in and requests operations
+     * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
      * **/
     private final String authToken;
 
     /**
-     * {@code token} is instance that memorize identifier of user to log in and requests operations
+     * {@code token} is instance that memorizes identifier of user to log in and requests operations
      * **/
     private final String token;
 
     /**
-     * {@code ivSpec} is instance that memorize initialization vector used in server requests
+     * {@code ivSpec} is instance that memorizes initialization vector used in server requests
      * **/
     private final String ivSpec;
 
     /**
-     * {@code secretKey} is instance that memorize secret key used in server requests
+     * {@code secretKey} is instance that memorizes secret key used in server requests
      * **/
     private final String secretKey;
 
@@ -99,7 +99,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      int timeout, boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
@@ -136,7 +136,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout, boolean sendStatsReport,
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials,
@@ -173,7 +173,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
@@ -209,7 +209,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, boolean sendStatsReport,
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials,
@@ -248,7 +248,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      int timeout, ArrayList<String> quoteCurrencies, boolean sendStatsReport,
@@ -287,7 +287,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout,
                                      ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
@@ -325,7 +325,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
@@ -362,7 +362,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, ArrayList<String> quoteCurrencies,
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
@@ -400,7 +400,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      int timeout, int refreshPricesTime, boolean sendStatsReport, boolean printRoutineMessages,
@@ -436,7 +436,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout, int refreshPricesTime,
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
@@ -472,7 +472,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      int refreshPricesTime, boolean sendStatsReport, boolean printRoutineMessages,
@@ -507,7 +507,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int refreshPricesTime,
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
@@ -545,7 +545,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      int timeout, ArrayList<String> quoteCurrencies, int refreshPricesTime,
@@ -584,7 +584,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout,
                                      ArrayList<String> quoteCurrencies, int refreshPricesTime, boolean sendStatsReport,
@@ -621,7 +621,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      ArrayList<String> quoteCurrencies, int refreshPricesTime, boolean sendStatsReport,
@@ -657,7 +657,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, ArrayList<String> quoteCurrencies,
                                      int refreshPricesTime, boolean sendStatsReport, boolean printRoutineMessages,

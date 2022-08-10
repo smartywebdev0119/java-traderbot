@@ -9,32 +9,32 @@ package com.tecknobit.traderbot.Records.Portfolio;
 public class Token {
 
     /**
-     * {@code BASE_ASSET_KEY} is instance that memorize base asset key
+     * {@code BASE_ASSET_KEY} is instance that memorizes base asset key
      * **/
     public static final String BASE_ASSET_KEY = "base_asset";
 
     /**
-     * {@code ASSET_NAME_KEY} is instance that memorize asset name key
+     * {@code ASSET_NAME_KEY} is instance that memorizes asset name key
      * **/
     public static final String ASSET_NAME_KEY = "asset_name";
 
     /**
-     * {@code QUANTITY_KEY} is instance that memorize quantity key
+     * {@code QUANTITY_KEY} is instance that memorizes quantity key
      * **/
     public static final String QUANTITY_KEY = "quantity";
 
     /**
-     * {@code assetIndex} is instance that memorize index of token es. BTC
+     * {@code assetIndex} is instance that memorizes index of token es. BTC
      * **/
     protected final String assetIndex;
 
     /**
-     * {@code assetName} is instance that memorize full name of token es Bitcoin
+     * {@code assetName} is instance that memorizes full name of token es Bitcoin
      * **/
     protected final String assetName;
 
     /**
-     * {@code quantity} is instance that memorize value of quantity bought for this token es 1
+     * {@code quantity} is instance that memorizes value of quantity bought for this token es 1
      * **/
     protected double quantity;
 
@@ -68,10 +68,23 @@ public class Token {
         return quantity;
     }
 
+    /** Method to set {@link #quantity}
+     * @param quantity: value of quantity bought for this token
+     * @throws IllegalArgumentException when quantity value is less than 0
+     * **/
     public void setQuantity(double quantity) {
         if(quantity < 0)
             throw new IllegalArgumentException("Balance value cannot be less than 0");
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "assetIndex='" + assetIndex + '\'' +
+                ", assetName='" + assetName + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 
 }

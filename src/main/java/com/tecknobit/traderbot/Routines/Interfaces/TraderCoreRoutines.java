@@ -78,7 +78,7 @@ public abstract class TraderCoreRoutines {
     protected ArrayList<String> quoteCurrencies;
 
     /**
-     * {@code lastTransactionCurrency} is instance that memorize currency used in transactions list methods. <br>
+     * {@code lastTransactionCurrency} is instance that memorizes currency used in transactions list methods. <br>
      * Every time that those methods are called if is different from new currency inserted will be replaced with that new currency.
      * **/
     protected String lastTransactionCurrency;
@@ -90,39 +90,39 @@ public abstract class TraderCoreRoutines {
     protected ArrayList<Asset> assets;
 
     /**
-     * {@code lastBalanceCurrency} is instance that memorize currency used in balance methods. <br>
+     * {@code lastBalanceCurrency} is instance that memorizes currency used in balance methods. <br>
      * Every time that those methods are called if is different from new currency inserted will be replaced with that new currency.
      * **/
     protected String lastBalanceCurrency;
 
     /**
-     * {@code lastAssetCurrency} is instance that memorize currency used in asset methods. <br>
+     * {@code lastAssetCurrency} is instance that memorizes currency used in asset methods. <br>
      * Every time that those methods are called if is different from new currency inserted will be replaced with that new currency.
      * **/
     protected String lastAssetCurrency;
 
     /**
-     * {@code REFRESH_PRICES_TIME} is instance that memorize time for refresh last prices.
+     * {@code REFRESH_PRICES_TIME} is instance that memorizes time for refresh last prices.
      * @implNote this param can customize with {@link #setRefreshPricesTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
      * **/
     protected long REFRESH_PRICES_TIME;
 
     /**
-     * {@code lastPricesRefresh} is instance that memorize last time that prices are updated.
+     * {@code lastPricesRefresh} is instance that memorizes last time that prices are updated.
      * @implNote when is called {@link #isRefreshTime()} if timestamp of the call minus
      * {@code lastPricesRefresh} is bigger or equal than {@link #REFRESH_PRICES_TIME} execute refresh.
      * **/
     protected long lastPricesRefresh;
 
     /**
-     * {@code balance} is instance that memorize balance of all cryptocurrencies of the user and all cryptocurrencies
+     * {@code balance} is instance that memorizes balance of all cryptocurrencies of the user and all cryptocurrencies
      * traded by bot.
      * **/
     protected double balance;
 
     /**
-     * {@code orderStatus} is instance that memorize response and result of an order.
+     * {@code orderStatus} is instance that memorizes response and result of an order.
      * @implNote it is obtained calling {@link #getOrderStatus(FormatResponseType)} method
      * **/
     protected String orderStatus;
@@ -139,7 +139,7 @@ public abstract class TraderCoreRoutines {
 
     /**
      * This method is used by traders to init all instances that routine need. <br>
-     * Any params required <br>
+     * Any params required
      * **/
     protected abstract void initTrader() throws Exception;
 
@@ -349,7 +349,7 @@ public abstract class TraderCoreRoutines {
      * This method is used check if is refreshing time <br>
      * Any params required.
      * @return true only if current timestamp when this method is called minus last timestamp when this method is called,
-     * it is memorized in {@link #lastPricesRefresh}, is bigger or equal than {@link #REFRESH_PRICES_TIME}
+     * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #REFRESH_PRICES_TIME}
      * **/
     protected boolean isRefreshTime(){
         return (System.currentTimeMillis() - lastPricesRefresh) >= REFRESH_PRICES_TIME;

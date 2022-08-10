@@ -9,7 +9,7 @@ package com.tecknobit.traderbot.Records.Portfolio;
 public final class Coin extends Token{
 
     /**
-     * {@code tradingEnabled} is instance that memorize if this coin is available or not for trading or if is not bought yet.
+     * {@code tradingEnabled} is instance that memorizes if this coin is available or not for trading or if is not bought yet.
      * **/
     private boolean tradingEnabled;
 
@@ -30,6 +30,16 @@ public final class Coin extends Token{
 
     public void setTradingEnabled(boolean tradingEnabled) {
         this.tradingEnabled = tradingEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return "Coin{" +
+                "tradingEnabled=" + tradingEnabled +
+                ", assetIndex='" + assetIndex + '\'' +
+                ", assetName='" + assetName + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 
 }

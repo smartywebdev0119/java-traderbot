@@ -478,6 +478,17 @@ public final class AndroidWorkflow implements RoutineMessages {
         return credentials;
     }
 
+    @Override
+    public String toString() {
+        return "AndroidWorkflow{" +
+                "serverRequest=" + serverRequest +
+                ", trader=" + trader +
+                ", credentials=" + credentials +
+                ", printRoutineMessages=" + printRoutineMessages +
+                ", workflowStarted=" + workflowStarted +
+                '}';
+    }
+
     /**
      * The {@code Credentials} class is object for Tecknobit's account credentials
      * @implNote it not saves your exchange keys
@@ -508,22 +519,22 @@ public final class AndroidWorkflow implements RoutineMessages {
         private ServerRequest serverRequest;
 
         /**
-         * {@code authToken} is instance that memorize identifier of server trader to log in and requests operations
+         * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
          * **/
         private final String authToken;
 
         /**
-         * {@code token} is instance that memorize identifier of user to log in and requests operations
+         * {@code token} is instance that memorizes identifier of user to log in and requests operations
          * **/
         private final String token;
 
         /**
-         * {@code mail} is instance that memorize mail of user
+         * {@code mail} is instance that memorizes mail of user
          * **/
         private String mail;
 
         /**
-         * {@code password} is instance that memorize password of user
+         * {@code password} is instance that memorizes password of user
          * **/
         private String password;
 
@@ -543,8 +554,8 @@ public final class AndroidWorkflow implements RoutineMessages {
         private TraderDetails traderDetails;
 
         /** Constructor to init {@link Credentials}
-         * @param mail: is instance that memorize mail of user
-         * @param password: is instance that memorize password of user
+         * @param mail: is instance that memorizes mail of user
+         * @param password: is instance that memorizes password of user
          * @implNote this constructor must call to register a new account
          * **/
         public Credentials(String mail, String password) {
@@ -600,10 +611,10 @@ public final class AndroidWorkflow implements RoutineMessages {
         }
 
         /** Constructor to init {@link Credentials}
-         * @param authToken: is instance that memorize identifier of server trader to log in and requests operations
-         * @param mail: is instance that memorize mail of user
-         * @param password: is instance that memorize password of user
-         * @param token: instance that memorize identifier of user to log in and requests operations
+         * @param authToken: is instance that memorizes identifier of server trader to log in and requests operations
+         * @param mail: is instance that memorizes mail of user
+         * @param password: is instance that memorizes password of user
+         * @param token: instance that memorizes identifier of user to log in and requests operations
          * @param ivSpec: instance initialization vector used in server requests
          * @param secretKey: is instance secret key used in server requests
          * @implNote this constructor must call to log in
@@ -718,6 +729,20 @@ public final class AndroidWorkflow implements RoutineMessages {
 
         public void setTraderDetails(TraderDetails traderDetails){
             this.traderDetails = traderDetails;
+        }
+
+        @Override
+        public String toString() {
+            return "Credentials{" +
+                    "serverRequest=" + serverRequest +
+                    ", authToken='" + authToken + '\'' +
+                    ", token='" + token + '\'' +
+                    ", mail='" + mail + '\'' +
+                    ", password='" + password + '\'' +
+                    ", ivSpec='" + ivSpec + '\'' +
+                    ", secretKey='" + secretKey + '\'' +
+                    ", traderDetails=" + traderDetails +
+                    '}';
         }
 
     }

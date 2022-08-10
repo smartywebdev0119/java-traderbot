@@ -16,13 +16,13 @@ import static java.util.Locale.getDefault;
 public abstract class Trader {
 
     /**
-     * {@code dayPassFormat} is instance that memorize format when a day from last activity
+     * {@code dayPassFormat} is instance that memorizes format when a day from last activity
      * is passed
      * **/
     protected static DateFormat dayPassFormat;
 
     /**
-     * {@code timeFormat} is instance that memorize default format
+     * {@code timeFormat} is instance that memorizes default format
      * **/
     protected static SimpleDateFormat timeFormat;
 
@@ -44,7 +44,7 @@ public abstract class Trader {
     public interface TraderManager {
 
         /**
-         * {@code SELL_KEY} is instance that memorize transaction sell key
+         * {@code SELL_KEY} is instance that memorizes transaction sell key
          * **/
         String SELL_KEY = "sell";
 

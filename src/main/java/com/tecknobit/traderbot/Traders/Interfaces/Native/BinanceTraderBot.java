@@ -69,7 +69,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     /** Constructor to init {@link BinanceTraderBot}
      * @param apiKey: your Binance's api key
      * @param secretKey: your Binance's secret key
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
@@ -83,7 +83,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param apiKey: your Binance's api key
      * @param secretKey: your Binance's secret key
      * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
@@ -98,7 +98,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param secretKey: your Binance's secret key
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, int refreshPricesTime) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
@@ -117,7 +117,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshPricesTime) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
@@ -136,7 +136,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies,
                             int refreshPricesTime) throws Exception {
@@ -158,7 +158,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                             int refreshPricesTime) throws Exception {
@@ -177,7 +177,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param apiKey: your Binance's api key
      * @param secretKey: your Binance's secret key
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
@@ -192,7 +192,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param secretKey: your Binance's secret key
      * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @implNote these keys will NOT store by libray anywhere.
+     * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
