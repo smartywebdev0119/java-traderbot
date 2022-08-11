@@ -90,6 +90,7 @@ trader.start();
 ### Android use
 Traders work with <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">Tecknobit's Android interface </a><br>
 All data will be stored and restored automatically, **will be not saved** your exchange platform api keys. <br>
+**Note:** is reccomended to use different password from exchange'account for Tecnobit's account for a major security.
 #### Auth operations
 - #### Registration
     To register a new trader, both traders type, you have to use Credentials object to init your Tecknobit's account credentials.
