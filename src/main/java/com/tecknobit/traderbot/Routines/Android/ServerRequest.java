@@ -1,6 +1,6 @@
 package com.tecknobit.traderbot.Routines.Android;
 
-import com.tecknobit.aesHelper.Client.ClientCipher;
+import com.tecknobit.aesHelper.ClientCipher;
 import org.json.JSONObject;
 
 import javax.crypto.BadPaddingException;
@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 
+import static com.tecknobit.aesHelper.ClientCipher.CBC_ALGORITHM;
 import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.ANSI_RED;
 import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.ANSI_RESET;
 
@@ -295,7 +296,7 @@ public final class ServerRequest {
      * @param token: identifier of user to log in and requests operations
      * **/
     public ServerRequest(String ivSpec, String secretKey, String authToken, String token) throws Exception {
-        clientCipher = new ClientCipher(ivSpec, secretKey);
+        clientCipher = new ClientCipher(ivSpec, secretKey, CBC_ALGORITHM);
         ciphered = true;
         this.authToken = authToken;
         this.token = token;
@@ -306,7 +307,7 @@ public final class ServerRequest {
      * @param secretKey: secret key used in server requests
      * **/
     public ServerRequest(String ivSpec, String secretKey) throws Exception {
-        clientCipher = new ClientCipher(ivSpec, secretKey);
+        clientCipher = new ClientCipher(ivSpec, secretKey, CBC_ALGORITHM);
         ciphered = true;
         authToken = null;
         token = null;
@@ -349,7 +350,7 @@ public final class ServerRequest {
             message.put("ope", operation);
             message.put(AUTH_TOKEN_KEY, authToken);
             assert clientCipher != null;
-            String messageToSent = clientCipher.encrypt(message.toString()) + "#" + token;
+            String messageToSent = clientCipher.encryptRequest(message.toString()) + "#" + token;
             printWriter.println(messageToSent);
             printWriter.flush();
         }catch (NullPointerException ignored){

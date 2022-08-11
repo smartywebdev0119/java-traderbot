@@ -637,7 +637,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     @Override
     protected void placeAnOrder(String symbol, double quantity, String side) throws Exception {
-        coinbaseOrdersManager.createMarketOrderSize(side, symbol, quantity);
+        orderStatus = coinbaseOrdersManager.createMarketOrderSize(side, symbol, quantity);
     }
 
     /**

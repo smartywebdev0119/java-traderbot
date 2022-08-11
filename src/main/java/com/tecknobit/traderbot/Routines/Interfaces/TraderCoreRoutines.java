@@ -1,6 +1,5 @@
 package com.tecknobit.traderbot.Routines.Interfaces;
 
-import com.tecknobit.apimanager.Tools.Trading.TradingTools;
 import com.tecknobit.traderbot.Records.Portfolio.Asset;
 import com.tecknobit.traderbot.Records.Portfolio.Coin;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
@@ -22,11 +21,6 @@ import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.For
  * **/
 
 public abstract class TraderCoreRoutines {
-
-    /**
-     * {@code TradingTools} is an instance to use everywhere also out from traders
-     * **/
-    public static TradingTools tradingTools = new TradingTools();
 
     /**
      * {@code USD_CURRENCY} is the identifier of USD currency used by traders to get default prices

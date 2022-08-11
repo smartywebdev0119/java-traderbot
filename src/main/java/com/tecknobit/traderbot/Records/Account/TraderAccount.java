@@ -1,6 +1,6 @@
 package com.tecknobit.traderbot.Records.Account;
 
-import com.tecknobit.apimanager.Tools.Readers.JsonHelper;
+import com.tecknobit.apimanager.Tools.Formatters.JsonHelper;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.Routines.Android.ServerRequest;
 import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
@@ -12,12 +12,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.textualizeAssetPercent;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.*;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
 import static com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines.ASSET_NOT_TRADABLE;
 import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.*;
-import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.tradingTools;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.out;
 
@@ -316,7 +317,7 @@ public final class TraderAccount extends Trader implements RecordDetails {
      * @return general income of account formatted with decimals digits
      * **/
     public double computeTotalIncome(int decimals){
-        return tradingTools.roundValue(computeTotalIncome(), decimals);
+        return roundValue(computeTotalIncome(), decimals);
     }
 
     /**
@@ -325,7 +326,7 @@ public final class TraderAccount extends Trader implements RecordDetails {
      * @return general income of account formatted as {@link String} es. +1.674% or -1.756%
      * **/
     public String textualizeTotalIncome(){
-        return tradingTools.textualizeAssetPercent(computeTotalIncome());
+        return textualizeAssetPercent(computeTotalIncome());
     }
 
     /**
@@ -334,7 +335,7 @@ public final class TraderAccount extends Trader implements RecordDetails {
      * @return general income of account formatted as {@link String} es. +1.67% or -1.75%
      * **/
     public String textualizeTotalIncome(int decimals){
-        return tradingTools.textualizeAssetPercent(computeTotalIncome(decimals));
+        return textualizeAssetPercent(computeTotalIncome(decimals));
     }
 
     /**
@@ -387,7 +388,7 @@ public final class TraderAccount extends Trader implements RecordDetails {
      * @return percent string colored and formatted as {@link String}
      * **/
     private String getIncomeColorLine(String tail, double income){
-        String textIncome = tradingTools.textualizeAssetPercent(income);
+        String textIncome = textualizeAssetPercent(income);
         if(textIncome.contains("+"))
             return tail + ANSI_GREEN + textIncome + ANSI_RESET + "\n";
         else if(textIncome.contains("-"))

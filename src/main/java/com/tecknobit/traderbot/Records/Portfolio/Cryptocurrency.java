@@ -5,9 +5,9 @@ import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.MODEL_ID_KEY;
 import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.*;
-import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.tradingTools;
 import static java.lang.System.out;
 
 /**
@@ -275,7 +275,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return first price formatted as 1.65 or -1.65
      * **/
     public double getFirstPrice(int decimals){
-        return tradingTools.roundValue(getFirstPrice(), decimals);
+        return roundValue(getFirstPrice(), decimals);
     }
 
     /**
@@ -299,7 +299,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #lastPrice} formatted as 1.65 or -1.65
      * **/
     public double getLastPrice(int decimals){
-        return tradingTools.roundValue(lastPrice, decimals);
+        return roundValue(lastPrice, decimals);
     }
 
     /** Method to set {@link #lastPrice}
@@ -322,7 +322,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #tptopIndex} formatted as 1.65 or -1.65
      * **/
     public double getTptopIndex(int decimals) {
-        return tradingTools.roundValue(tptopIndex, decimals);
+        return roundValue(tptopIndex, decimals);
     }
 
     public Object getCandleGap() {
@@ -339,7 +339,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #priceChangePercent} formatted as 1.65 or -1.65
      * **/
     public double getPriceChangePercent(int decimals){
-        return tradingTools.roundValue(priceChangePercent, decimals);
+        return roundValue(priceChangePercent, decimals);
     }
 
     /**
@@ -348,7 +348,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #priceChangePercent} formatted as +1.653% or -1.6563% as {@link String}
      * **/
     public String getTextPriceChangePercent(){
-        return tradingTools.textualizeAssetPercent(priceChangePercent);
+        return textualizeAssetPercent(priceChangePercent);
     }
 
     /**
@@ -357,7 +357,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #priceChangePercent} formatted as +1.65% or -1.65% as {@link String}
      * **/
     public String getTextPriceChangePercent(int decimals){
-        return tradingTools.textualizeAssetPercent(tradingTools.roundValue(priceChangePercent, decimals));
+        return textualizeAssetPercent(roundValue(priceChangePercent, decimals));
     }
 
     /** Method to set {@link #priceChangePercent}
@@ -376,7 +376,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
 
     public double getIncomePercent() {
         if(firstPrices != null)
-            return incomePercent = tradingTools.computeAssetPercent(getFirstPrice(), lastPrice);
+            return incomePercent = computeAssetPercent(getFirstPrice(), lastPrice);
         return incomePercent;
     }
 
@@ -386,7 +386,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #incomePercent} formatted as 1.65 or -1.65
      * **/
     public double getIncomePercent(int decimals){
-        return tradingTools.roundValue(getIncomePercent(), decimals);
+        return roundValue(getIncomePercent(), decimals);
     }
 
     /**
@@ -395,7 +395,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #incomePercent} formatted as +1.653% or -1.6563% as {@link String}
      * **/
     public String getTextIncomePercent(){
-        return tradingTools.textualizeAssetPercent(getIncomePercent());
+        return textualizeAssetPercent(getIncomePercent());
     }
 
     /**
@@ -404,7 +404,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #incomePercent} formatted as +1.65% or -1.65% as {@link String}
      * **/
     public String getTextIncomePercent(int decimals){
-        return tradingTools.textualizeAssetPercent(tradingTools.roundValue(getIncomePercent(), decimals));
+        return textualizeAssetPercent(roundValue(getIncomePercent(), decimals));
     }
 
     /** Method to set {@link #incomePercent}
@@ -423,7 +423,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #tptopIndex} formatted as +1.653% or -1.6563% as {@link String}
      * **/
     public String getTextTptopIndex(){
-        return tradingTools.textualizeAssetPercent(tptopIndex);
+        return textualizeAssetPercent(tptopIndex);
     }
 
     /**
@@ -432,7 +432,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return {@link #tptopIndex} formatted as +1.65% or -1.65%
      * **/
     public String getTextTptopIndex(int decimals){
-        return tradingTools.textualizeAssetPercent(tradingTools.roundValue(tptopIndex, decimals));
+        return textualizeAssetPercent(tptopIndex, decimals);
     }
 
     public TradingConfig getTradingConfig() {
@@ -454,7 +454,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * @return balance for this cryptocurrency
      * **/
     public double getCryptocurrencyBalance(int decimals){
-        return tradingTools.roundValue(getCryptocurrencyBalance(), decimals);
+        return roundValue(getCryptocurrencyBalance(), decimals);
     }
 
     /**
@@ -659,7 +659,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #marketPhase} formatted as 1.65 or -1.65
          * **/
         public double getMarketPhase(int decimals) {
-            return tradingTools.roundValue(marketPhase, decimals);
+            return roundValue(marketPhase, decimals);
         }
 
         /**
@@ -668,7 +668,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #marketPhase} formatted as +1.653% or -1.6563% as {@link String}
          * **/
         public String getTextMarketPhase(){
-            return tradingTools.textualizeAssetPercent(marketPhase);
+            return textualizeAssetPercent(marketPhase);
         }
 
         /**
@@ -677,7 +677,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #marketPhase} formatted as +1.65% or -1.65%
          * **/
         public String getTextMarketPhase(int decimals){
-            return tradingTools.textualizeAssetPercent(marketPhase, decimals);
+            return textualizeAssetPercent(marketPhase, decimals);
         }
 
         public double getWasteRange() {
@@ -690,7 +690,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #wasteRange} formatted as 1.65 or -1.65
          * **/
         public double getWasteRange(int decimals) {
-            return tradingTools.roundValue(wasteRange, decimals);
+            return roundValue(wasteRange, decimals);
         }
 
         /**
@@ -699,7 +699,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #wasteRange} formatted as +1.653% or -1.6563% as {@link String}
          * **/
         public String getTextWasteRange(){
-            return tradingTools.textualizeAssetPercent(wasteRange);
+            return textualizeAssetPercent(wasteRange);
         }
 
         /**
@@ -708,7 +708,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #wasteRange} formatted as +1.65% or -1.65%
          * **/
         public String getTextWasteRange(int decimals){
-            return tradingTools.textualizeAssetPercent(wasteRange, decimals);
+            return textualizeAssetPercent(wasteRange, decimals);
         }
 
         public int getDaysGap() {
@@ -725,7 +725,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #minGainForOrder} formatted as 1.65 or -1.65
          * **/
         public double getMinGainForOrder(int decimals) {
-            return tradingTools.roundValue(minGainForOrder, decimals);
+            return roundValue(minGainForOrder, decimals);
         }
 
         /**
@@ -734,7 +734,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #minGainForOrder} formatted as +1.653% or -1.6563% as {@link String}
          * **/
         public String getTextMinGainForOrder(){
-            return tradingTools.textualizeAssetPercent(minGainForOrder);
+            return textualizeAssetPercent(minGainForOrder);
         }
 
         /**
@@ -743,7 +743,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #minGainForOrder} formatted as +1.65% or -1.65%
          * **/
         public String getTextMinGainForOrder(int decimals){
-            return tradingTools.textualizeAssetPercent(minGainForOrder, decimals);
+            return textualizeAssetPercent(minGainForOrder, decimals);
         }
 
         public double getMaxLoss() {
@@ -756,7 +756,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #maxLoss} formatted as 1.65 or -1.65
          * **/
         public double getMaxLoss(int decimals) {
-            return tradingTools.roundValue(maxLoss, decimals);
+            return roundValue(maxLoss, decimals);
         }
 
         /**
@@ -765,7 +765,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #maxLoss} formatted as +1.653% or -1.6563% as {@link String}
          * **/
         public String getTextMaxLoss(){
-            return tradingTools.textualizeAssetPercent(maxLoss);
+            return textualizeAssetPercent(maxLoss);
         }
 
         /**
@@ -774,7 +774,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #maxLoss} formatted as +1.65% or -1.65%
          * **/
         public String getTextMaxLoss(int decimals){
-            return tradingTools.textualizeAssetPercent(maxLoss, decimals);
+            return textualizeAssetPercent(maxLoss, decimals);
         }
 
         public double getMaxGain() {
@@ -787,7 +787,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #maxGain} formatted as 1.65 or -1.65
          * **/
         public double getMaxGain(int decimals) {
-            return tradingTools.roundValue(maxGain, decimals);
+            return roundValue(maxGain, decimals);
         }
 
         /**
@@ -796,7 +796,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #maxGain} formatted as +1.653% or -1.6563% as {@link String}
          * **/
         public String getTextMaxGain(){
-            return tradingTools.textualizeAssetPercent(maxGain);
+            return textualizeAssetPercent(maxGain);
         }
 
         /**
@@ -805,7 +805,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * @return {@link #maxGain} formatted as +1.65% or -1.65%
          * **/
         public String getTextMaxGain(int decimals){
-            return tradingTools.textualizeAssetPercent(maxGain, decimals);
+            return textualizeAssetPercent(maxGain, decimals);
         }
 
         /**

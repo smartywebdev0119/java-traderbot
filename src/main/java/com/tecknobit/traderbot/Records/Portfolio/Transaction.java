@@ -4,13 +4,13 @@ import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
 
 import java.util.HashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.BUY;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.SELL;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.QUANTITY_KEY;
 import static com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines.*;
-import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.tradingTools;
 import static java.lang.System.out;
 
 /**
@@ -202,7 +202,7 @@ public class Transaction implements RecordDetails {
      * @return {@link #value} formatted as 22.21
      * **/
     public double getValue(int decimals) {
-        return tradingTools.roundValue(value, decimals);
+        return roundValue(value, decimals);
     }
 
     public double getQuantity() {
@@ -227,7 +227,7 @@ public class Transaction implements RecordDetails {
      * @return {@link #incomePercent} formatted as 21.22
      * **/
     public double getIncomePercent(int decimals) {
-        return tradingTools.roundValue(incomePercent, decimals);
+        return roundValue(incomePercent, decimals);
     }
 
     /** Method to set {@link #incomePercent}

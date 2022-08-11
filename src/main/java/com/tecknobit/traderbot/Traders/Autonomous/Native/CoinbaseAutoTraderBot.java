@@ -754,9 +754,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                                 cryptocurrency.getFirstPrice(), lastPrice);
                                         double minGainOrder = tradingConfig.getMinGainForOrder();
                                         double tptopIndex = cryptocurrency.getTptopIndex();
-                                        double priceChangePercent = coinbaseAccountManager.getTrendPercent(
-                                                coinbaseProductsManager.getProductStatsObject(symbol).getLow(), lastPrice);
-                                        refreshCryptoDetails(cryptocurrency, incomePercent, lastPrice, priceChangePercent);
+                                        refreshCryptoDetails(cryptocurrency, incomePercent, lastPrice, ticker.getPriceChangePercent());
                                         if(incomePercent < tradingConfig.getMinGainForOrder() && incomePercent < tptopIndex){
                                             if(printRoutineMessages)
                                                 System.out.println("Refreshing [" + symbol + "]");
