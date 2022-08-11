@@ -191,9 +191,7 @@ public final class AndroidWorkflow implements RoutineMessages {
             response = serverRequest.readResponse();
             if(response != null) {
                 if(response.getInt(STATUS_CODE) != -1){
-                    // TODO: 11/08/2022 CHECK ARRAY 
                     JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY);
-                    System.out.println(jsonRoutines.toString(4));
                     if(jsonRoutines != null){
                         for (int j = 0; j < jsonRoutines.length(); j++) {
                             JSONObject routine = jsonRoutines.getJSONObject(j);
