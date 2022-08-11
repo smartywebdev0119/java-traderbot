@@ -90,11 +90,11 @@ trader.start();
 ### Android use
 Traders work with <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">Tecknobit's Android interface </a><br>
 All data will be stored and restored automatically, **will be not saved** your exchange platform api keys. <br>
-**Note:** is reccomended to use different password from exchange'account for Tecnobit's account for a major security.
+**Note:** is recommended to use different password from exchange's account for Tecnobit's account for a major security.
 #### Auth operations
 - #### Registration
     To register a new trader, both traders type, you have to use Credentials object to init your Tecknobit's account credentials.
-    In first attemp will throws a SaveData exception so you can save credentials generated.
+    In first attempt will throw a SaveData exception, so you can save credentials generated.
 
 ```java
 //In registration you have to init Credentials object with your email and password for Tecknobit's account.
