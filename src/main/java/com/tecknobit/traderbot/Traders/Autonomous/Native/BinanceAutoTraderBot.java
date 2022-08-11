@@ -1,7 +1,6 @@
 package com.tecknobit.traderbot.Traders.Autonomous.Native;
 
 import com.tecknobit.binancemanager.Managers.BinanceManager;
-import com.tecknobit.binancemanager.Managers.Market.Records.Filter;
 import com.tecknobit.binancemanager.Managers.Market.Records.Tickers.TickerPriceChange;
 import com.tecknobit.traderbot.Helpers.Orders.MarketOrder;
 import com.tecknobit.traderbot.Records.Account.TraderAccount;
@@ -11,17 +10,16 @@ import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines;
 import com.tecknobit.traderbot.Traders.Interfaces.Native.BinanceTraderBot;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.Candlestick.*;
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
 import static java.lang.Math.abs;
-import static java.lang.Math.ceil;
 import static java.lang.System.currentTimeMillis;
 
 /**
@@ -42,16 +40,6 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * account
      * **/
     protected final TraderAccount traderAccount;
-
-    /**
-     * {@code MIN_NOTIONAL_FILTER} is instance that contains key for {@code MIN_NOTIONAL} filter
-     * **/
-    public static final String MIN_NOTIONAL_FILTER = "MIN_NOTIONAL";
-
-    /**
-     * {@code LOT_SIZE_FILTER} is instance that contains key for {@code LOT_SIZE} filter
-     * **/
-    public static final String LOT_SIZE_FILTER = "LOT_SIZE";
 
     /**
      * {@code walletList} is a map that contains wallet list assets and index (es. BTCBUSD) as key {@link String} and {@link Cryptocurrency}
@@ -124,7 +112,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param traderAccount        : manage account information and trading reports of auto trader account
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -145,7 +133,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param traderAccount        : manage account information and trading reports of auto trader account
@@ -167,7 +155,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
      * @param traderAccount        : manage account information and trading reports of auto trader account
@@ -190,7 +178,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
@@ -215,7 +203,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
      * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
@@ -240,7 +228,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
@@ -266,7 +254,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
      * @param traderAccount        : manage account information and trading reports of auto trader account
@@ -288,7 +276,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
@@ -667,47 +655,14 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     }
 
     /**
-     * This method is used to get quantity for market order type <br>
+     * This method is used to get quantity for market order type
      * @param cryptocurrency: cryptocurrency as {@link Cryptocurrency} used in the order
      * @return quantity for the market order es. 1
      * **/
     @Override
-    public double getMarketOrderQuantity(Cryptocurrency cryptocurrency) {
-        Symbol exchangeInformation = tradingPairsList.get(cryptocurrency.getSymbol());
-        double stepSize = 0, maxQty = 0, minQty = 0, minNotional = 0, quantity = -1;
-        double coinBalance = getCoinBalance(cryptocurrency.getQuoteAsset());
-        if(coinBalance != -1){
-            for (Filter filter : exchangeInformation.getFiltersList()) {
-                if(filter.getFilterType().equals(LOT_SIZE_FILTER)){
-                    JSONObject lotSize = filter.getFilterDetails().getJSONObject(LOT_SIZE_FILTER);
-                    stepSize = lotSize.getDouble("stepSize");
-                    maxQty = lotSize.getDouble("maxQty");
-                    minQty = lotSize.getDouble("minQty");
-                }else if(filter.getFilterType().equals(MIN_NOTIONAL_FILTER)) {
-                    minNotional = filter.getFilterDetails().getJSONObject(MIN_NOTIONAL_FILTER)
-                            .getDouble("minNotional");
-                    break;
-                }
-            }
-            double minNotionalQty = minNotional / cryptocurrency.getLastPrice();
-            if(coinBalance == minNotional)
-                quantity = ceil(minNotional);
-            else if(coinBalance > minNotional){
-                double difference = coinBalance - minNotional;
-                quantity = difference * cryptocurrency.getTptopIndex() / 100;
-                if(quantity < minQty)
-                    quantity = minQty;
-                else if(quantity > maxQty)
-                    quantity = maxQty;
-                else {
-                    if ((quantity - minQty) % stepSize != 0)
-                        quantity = ceil(quantity);
-                    if(quantity < minNotionalQty)
-                        quantity = ceil(minNotionalQty + 1);
-                }
-            }
-        }
-        return quantity;
+    public double getMarketOrderQuantity(Cryptocurrency cryptocurrency) throws Exception {
+        return getSuggestedOrderQuantity(cryptocurrency.getSymbol(), roundValue(getCoinBalance(cryptocurrency.getQuoteAsset())
+                * cryptocurrency.getTptopIndex() / 100, 8));
     }
 
     /**
@@ -722,14 +677,13 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
         double quantity = coin.getQuantity();
         if(assetIndex.equals(USDT_CURRENCY)){
             try {
-                return binanceMarketManager.roundValue(quantity *
-                        binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY + USDT_CURRENCY), 8);
+                return roundValue(quantity * binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY
+                        + USDT_CURRENCY), 8);
             } catch (IOException e) {
                 return -1;
             }
         }
-        return binanceMarketManager.roundValue(quantity *
-                lastPrices.get(assetIndex + USDT_CURRENCY).getLastPrice(), 8);
+        return roundValue(quantity * lastPrices.get(assetIndex + USDT_CURRENCY).getLastPrice(), 8);
     }
 
     /**

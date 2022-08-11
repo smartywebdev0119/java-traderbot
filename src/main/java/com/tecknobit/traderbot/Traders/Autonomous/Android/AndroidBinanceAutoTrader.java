@@ -88,7 +88,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -121,7 +121,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -156,7 +156,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -188,7 +188,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -223,7 +223,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -258,7 +258,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
@@ -294,7 +294,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -330,7 +330,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     
     /**
      * Constructor to init {@link BinanceAutoTraderBot}
-     * @param apiKey               : your Binance's api key
+     * @param apiKey: your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceManager.BASE_ENDPOINTS array
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)

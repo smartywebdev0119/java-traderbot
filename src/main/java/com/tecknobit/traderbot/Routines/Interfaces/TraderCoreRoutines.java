@@ -25,12 +25,12 @@ public abstract class TraderCoreRoutines {
     /**
      * {@code USD_CURRENCY} is the identifier of USD currency used by traders to get default prices
      * **/
-    protected static final String USD_CURRENCY = "USD";
+    public static final String USD_CURRENCY = "USD";
 
     /**
      * {@code USDT_CURRENCY} is the identifier of USDT cryptocurrency used by traders to get default prices
      * **/
-    protected static final String USDT_CURRENCY = "USDT";
+    public static final String USDT_CURRENCY = "USDT";
 
     /**
      * {@code transactions} is a list of transactions made by user account plus transactions made by a
@@ -120,7 +120,7 @@ public abstract class TraderCoreRoutines {
      * @implNote it is obtained calling {@link #getOrderStatus(FormatResponseType)} method
      * **/
     protected String orderStatus;
-
+    
     /**
      * {@code FormatResponseType} is enum list to format order in different formats.
      * @implSpec format type are {@link String}, JSON type {@link JSONArray} or {@link JSONObject}, CustomObject
@@ -341,7 +341,7 @@ public abstract class TraderCoreRoutines {
 
     /**
      * This method is used check if is refreshing time <br>
-     * Any params required.
+     * Any params required
      * @return true only if current timestamp when this method is called minus last timestamp when this method is called,
      * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #REFRESH_PRICES_TIME}
      * **/
@@ -354,6 +354,14 @@ public abstract class TraderCoreRoutines {
      * will print {@link Exception} error message
      * **/
     protected abstract void printError(String symbol, Exception e);
+
+    /**
+     * This method is to compute suggested quantity for an order
+     * @param symbol: symbol of cryptocurrency for the order
+     * @param testQuantity: quantity to test
+     * @return suggested quantity value computed from exchange's limits as double
+     * **/
+    protected abstract double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception;
 
     /**
      * This method is used to print disclaimer alert to warn user of responsibility of storage and manage

@@ -2,6 +2,7 @@ package com.tecknobit.traderbot.Traders.Interfaces.Native;
 
 import com.tecknobit.binancemanager.Managers.BinanceManager;
 import com.tecknobit.binancemanager.Managers.Market.BinanceMarketManager;
+import com.tecknobit.binancemanager.Managers.Market.Records.Filter;
 import com.tecknobit.binancemanager.Managers.Market.Records.Tickers.TickerPriceChange;
 import com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Spot.BinanceSpotManager;
 import com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Spot.Records.Orders.Response.SpotOrderStatus;
@@ -12,6 +13,7 @@ import com.tecknobit.traderbot.Records.Portfolio.Coin;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,7 @@ import java.util.HashMap;
 
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.*;
+import static java.lang.Math.ceil;
 
 /**
  * The {@code BinanceTraderBot} class is trader for {@link BinanceManager} library.<br>
@@ -32,9 +35,19 @@ import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.
 public class BinanceTraderBot extends TraderCoreRoutines {
 
     /**
+     * {@code MIN_NOTIONAL_FILTER} is instance that contains key for {@code MIN_NOTIONAL} filter
+     * **/
+    public static final String MIN_NOTIONAL_FILTER = "MIN_NOTIONAL";
+
+    /**
+     * {@code LOT_SIZE_FILTER} is instance that contains key for {@code LOT_SIZE} filter
+     * **/
+    public static final String LOT_SIZE_FILTER = "LOT_SIZE";
+
+    /**
      * {@code BUSD_CURRENCY} is the identifier of BUSD currency used by Binance's traders
      * **/
-    protected static final String BUSD_CURRENCY = "BUSD";
+    public static final String BUSD_CURRENCY = "BUSD";
 
     /**
      * {@code binanceWalletManager} is instance of {@link BinanceWalletManager} helpful to wallet operations
@@ -494,6 +507,51 @@ public class BinanceTraderBot extends TraderCoreRoutines {
             System.out.println(getErrorResponse() + " on [" + symbol + "]");
         else
             e.printStackTrace();
+    }
+
+    /**
+     * This method is to compute suggested quantity for an order
+     * @param symbol: symbol of cryptocurrency for the order
+     * @param testQuantity: quantity to test
+     * @return suggested quantity value computed from exchange's limits as double
+     * **/
+    @Override
+    public double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception {
+        Symbol exchangeInformation = tradingPairsList.get(symbol);
+        if(exchangeInformation != null){
+            double stepSize = 0, maxQty = 0, minQty = 0, minNotional = 0, quantity = -1;
+            double lastPrice = lastPrices.get(symbol).getLastPrice();
+            double balance = lastPrice * testQuantity;
+            for (Filter filter : exchangeInformation.getFiltersList()) {
+                if(filter.getFilterType().equals(LOT_SIZE_FILTER)){
+                    JSONObject lotSize = filter.getFilterDetails().getJSONObject(LOT_SIZE_FILTER);
+                    stepSize = lotSize.getDouble("stepSize");
+                    maxQty = lotSize.getDouble("maxQty");
+                    minQty = lotSize.getDouble("minQty");
+                }else if(filter.getFilterType().equals(MIN_NOTIONAL_FILTER)) {
+                    minNotional = filter.getFilterDetails().getJSONObject(MIN_NOTIONAL_FILTER)
+                            .getDouble("minNotional");
+                    break;
+                }
+            }
+            double minNotionalQty = minNotional / lastPrice;
+            if(balance == minNotional)
+                quantity = ceil(minNotional);
+            else if(balance > minNotional){
+                if(quantity < minQty)
+                    quantity = minQty;
+                else if(quantity > maxQty)
+                    quantity = maxQty;
+                else {
+                    if ((quantity - minQty) % stepSize != 0)
+                        quantity = ceil(quantity);
+                    if(quantity < minNotionalQty)
+                        quantity = ceil(minNotionalQty);
+                }
+            }
+            return quantity;
+        }
+        throw new Exception("Symbol does not exits");
     }
 
 }

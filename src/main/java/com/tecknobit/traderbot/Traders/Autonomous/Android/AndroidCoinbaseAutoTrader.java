@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
 import static com.tecknobit.traderbot.Records.Account.TraderDetails.*;
@@ -88,7 +89,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -126,7 +127,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param timeout              : custom timeout for request
@@ -163,7 +164,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -200,7 +201,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -236,7 +237,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -276,7 +277,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param timeout              : custom timeout for request
@@ -314,7 +315,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -352,7 +353,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
@@ -389,7 +390,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -426,7 +427,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param timeout              : custom timeout for request
@@ -462,7 +463,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -498,7 +499,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param sendStatsReport      : flag to insert to send or not reports
@@ -533,7 +534,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -573,7 +574,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
@@ -610,7 +611,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param defaultErrorMessage  : custom error to show when is not a request error
@@ -647,7 +648,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     * @param apiKey               : your Coinbase's api key
+     * @param apiKey: your Coinbase's api key
      * @param apiSecret            : your Coinbase's secret key
      * @param passphrase           : your Coinbase's api passphrase
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
@@ -794,7 +795,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     public double getWalletBalance(boolean forceRefresh) {
         if(runningTrader) {
             balance = super.getWalletBalance(baseCurrency, forceRefresh);
-            androidWorkflow.insertWalletBalance(coinbaseCurrenciesManager.roundValue(balance, 2));
+            androidWorkflow.insertWalletBalance(roundValue(balance, 2));
             return balance;
         }
         return -1;
@@ -809,7 +810,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * **/
     public double getWalletBalance(boolean forceRefresh, int decimals) throws Exception {
         if(runningTrader)
-            return coinbaseCurrenciesManager.roundValue(getWalletBalance(forceRefresh), decimals);
+            return roundValue(getWalletBalance(forceRefresh), decimals);
         return -1;
     }
 

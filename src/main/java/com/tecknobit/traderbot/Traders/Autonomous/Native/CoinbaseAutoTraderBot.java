@@ -1,8 +1,6 @@
 package com.tecknobit.traderbot.Traders.Autonomous.Native;
 
 import com.tecknobit.coinbasemanager.Managers.ExchangePro.CoinbaseManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Currencies.CoinbaseCurrenciesManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Currencies.Records.Currency;
 import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Ticker;
 import com.tecknobit.traderbot.Helpers.Orders.MarketOrder;
 import com.tecknobit.traderbot.Records.Account.TraderAccount;
@@ -17,9 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Candle.GRANULARITY_1d;
 import static java.lang.Math.abs;
-import static java.lang.Math.ceil;
 import static java.lang.System.currentTimeMillis;
 
 /**
@@ -121,29 +119,22 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     protected volatile boolean USING_WALLET_LIST = false;
 
     /**
-     * {@code coinbaseCurrenciesManager} is instance of {@link CoinbaseCurrenciesManager} helpful to fetch details about
-     * cryptocurrencies
-     * **/
-    protected final CoinbaseCurrenciesManager coinbaseCurrenciesManager;
-
-    /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param timeout              : custom timeout for request
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param timeout: custom timeout for request
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  int timeout, TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -154,21 +145,20 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param timeout              : custom timeout for request
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param timeout: custom timeout for request
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -179,21 +169,20 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -204,19 +193,18 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, TraderAccount traderAccount,
                                  boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -227,23 +215,22 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param timeout              : custom timeout for request
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param timeout: custom timeout for request
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  int timeout, ArrayList<String> quoteCurrencies, TraderAccount traderAccount,
                                  boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, defaultErrorMessage, timeout);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -254,22 +241,21 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param timeout              : custom timeout for request
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param timeout: custom timeout for request
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, ArrayList<String> quoteCurrencies,
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -280,22 +266,21 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency : base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  ArrayList<String> quoteCurrencies, TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -306,21 +291,20 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, ArrayList<String> quoteCurrencies,
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, quoteCurrencies);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -331,16 +315,16 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param timeout              : custom timeout for request
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param timeout: custom timeout for request
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -348,7 +332,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  int timeout, int refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -359,15 +342,15 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param timeout              : custom timeout for request
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param timeout: custom timeout for request
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -375,7 +358,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -386,15 +368,15 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -402,7 +384,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  short refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -413,14 +394,14 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -428,7 +409,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -439,17 +419,17 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param timeout              : custom timeout for request
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices.
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param timeout: custom timeout for request
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices.
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -458,7 +438,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, defaultErrorMessage, timeout);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -469,16 +448,16 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param timeout              : custom timeout for request
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices.
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param timeout: custom timeout for request
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices.
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -486,7 +465,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  ArrayList<String> quoteCurrencies, int refreshPricesTime, TraderAccount traderAccount,
                                  boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -497,16 +475,16 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param defaultErrorMessage: custom error to show when is not a request error
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -514,7 +492,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  ArrayList<String> quoteCurrencies, int refreshPricesTime, TraderAccount traderAccount,
                                  boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -525,15 +502,15 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey               : your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime    : is time in seconds to set for refresh the latest prices
-     * @param traderAccount        : manage account information and trading reports of auto trader account
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param apiKey: your Coinbase's api key
+     * @param apiSecret: your Coinbase's secret key
+     * @param passphrase: your Coinbase's api passphrase
+     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
+     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param traderAccount: manage account information and trading reports of auto trader account
+     * @param sendStatsReport: flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -541,7 +518,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
                                  int refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
         super(apiKey, apiSecret, passphrase, quoteCurrencies, refreshPricesTime);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -901,21 +877,14 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     }
 
     /**
-     * This method is used to get quantity for market order type <br>
+     * This method is used to get quantity for market order type
      * @param cryptocurrency: cryptocurrency as {@link Cryptocurrency} used in the order
      * @return quantity for the market order es. 1
      * **/
     @Override
     public double getMarketOrderQuantity(Cryptocurrency cryptocurrency) throws Exception {
-        Currency currency = coinbaseCurrenciesManager.getCurrencyObject(cryptocurrency.getAssetIndex());
-        double coinBalance = getCoinBalance(cryptocurrency.getQuoteAsset());
-        double quantity = coinbaseProductsManager.roundValue(coinBalance * cryptocurrency.getTptopIndex() / 100, 6);
-        if(quantity >= currency.getMinSize()) {
-            if(quantity % currency.getMaxPrecision() != 0)
-                quantity = ceil(quantity);
-        }else
-            quantity = -1;
-        return quantity;
+        return getSuggestedOrderQuantity(cryptocurrency.getSymbol(), roundValue(getCoinBalance(cryptocurrency.getQuoteAsset()) *
+                        cryptocurrency.getTptopIndex() / 100, 6));
     }
 
     /**
