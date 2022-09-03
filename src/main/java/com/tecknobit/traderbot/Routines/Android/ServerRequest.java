@@ -251,25 +251,32 @@ public class ServerRequest {
 
     /**
      * {@code BALANCE_KEY} key
-     * **/
+     **/
     public static final String BALANCE_KEY = "balance";
 
     /**
      * {@code response} object for requests response
-     * **/
+     **/
     public static JSONObject response;
 
+    /**
+     * {@code HOST} host value
+     **/
     public static final String HOST = "194.50.19.168";
+
+    /**
+     * {@code PORT} port value
+     **/
     public static final int PORT = 7898;
 
     /**
      * {@code clientCipher} object to cipher requests
-     * **/
+     **/
     private final ClientCipher clientCipher;
 
     /**
      * {@code clientCipher} object to write requests
-     * **/
+     **/
     private PrintWriter printWriter;
 
     /**
