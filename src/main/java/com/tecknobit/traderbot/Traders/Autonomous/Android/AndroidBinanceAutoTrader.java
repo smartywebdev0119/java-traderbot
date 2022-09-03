@@ -29,6 +29,8 @@ import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.MODEL_ID_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Transaction.TRANSACTION_KEY;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
 import static java.lang.Math.toIntExact;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
@@ -101,7 +103,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, boolean sendStatsReport, boolean printRoutineMessages,
                                     String baseCurrency, Credentials credentials, int refreshPricesTime) throws Exception {
         super(apiKey, secretKey, new TraderAccount(new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(),
-                credentials.getAuthToken(), credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, BINANCE_TRADER_PLATFORM,
@@ -111,7 +113,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -136,7 +138,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
                                     boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                     int refreshPricesTime) throws Exception {
         super(apiKey, secretKey, baseEndpoint, new TraderAccount(new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(),
-                credentials.getAuthToken(), credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, BINANCE_TRADER_PLATFORM,
@@ -146,7 +148,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -169,7 +171,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, int refreshPricesTime, boolean sendStatsReport,
                                     boolean printRoutineMessages, String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, secretKey, refreshPricesTime, new TraderAccount(new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(),
-                credentials.getAuthToken(), credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, BINANCE_TRADER_PLATFORM,
                 toIntExact(REFRESH_PRICES_TIME), timestamp);
@@ -178,7 +180,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -203,7 +205,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
                                     boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                     Credentials credentials) throws Exception {
         super(apiKey, secretKey, baseEndpoint, refreshPricesTime, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())),
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)),
                 sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, BINANCE_TRADER_PLATFORM,
@@ -213,7 +215,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -238,7 +240,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
                                     boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                     Credentials credentials) throws Exception {
         super(apiKey, secretKey, quoteCurrencies, refreshPricesTime, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, BINANCE_TRADER_PLATFORM,
@@ -248,7 +250,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -274,7 +276,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
                                     int refreshPricesTime, boolean sendStatsReport, boolean printRoutineMessages,
                                     String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, secretKey, baseEndpoint, quoteCurrencies, refreshPricesTime, new TraderAccount(new ServerRequest(
-                credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())),
+                credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)),
                 sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, BINANCE_TRADER_PLATFORM,
@@ -284,7 +286,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -309,7 +311,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
                                     boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                     int refreshPricesTime) throws Exception {
         super(apiKey, secretKey, quoteCurrencies, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         setRefreshPricesTime(refreshPricesTime);
         long timestamp = currentTimeMillis();
@@ -320,7 +322,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -346,7 +348,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
                                     boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                     Credentials credentials,  int refreshPricesTime) throws Exception {
         super(apiKey, secretKey, baseEndpoint, quoteCurrencies, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         setRefreshPricesTime(refreshPricesTime);
         long timestamp = currentTimeMillis();
@@ -357,7 +359,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();

@@ -21,7 +21,7 @@ import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.ANSI_R
  * @author Tecknobit N7ghtm4r3
  * **/
 
-public final class ServerRequest {
+public class ServerRequest {
 
     /**
      * {@code SERVICE_UNAVAILABLE} is instance to indicate that service is not available to perform requests
@@ -259,6 +259,9 @@ public final class ServerRequest {
      * **/
     public static JSONObject response;
 
+    public static final String HOST = "194.50.19.168";
+    public static final int PORT = 7898;
+
     /**
      * {@code clientCipher} object to cipher requests
      * **/
@@ -289,34 +292,61 @@ public final class ServerRequest {
      * **/
     private String token;
 
-    /** Constructor to init {@link ServerRequest}
-     * @param ivSpec: initialization vector used in server requests
-     * @param secretKey: secret key used in server requests
-     * @param authToken : identifier of server trader to log in and requests operations
-     * @param token: identifier of user to log in and requests operations
+    /**
+     * {@code port} is instance that memorizes host value
      * **/
-    public ServerRequest(String ivSpec, String secretKey, String authToken, String token) throws Exception {
+    private final String host;
+
+    /**
+     * {@code port} is instance that memorizes port value
+     * **/
+    private final int port;
+
+    /**
+     * Constructor to init {@link ServerRequest}
+     *
+     * @param ivSpec    : initialization vector used in server requests
+     * @param secretKey : secret key used in server requests
+     * @param authToken : identifier of server trader to log in and requests operations
+     * @param token     : identifier of user to log in and requests operations
+     * @param host: host value
+     * @param port: port value
+     **/
+    public ServerRequest(String ivSpec, String secretKey, String authToken, String token, String host, int port) throws Exception {
         clientCipher = new ClientCipher(ivSpec, secretKey, CBC_ALGORITHM);
         ciphered = true;
         this.authToken = authToken;
         this.token = token;
+        this.host = host;
+        this.port = port;
     }
 
-    /** Constructor to init {@link ServerRequest}
-     * @param ivSpec: initialization vector used in server requests
-     * @param secretKey: secret key used in server requests
-     * **/
-    public ServerRequest(String ivSpec, String secretKey) throws Exception {
+    /**
+     * Constructor to init {@link ServerRequest}
+     *
+     * @param ivSpec    : initialization vector used in server requests
+     * @param secretKey : secret key used in server requests
+     * @param host: host value
+     * @param port: port value
+     **/
+    public ServerRequest(String ivSpec, String secretKey, String host, int port) throws Exception {
+        this.host = host;
+        this.port = port;
         clientCipher = new ClientCipher(ivSpec, secretKey, CBC_ALGORITHM);
         ciphered = true;
         authToken = null;
         token = null;
     }
 
-    /** Constructor to init {@link ServerRequest} **/
-    public ServerRequest() {
+    /** Constructor to init {@link ServerRequest}
+     * @param host: host value
+     * @param port: port value
+     * **/
+    public ServerRequest(String host, int port) {
         clientCipher = null;
         ciphered = false;
+        this.host = host;
+        this.port = port;
     }
 
     /**
@@ -387,7 +417,7 @@ public final class ServerRequest {
     private void createSocket() throws IOException {
         try {
             while (socket != null);
-            socket = new Socket("194.50.19.168", 7898);
+            socket = new Socket(host, port);
             printWriter = new PrintWriter(socket.getOutputStream(), true);
         }catch (ConnectException ignored){
         }
@@ -400,11 +430,11 @@ public final class ServerRequest {
      * **/
     public static ServerRequest getPublicRequest() {
         try {
-            ServerRequest serverRequest = new ServerRequest();
+            ServerRequest serverRequest = new ServerRequest(HOST, PORT);
             serverRequest.sendRequest(new JSONObject(), GET_KEYS_OPE);
             response = serverRequest.readResponse();
             if(response != null)
-                return new ServerRequest(response.getString(IV_SPEC_KEY), response.getString(SECRET_KEY));
+                return new ServerRequest(response.getString(IV_SPEC_KEY), response.getString(SECRET_KEY), HOST, PORT);
         }catch (Exception e){
             throw new IllegalStateException(SERVICE_UNAVAILABLE);
         }

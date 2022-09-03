@@ -11,6 +11,7 @@ import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
 import com.tecknobit.traderbot.Traders.Autonomous.Android.AndroidBinanceAutoTrader;
+import com.tecknobit.traderbot.Traders.Autonomous.Android.AndroidCoinbaseAutoTrader;
 import com.tecknobit.traderbot.Traders.Interfaces.Android.AndroidBinanceTrader;
 import com.tecknobit.traderbot.Traders.Interfaces.Android.AndroidCoinbaseTrader;
 import org.json.JSONArray;
@@ -27,9 +28,10 @@ import static com.tecknobit.traderbot.Records.Account.TraderDetails.*;
 import static com.tecknobit.traderbot.Records.Android.Routine.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.CRYPTOCURRENCY_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Transaction.TRANSACTION_KEY;
+import static com.tecknobit.traderbot.Records.Portfolio.Transaction.getDate;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
 import static java.lang.Integer.parseInt;
-import static java.lang.System.currentTimeMillis;
+import static java.lang.System.*;
 import static org.apache.commons.validator.routines.EmailValidator.getInstance;
 
 /**
@@ -38,7 +40,7 @@ import static org.apache.commons.validator.routines.EmailValidator.getInstance;
  * @author Tecknobit N7ghtm4r3
  * **/
 
-public final class AndroidWorkflow implements RoutineMessages {
+public class AndroidWorkflow implements RoutineMessages {
 
     /**
      * {@code alreadyInstantiated} flag to lock multiple instantiations of {@link AndroidWorkflow} object
@@ -81,9 +83,9 @@ public final class AndroidWorkflow implements RoutineMessages {
         if(!alreadyInstantiated)
             alreadyInstantiated = true;
         else {
-            System.out.println(ANSI_RED + "AndroidWorkflow object is already instantiated you cannot have multiple AndroidWorkflow " +
+            out.println(ANSI_RED + "AndroidWorkflow object is already instantiated you cannot have multiple AndroidWorkflow " +
                     "objects in same session" + ANSI_RESET);
-            System.exit(1);
+            exit(1);
         }
         this.serverRequest = serverRequest;
         this.printRoutineMessages = printRoutineMessages;
@@ -146,6 +148,8 @@ public final class AndroidWorkflow implements RoutineMessages {
                             ((AndroidCoinbaseTrader)trader).disableTrader();
                         else if (trader instanceof AndroidBinanceAutoTrader)
                             ((AndroidBinanceAutoTrader)trader).disableTrader();
+                        else if (trader instanceof AndroidCoinbaseAutoTrader)
+                            ((AndroidCoinbaseAutoTrader)trader).disableTrader();
                         printOperationStatus("Trader status: [" + STOPPED_TRADER_STATUS + "]", false);
                     }else{
                         if(trader instanceof AndroidBinanceTrader)
@@ -154,6 +158,8 @@ public final class AndroidWorkflow implements RoutineMessages {
                             ((AndroidCoinbaseTrader)trader).enableTrader();
                         else if (trader instanceof AndroidBinanceAutoTrader)
                             ((AndroidBinanceAutoTrader)trader).enableTrader();
+                        else if (trader instanceof AndroidCoinbaseAutoTrader)
+                            ((AndroidCoinbaseAutoTrader)trader).enableTrader();
                         printOperationStatus("Trader status: [" + RUNNING_TRADER_STATUS+ "]", true);
                     }
                     break;
@@ -164,17 +170,21 @@ public final class AndroidWorkflow implements RoutineMessages {
                         ((AndroidCoinbaseTrader)trader).setBaseCurrency(routine.getExtraValue());
                     else if (trader instanceof AndroidBinanceAutoTrader)
                         ((AndroidBinanceAutoTrader)trader).setBaseCurrency(routine.getExtraValue());
+                    else if (trader instanceof AndroidCoinbaseAutoTrader)
+                        ((AndroidCoinbaseAutoTrader)trader).setBaseCurrency(routine.getExtraValue());
                     printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Base currency successfully changed",
                             true);
                     break;
                 case INSERT_QUOTE_OPE:
-                    trader.insertQuoteCurrency(routine.getExtraValue());
-                    printOperationStatus("[" + INSERT_QUOTE_OPE + "] Base currency successfully inserted",
+                    String quoteAdd = routine.getExtraValue();
+                    trader.insertQuoteCurrency(quoteAdd);
+                    printOperationStatus("[" + INSERT_QUOTE_OPE + "] Quote currency [" + quoteAdd +  "] successfully inserted",
                             true);
                     break;
                 case REMOVE_QUOTE_OPE:
-                    trader.removeQuoteCurrency(routine.getExtraValue());
-                    printOperationStatus("[" + REMOVE_QUOTE_OPE + "] Base currency successfully removed",
+                    String quoteRemove = routine.getExtraValue();
+                    trader.removeQuoteCurrency(quoteRemove);
+                    printOperationStatus("[" + REMOVE_QUOTE_OPE + "] Quote currency [" + quoteRemove + "] successfully removed",
                             true);
             }
         }
@@ -191,16 +201,14 @@ public final class AndroidWorkflow implements RoutineMessages {
             response = serverRequest.readResponse();
             if(response != null) {
                 if(response.getInt(STATUS_CODE) != -1){
-                    JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY);
-                    if(jsonRoutines != null){
-                        for (int j = 0; j < jsonRoutines.length(); j++) {
-                            JSONObject routine = jsonRoutines.getJSONObject(j);
-                            routines.add(new Routine(routine.getString(ROUTINE_KEY), routine.getString(ROUTINE_EXTRA_VALUE_KEY)));
-                        }
+                    JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY, new JSONArray());
+                    for (int j = 0; j < jsonRoutines.length(); j++) {
+                        JSONObject routine = jsonRoutines.getJSONObject(j);
+                        routines.add(new Routine(routine.getString(ROUTINE_KEY), routine.getString(ROUTINE_EXTRA_VALUE_KEY)));
                     }
                 }else{
                     printRed("[ACCOUNT DELETED] You deleted account for trader, we hope to see you again soon!");
-                    System.exit(0);
+                    exit(0);
                 }
             }
         } catch (Exception e) {
@@ -431,10 +439,10 @@ public final class AndroidWorkflow implements RoutineMessages {
      * **/
     private void printOperationStatus(String msg, boolean greenPrint) {
         if(printRoutineMessages){
-            if(greenPrint)
-                printGreen(msg);
-            else
-                printRed(msg);
+            if(greenPrint) {
+                printGreen(getDate(currentTimeMillis()) + " -> " + msg);
+            } else
+                printRed(getDate(currentTimeMillis()) + " -> " + msg);
         }
     }
 
@@ -444,7 +452,7 @@ public final class AndroidWorkflow implements RoutineMessages {
      * **/
     public void printOperationFailed(String ope){
         if(printRoutineMessages)
-            printRed("[" + ope + "] Operation failed");
+            printRed(getDate(currentTimeMillis()) + " -> [" + ope + "] Operation failed");
     }
 
     /**
@@ -453,7 +461,7 @@ public final class AndroidWorkflow implements RoutineMessages {
      * **/
     private void printOperationSuccess(String ope){
         if(printRoutineMessages)
-            printGreen("[" + ope + "] Operation ended successfully");
+            printGreen(getDate(currentTimeMillis()) + " -> [" + ope + "] Operation ended successfully");
     }
 
     /**
@@ -670,9 +678,9 @@ public final class AndroidWorkflow implements RoutineMessages {
          * Any params required
          * **/
         private void exitWithError() {
-            System.out.println(ANSI_RED + "Credentials object is already instantiated you cannot have multiple Credentials objects in same session"
+            out.println(ANSI_RED + "Credentials object is already instantiated you cannot have multiple Credentials objects in same session"
             + ANSI_RESET);
-            System.exit(1);
+            exit(1);
         }
 
         /**

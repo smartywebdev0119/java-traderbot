@@ -30,6 +30,8 @@ import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.MODEL_ID_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Transaction.TRANSACTION_KEY;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
 import static java.lang.Math.toIntExact;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
@@ -106,7 +108,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      int timeout, boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials, int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -117,7 +119,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -143,7 +145,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                      int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -154,7 +156,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -180,7 +182,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials, int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -191,7 +193,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -216,7 +218,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                      int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -227,7 +229,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -257,7 +259,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, new TraderAccount(
                 new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(),
-                        credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                        credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
@@ -267,7 +269,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -294,7 +296,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
                                      String baseCurrency, Credentials credentials, int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -305,7 +307,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -332,7 +334,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
                                      String baseCurrency, Credentials credentials, int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -343,7 +345,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -369,7 +371,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials, int refreshPricesTime) throws Exception {
         super(apiKey, apiSecret, passphrase, quoteCurrencies, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         setRefreshPricesTime(refreshPricesTime);
@@ -380,7 +382,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -408,7 +410,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshPricesTime, new TraderAccount(
                 new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(),
-                        credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                        credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
                 toIntExact(REFRESH_PRICES_TIME), timestamp);
@@ -417,7 +419,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -443,7 +445,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, refreshPricesTime, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
@@ -453,7 +455,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -479,7 +481,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      int refreshPricesTime, boolean sendStatsReport, boolean printRoutineMessages,
                                      String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, refreshPricesTime, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                        credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
@@ -489,7 +491,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -514,7 +516,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, refreshPricesTime, new TraderAccount(new ServerRequest(credentials.getIvSpec(),
-                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken())), sendStatsReport,
+                credentials.getSecretKey(), credentials.getAuthToken(), credentials.getToken(), HOST, PORT)), sendStatsReport,
                 printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
@@ -524,7 +526,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -554,7 +556,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, refreshPricesTime,
                 new TraderAccount(new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(),
-                        credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                        credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
                 toIntExact(REFRESH_PRICES_TIME), timestamp);
@@ -563,7 +565,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -592,7 +594,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies, refreshPricesTime, new TraderAccount(
                 new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(),
-                        credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                        credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
                 toIntExact(REFRESH_PRICES_TIME), timestamp);
@@ -601,7 +603,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -629,7 +631,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, refreshPricesTime, new TraderAccount(
                         new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(),
-                                credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);
+                                credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
         long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
                 toIntExact(REFRESH_PRICES_TIME), timestamp);
@@ -638,7 +640,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -665,7 +667,8 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
                                      String baseCurrency, Credentials credentials) throws Exception {
         super(apiKey, apiSecret, passphrase, quoteCurrencies, refreshPricesTime, new TraderAccount(
                         new ServerRequest(credentials.getIvSpec(), credentials.getSecretKey(), credentials.getAuthToken(),
-                                credentials.getToken())), sendStatsReport, printRoutineMessages, baseCurrency);long timestamp = currentTimeMillis();
+                                credentials.getToken(), HOST, PORT)), sendStatsReport, printRoutineMessages, baseCurrency);
+        long timestamp = currentTimeMillis();
         traderDetails = new TraderDetails(timestamp, TRADER_TYPE_AUTONOMOUS, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
                 toIntExact(REFRESH_PRICES_TIME), timestamp);
         initCredentials(credentials);
@@ -673,7 +676,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         cryptocurrencyTool = new CryptocurrencyTool();
         transactionDateFormat = getDateTimeInstance();
@@ -808,7 +811,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @implNote if {@link #runningTrader} is false will return -1
      * @return wallet balance in currency value
      * **/
-    public double getWalletBalance(boolean forceRefresh, int decimals) throws Exception {
+    public double getWalletBalance(boolean forceRefresh, int decimals) {
         if(runningTrader)
             return roundValue(getWalletBalance(forceRefresh), decimals);
         return -1;

@@ -2,6 +2,9 @@ package com.tecknobit.traderbot.Records.Portfolio;
 
 import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
@@ -12,6 +15,9 @@ import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.QUANTITY_KEY;
 import static com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines.*;
 import static java.lang.System.out;
+import static java.text.DateFormat.DATE_FIELD;
+import static java.text.DateFormat.getDateInstance;
+import static java.util.Locale.getDefault;
 
 /**
  * The {@code Transaction} class defines Transaction object. <br>
@@ -49,47 +55,47 @@ public class Transaction implements RecordDetails {
     /**
      * {@code symbol} is instance that memorizes symbol of transaction es. BTCBUSD or BTC-USD
      * **/
-    private final String symbol;
+    protected final String symbol;
 
     /**
      * {@code side} is instance that memorizes side of transaction BUY or SELL
      * **/
-    private final String side;
+    protected final String side;
 
     /**
      * {@code transactionDate} is instance that memorizes date of that transaction es 21:08:22 24/05/2022
      * **/
-    private final String transactionDate;
+    protected final String transactionDate;
 
     /**
      * {@code value} is instance that memorizes value of symbol in fiat currency amount of transaction transfered es. 1235 USD
      * **/
-    private final double value;
+    protected final double value;
 
     /**
      * {@code quantity} is instance that memorizes value of quantity transfered in that transaction es. 1 BTC
      * **/
-    private final double quantity;
+    protected final double quantity;
 
     /**
      * {@code quoteAsset} is instance that memorizes quote asset used in that transaction es. EUR
      * **/
-    private final String quoteAsset;
+    protected final String quoteAsset;
 
     /**
      * {@code baseAsset} is instance that memorizes base asset used in that transaction es. BTC
      * **/
-    private final String baseAsset;
+    protected final String baseAsset;
 
     /**
      * {@code incomePercent} is instance that memorizes income of that transaction es. +1.5%
      * **/
-    private double incomePercent;
+    protected double incomePercent;
 
     /**
      * {@code transactionType} is instance that memorizes type of that transaction es. sold at gain, at loss or at pair
      * **/
-    private String transactionType;
+    protected String transactionType;
 
     /**
      * Constructor to init {@link Transaction}
@@ -143,6 +149,7 @@ public class Transaction implements RecordDetails {
      * @param quantity: value of quantity transfered in that transaction es. 1 BTC
      * @param quoteAsset: quote asset used in that transaction es. EUR
      * @param baseAsset: base asset used in that transaction es. BTC
+     * @param incomePercent: income percent that transaction has done
      * @throws IllegalArgumentException when parameters inserted do not respect right value form.
      **/
     public Transaction(String symbol, String side, String transactionDate, double value, double quantity,
@@ -180,6 +187,230 @@ public class Transaction implements RecordDetails {
         transactionType = null;
     }
 
+    /**
+     * Constructor to init {@link Transaction}
+     * @param symbol: symbol of transaction es. BTCBUSD or BTC-USD
+     * @param side: side of transaction BUY or SELL
+     * @param transactionDate: date of that transaction es 21:08:22 24/05/2022
+     * @param value: value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * @param quantity: value of quantity transfered in that transaction es. 1 BTC
+     * @throws IllegalArgumentException when parameters inserted do not respect right value form.
+     **/
+    public Transaction(String symbol, String side, String transactionDate, double value, double quantity) {
+        if(symbol == null || symbol.isEmpty())
+            throw new IllegalArgumentException("Symbol must contains characters");
+        else
+            this.symbol = symbol;
+        side = side.toUpperCase();
+        if(!side.equals(BUY) && !side.equals(SELL))
+            throw new IllegalArgumentException("Side can be only value BUY or SELL");
+        else
+            this.side = side;
+        if(transactionDate == null || transactionDate.isEmpty())
+            throw new IllegalArgumentException("Transaction date must contains characters");
+        else
+            this.transactionDate = transactionDate;
+        if(value < 0)
+            throw new IllegalArgumentException("Value cannot be less than 0");
+        else
+            this.value = value;
+        this.quantity = quantity;
+        incomePercent = ASSET_NOT_TRADABLE;
+        quoteAsset = null;
+        baseAsset = null;
+        transactionType = null;
+    }
+
+    /**
+     * Constructor to init {@link Transaction}
+     * @param symbol: symbol of transaction es. BTCBUSD or BTC-USD
+     * @param side: side of transaction BUY or SELL
+     * @param transactionDate: date of that transaction es 21:08:22 24/05/2022
+     * @param value: value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * @param quantity: value of quantity transfered in that transaction es. 1 BTC
+     * @param incomePercent: income percent that transaction has done
+     * @throws IllegalArgumentException when parameters inserted do not respect right value form.
+     **/
+    public Transaction(String symbol, String side, String transactionDate, double value, double quantity,
+                       double incomePercent) {
+        if(symbol == null || symbol.isEmpty())
+            throw new IllegalArgumentException("Symbol must contains characters");
+        else
+            this.symbol = symbol;
+        side = side.toUpperCase();
+        if(!side.equals(BUY) && !side.equals(SELL))
+            throw new IllegalArgumentException("Side can be only value BUY or SELL");
+        else
+            this.side = side;
+        if(transactionDate == null || transactionDate.isEmpty())
+            throw new IllegalArgumentException("Transaction date must contains characters");
+        else
+            this.transactionDate = transactionDate;
+        if(value < 0)
+            throw new IllegalArgumentException("Value cannot be less than 0");
+        else
+            this.value = value;
+        this.quantity = quantity;
+        if(incomePercent < -100)
+            throw new IllegalArgumentException("Income percent must be bigger than -100");
+        else
+            this.incomePercent = incomePercent;
+        quoteAsset = null;
+        baseAsset = null;
+        transactionType = null;
+    }
+
+    /**
+     * Constructor to init {@link Transaction}
+     * @param symbol: symbol of transaction es. BTCBUSD or BTC-USD
+     * @param side: side of transaction BUY or SELL
+     * @param transactionDate: date of that transaction es 21:08:22 24/05/2022
+     * @param value: value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * @param quantity: value of quantity transfered in that transaction es. 1 BTC
+     * @param quoteAsset: quote asset used in that transaction es. EUR
+     * @param baseAsset: base asset used in that transaction es. BTC
+     * @throws IllegalArgumentException when parameters inserted do not respect right value form.
+     **/
+    public Transaction(String symbol, String side, long transactionDate, double value, double quantity,
+                       String quoteAsset, String baseAsset) {
+        if(symbol == null || symbol.isEmpty())
+            throw new IllegalArgumentException("Symbol must contains characters");
+        else
+            this.symbol = symbol;
+        side = side.toUpperCase();
+        if(!side.equals(BUY) && !side.equals(SELL))
+            throw new IllegalArgumentException("Side can be only value BUY or SELL");
+        else
+            this.side = side;
+        this.transactionDate = getDate(transactionDate);
+        if(value < 0)
+            throw new IllegalArgumentException("Value cannot be less than 0");
+        else
+            this.value = value;
+        this.quantity = quantity;
+        if(quoteAsset == null || quoteAsset.isEmpty())
+            throw new IllegalArgumentException("Quote asset must contains characters");
+        else
+            this.quoteAsset = quoteAsset;
+        if(baseAsset == null || baseAsset.isEmpty())
+            throw new IllegalArgumentException("Base asset must contains characters");
+        else
+            this.baseAsset = baseAsset;
+        incomePercent = ASSET_NOT_TRADABLE;
+        transactionType = null;
+    }
+
+    /**
+     * Constructor to init {@link Transaction}
+     * @param symbol: symbol of transaction es. BTCBUSD or BTC-USD
+     * @param side: side of transaction BUY or SELL
+     * @param transactionDate: date of that transaction es 21:08:22 24/05/2022
+     * @param value: value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * @param quantity: value of quantity transfered in that transaction es. 1 BTC
+     * @param quoteAsset: quote asset used in that transaction es. EUR
+     * @param baseAsset: base asset used in that transaction es. BTC
+     * @param incomePercent: income percent that transaction has done
+     * @throws IllegalArgumentException when parameters inserted do not respect right value form.
+     **/
+    public Transaction(String symbol, String side, long transactionDate, double value, double quantity,
+                       String quoteAsset, String baseAsset, double incomePercent) {
+        if(symbol == null || symbol.isEmpty())
+            throw new IllegalArgumentException("Symbol must contains characters");
+        else
+            this.symbol = symbol;
+        side = side.toUpperCase();
+        if(!side.equals(BUY) && !side.equals(SELL))
+            throw new IllegalArgumentException("Side can be only value BUY or SELL");
+        else
+            this.side = side;
+        this.transactionDate = getDate(transactionDate);
+        if(value < 0)
+            throw new IllegalArgumentException("Value cannot be less than 0");
+        else
+            this.value = value;
+        this.quantity = quantity;
+        if(quoteAsset == null || quoteAsset.isEmpty())
+            throw new IllegalArgumentException("Quote asset must contains characters");
+        else
+            this.quoteAsset = quoteAsset;
+        if(baseAsset == null || baseAsset.isEmpty())
+            throw new IllegalArgumentException("Base asset must contains characters");
+        else
+            this.baseAsset = baseAsset;
+        if(incomePercent < -100)
+            throw new IllegalArgumentException("Income percent must be bigger than -100");
+        else
+            this.incomePercent = incomePercent;
+        transactionType = null;
+    }
+
+    /**
+     * Constructor to init {@link Transaction}
+     * @param symbol: symbol of transaction es. BTCBUSD or BTC-USD
+     * @param side: side of transaction BUY or SELL
+     * @param transactionDate: date of that transaction es 21:08:22 24/05/2022
+     * @param value: value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * @param quantity: value of quantity transfered in that transaction es. 1 BTC
+     * @throws IllegalArgumentException when parameters inserted do not respect right value form.
+     **/
+    public Transaction(String symbol, String side, long transactionDate, double value, double quantity) {
+        if(symbol == null || symbol.isEmpty())
+            throw new IllegalArgumentException("Symbol must contains characters");
+        else
+            this.symbol = symbol;
+        side = side.toUpperCase();
+        if(!side.equals(BUY) && !side.equals(SELL))
+            throw new IllegalArgumentException("Side can be only value BUY or SELL");
+        else
+            this.side = side;
+        this.transactionDate = getDate(transactionDate);
+        if(value < 0)
+            throw new IllegalArgumentException("Value cannot be less than 0");
+        else
+            this.value = value;
+        this.quantity = quantity;
+        incomePercent = ASSET_NOT_TRADABLE;
+        quoteAsset = null;
+        baseAsset = null;
+        transactionType = null;
+    }
+
+    /**
+     * Constructor to init {@link Transaction}
+     * @param symbol: symbol of transaction es. BTCBUSD or BTC-USD
+     * @param side: side of transaction BUY or SELL
+     * @param transactionDate: date of that transaction es 21:08:22 24/05/2022
+     * @param value: value of symbol in fiat currency amount of transaction transfered es. 1235 USD
+     * @param quantity: value of quantity transfered in that transaction es. 1 BTC
+     * @param incomePercent: income percent that transaction has done
+     * @throws IllegalArgumentException when parameters inserted do not respect right value form.
+     **/
+    public Transaction(String symbol, String side, long transactionDate, double value, double quantity,
+                       double incomePercent) {
+        if(symbol == null || symbol.isEmpty())
+            throw new IllegalArgumentException("Symbol must contains characters");
+        else
+            this.symbol = symbol;
+        side = side.toUpperCase();
+        if(!side.equals(BUY) && !side.equals(SELL))
+            throw new IllegalArgumentException("Side can be only value BUY or SELL");
+        else
+            this.side = side;
+        this.transactionDate = getDate(transactionDate);
+        if(value < 0)
+            throw new IllegalArgumentException("Value cannot be less than 0");
+        else
+            this.value = value;
+        this.quantity = quantity;
+        if(incomePercent < -100)
+            throw new IllegalArgumentException("Income percent must be bigger than -100");
+        else
+            this.incomePercent = incomePercent;
+        quoteAsset = null;
+        baseAsset = null;
+        transactionType = null;
+    }
+
     public String getSymbol() {
         return symbol;
     }
@@ -190,6 +421,16 @@ public class Transaction implements RecordDetails {
 
     public String getTransactionDate() {
         return transactionDate;
+    }
+
+    /**
+     * This method is used get {@link #transactionDate} instance formatted as long<br>
+     * Any params required
+     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
+     * @return {@link #transactionDate} timestamp as long
+     * **/
+    public long getTransactionTimestamp() {
+        return getDateTimestamp(transactionDate);
     }
 
     public double getValue() {
@@ -207,6 +448,15 @@ public class Transaction implements RecordDetails {
 
     public double getQuantity() {
         return quantity;
+    }
+
+    /**
+     * This method is used get {@link #quantity} instance
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #quantity} formatted as 21.22
+     * **/
+    public double getQuantity(int decimals) {
+        return roundValue(quantity, decimals);
     }
 
     public String getQuoteAsset() {
@@ -272,10 +522,33 @@ public class Transaction implements RecordDetails {
      * Any params required
      * @return side string colored and formatted as {@link String}
      * **/
-    private String getSideInfoLine(){
+    protected String getSideInfoLine(){
         if(side.equals(BUY))
             return "## Side: " + ANSI_GREEN + side + ANSI_RESET + "\n";
         return "## Side: " + ANSI_RED + side + ANSI_RESET + "\n";
+    }
+
+    /**
+     * This method is used to get from a timestamp a date formatted by Locale
+     * @param timestamp: timestamp of the date to get
+     * @return date value as {@link String}
+     * **/
+    public static String getDate(long timestamp) {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", getDefault()).format(new Date(timestamp));
+    }
+
+    /**
+     * This method is used to get from a date its timestamp value
+     * @param date: date to get timestamp
+     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
+     * @return date timestamp value as long
+     * **/
+    public static long getDateTimestamp(String date) {
+        try {
+            return getDateInstance(DATE_FIELD, getDefault()).parse(date).getTime();
+        }catch (ParseException e){
+            return -1;
+        }
     }
 
     /**

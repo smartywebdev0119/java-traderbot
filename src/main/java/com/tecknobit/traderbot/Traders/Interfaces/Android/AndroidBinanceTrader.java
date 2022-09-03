@@ -26,6 +26,8 @@ import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.
 import static com.tecknobit.traderbot.Records.Account.TraderDetails.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
 import static java.lang.Math.toIntExact;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
@@ -137,7 +139,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -170,7 +172,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -202,7 +204,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -234,7 +236,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -266,7 +268,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -300,7 +302,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -334,7 +336,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         this.secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, this.secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();

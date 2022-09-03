@@ -26,6 +26,8 @@ import static com.tecknobit.traderbot.Records.Account.TraderDetails.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
 import static java.lang.Math.toIntExact;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
@@ -140,7 +142,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -173,7 +175,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -208,7 +210,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -241,7 +243,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -277,7 +279,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -313,7 +315,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -348,7 +350,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();
@@ -382,7 +384,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         token = credentials.getToken();
         ivSpec = credentials.getIvSpec();
         secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token);
+        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         cryptocurrencyTool = new CryptocurrencyTool();

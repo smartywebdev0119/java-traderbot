@@ -2,7 +2,7 @@ package com.tecknobit.traderbot.Traders.Interfaces.Native;
 
 import com.tecknobit.binancemanager.Managers.BinanceManager;
 import com.tecknobit.binancemanager.Managers.Market.BinanceMarketManager;
-import com.tecknobit.binancemanager.Managers.Market.Records.Filter;
+import com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Filter;
 import com.tecknobit.binancemanager.Managers.Market.Records.Tickers.TickerPriceChange;
 import com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Spot.BinanceSpotManager;
 import com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Spot.Records.Orders.Response.SpotOrderStatus;
@@ -22,7 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.*;
+import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
+import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
 import static java.lang.Math.ceil;
 
 /**
