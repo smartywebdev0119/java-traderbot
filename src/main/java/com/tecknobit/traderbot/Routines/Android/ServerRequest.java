@@ -131,22 +131,33 @@ public class ServerRequest {
 
     /**
      * {@code GET_TRADING_CONFIGS_OPE} request
-     * **/
+     **/
     public static final String GET_TRADING_CONFIGS_OPE = "get_trading_configs_request";
 
     /**
      * {@code SEND_STATS_REPORT_OPE} request
-     * **/
+     **/
     public static final String SEND_STATS_REPORT_OPE = "send_stats_report_ope";
 
     /**
+     * {@code DELETE_TRANSACTION_OPE} request
+     *
+     * @apiNote base workflow of this operation is to delete a transaction from
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s application,
+     * but not to delete transaction in server side use. For that use you can see <a href="https://github.com/N7ghtm4r3/TxNotes">TxNotes</a>'s
+     * library that allows to delete also in server side use and not only from <a href="https://play.google.com/store/apps/details?id=com.tecknobit.txnotes">TxNotes</a>'s
+     * application
+     **/
+    public static final String DELETE_TRANSACTION_OPE = "delete_transaction_ope";
+
+    /**
      * {@code LOGOUT_ACCOUNT_OPE} request
-     * **/
+     **/
     public static final String LOGOUT_ACCOUNT_OPE = "logout_account_ope";
 
     /**
      * {@code DELETE_ACCOUNT_OPE} request
-     * **/
+     **/
     public static final String DELETE_ACCOUNT_OPE = "delete_account_ope";
 
     /**
