@@ -11,6 +11,8 @@ import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
+import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
 import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.FormatResponseType.String;
 import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.FormatResponseType.*;
 
@@ -24,23 +26,34 @@ public abstract class TraderCoreRoutines {
 
     /**
      * {@code USD_CURRENCY} is the identifier of USD currency used by traders to get default prices
-     * **/
+     **/
     public static final String USD_CURRENCY = "USD";
 
     /**
      * {@code USDT_CURRENCY} is the identifier of USDT cryptocurrency used by traders to get default prices
-     * **/
+     **/
     public static final String USDT_CURRENCY = "USDT";
+
+    /**
+     * {@code BUY} is constant for buy side
+     **/
+    public static final String BUY = BUY_SIDE;
+
+    /**
+     * {@code SELL} is constant for buy side
+     **/
+    public static final String SELL = SELL_SIDE;
 
     /**
      * {@code transactions} is a list of transactions made by user account plus transactions made by a
      * trader on a single symbol.
+     *
      * @implNote every time that is call {@link #getTransactionsList(java.lang.String, boolean)}
      * or {@link #getTransactionsList(java.lang.String, java.lang.String, boolean)} {@code transactions}
      * instance will be clear only if currency used is different from previous time or is time to refresh different
      * data or user force refresh of this list. <br>
      * This list is {@link ArrayList} of custom object {@link Transaction} give by {@code TraderBot} library.
-     * **/
+     **/
     protected ArrayList<Transaction> transactions;
 
     /**
@@ -96,16 +109,16 @@ public abstract class TraderCoreRoutines {
     protected String lastAssetCurrency;
 
     /**
-     * {@code REFRESH_PRICES_TIME} is instance that memorizes time for refresh last prices.
-     * @implNote this param can customize with {@link #setRefreshPricesTime(int)}
+     * {@code REFRESH_TIME} is instance that memorizes time to refresh last prices.
+     * @implNote this param can customize with {@link #setRefreshTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
      * **/
-    protected long REFRESH_PRICES_TIME;
+    protected long REFRESH_TIME;
 
     /**
      * {@code lastPricesRefresh} is instance that memorizes last time that prices are updated.
      * @implNote when is called {@link #isRefreshTime()} if timestamp of the call minus
-     * {@code lastPricesRefresh} is bigger or equal than {@link #REFRESH_PRICES_TIME} execute refresh.
+     * {@code lastPricesRefresh} is bigger or equal than {@link #REFRESH_TIME} execute refresh.
      * **/
     protected long lastPricesRefresh;
 
@@ -143,7 +156,7 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return wallet balance in currency value
      * **/
-    protected abstract double getWalletBalance(String currency, boolean forceRefresh) throws Exception;
+    public abstract double getWalletBalance(String currency, boolean forceRefresh) throws Exception;
 
     /**
      * This method is used by traders to get user wallet balance. <br>
@@ -152,7 +165,7 @@ public abstract class TraderCoreRoutines {
      * @param decimals: this indicates number of decimal number after comma es. 3 -> xx,yyy.
      * @return wallet balance in currency value
      * **/
-    protected abstract double getWalletBalance(String currency, boolean forceRefresh, int decimals) throws Exception;
+    public abstract double getWalletBalance(String currency, boolean forceRefresh, int decimals) throws Exception;
 
     /**
      * This method is used to get asset list of user wallet.<br>
@@ -160,7 +173,7 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Asset} as {@link ArrayList}
      * **/
-    protected abstract ArrayList<Asset> getAssetsList(String currency, boolean forceRefresh) throws Exception;
+    public abstract ArrayList<Asset> getAssetsList(String currency, boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to get all transactions from all {@link #quoteCurrencies} inserted.<br>
@@ -168,14 +181,14 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * **/
-    protected abstract ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception;
+    public abstract ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to get all transactions from all {@link #quoteCurrencies} inserted.<br>
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * **/
-    protected abstract ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception;
+    public abstract ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to get all transactions from a single symbol<br>
@@ -184,29 +197,33 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * **/
-    protected abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
-                                                                  boolean forceRefresh) throws Exception;
+    public abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                               boolean forceRefresh) throws Exception;
+
     /**
      * This method is used to get all transactions from a single symbol<br>
+     *
      * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    protected abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception;
+     **/
+    public abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to send a buy market order<br>
-     * @param symbol: this indicates the symbol for the order es. (BTCBUSD or BTC-USDT)
+     *
+     * @param symbol:   this indicates the symbol for the order es. (BTCBUSD or BTC-USDT)
      * @param quantity: this indicates quantity of that symbol is wanted to buy es. 10
-     * **/
-    protected abstract void buyMarket(String symbol, double quantity) throws Exception;
+     **/
+    public abstract void buyMarket(String symbol, double quantity) throws Exception;
 
     /**
      * This method is used to send a sell market order<br>
-     * @param symbol: this indicates the symbol for the order es. (BTCBUSD or BTC-USDT)
+     *
+     * @param symbol:   this indicates the symbol for the order es. (BTCBUSD or BTC-USDT)
      * @param quantity: this indicates quantity of that symbol is wanted to sell es. 10
-     * **/
-    protected abstract void sellMarket(String symbol, double quantity) throws Exception;
+     **/
+    public abstract void sellMarket(String symbol, double quantity) throws Exception;
 
     /**
      * This method is used to place an order<br>
@@ -232,23 +249,24 @@ public abstract class TraderCoreRoutines {
 
     /**
      * This method is used fetch details of an order request<br>
+     *
+     * @param formatResponseType: this indicates the format of order status that have to return.
      * @implNote you must call it when is placed an order before, so when {@link #buyMarket(java.lang.String, double)}
      * or {@link #sellMarket(java.lang.String, double)} is being called.
-     * @param formatResponseType: this indicates the format of order status that have to return.
      * @implSpec if {@code formatResponseType} is equal to {@code String} order status will be returned as {@link String} <br>
      * if {@code formatResponseType} is equal to {@code JSON} order status will be returned as {@link JSONObject} or {@link JSONArray} <br>
      * if {@code formatResponseType} is equal to {@code CustomObject} order status will be returned as custom object given by libraries<br>
-     * **/
-    protected <T> T getOrderStatus(FormatResponseType formatResponseType) {
-        if(formatResponseType.equals(String) || formatResponseType.equals(CustomObject)){
+     **/
+    public <T> T getOrderStatus(FormatResponseType formatResponseType) {
+        if (formatResponseType.equals(String) || formatResponseType.equals(CustomObject)) {
             return (T) orderStatus;
-        }else if(formatResponseType.equals(JSON)){
+        } else if (formatResponseType.equals(JSON)) {
             try {
                 return (T) new JSONObject(orderStatus);
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 try {
                     return (T) new JSONArray(orderStatus);
-                }catch (JSONException requestError){
+                } catch (JSONException requestError) {
                     return null;
                 }
             }
@@ -259,34 +277,42 @@ public abstract class TraderCoreRoutines {
     /**
      * This method is used to get error of any requests<br>
      * Any params required
-     * **/
-    protected abstract String getErrorResponse();
+     **/
+    public abstract String getErrorResponse();
+
+    /**
+     * Method to print error response <br>
+     * Any params required
+     **/
+    public abstract void printErrorMessage();
 
     /**
      * This method is used to refresh latest prices<br>
      * Any params required
-     * **/
-    protected abstract void refreshLatestPrice() throws Exception;
+     **/
+    public abstract void refreshLatestPrice() throws Exception;
 
     /**
-     * This method is used to set time to refresh the latest prices <br>
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices.
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * **/
-    public void setRefreshPricesTime(int refreshPricesTime) {
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
-        else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+     * This method is used to get {@link #REFRESH_TIME}<br>
+     * Any params required.
+     *
+     * @return {@link #REFRESH_TIME} list long
+     **/
+    public long getRefreshTime() {
+        return REFRESH_TIME;
     }
 
     /**
-     * This method is used to get {@link #REFRESH_PRICES_TIME}<br>
-     * Any params required.
-     * @return {@link #REFRESH_PRICES_TIME} list long
-     * **/
-    public long getRefreshPricesTime() {
-        return REFRESH_PRICES_TIME;
+     * This method is used to check if any quote is inserted in {@link #quoteCurrencies} list
+     *
+     * @param compareQuote: quote to compare and check if is inserted
+     * @return true if is inserted o false if not
+     **/
+    public boolean quoteContained(String compareQuote) {
+        for (String quote : quoteCurrencies)
+            if (compareQuote.equals(quote))
+                return true;
+        return false;
     }
 
     /**
@@ -328,50 +354,69 @@ public abstract class TraderCoreRoutines {
     }
 
     /**
-     * This method is used to check if any quote is inserted in {@link #quoteCurrencies} list
-     * @param compareQuote: quote to compare and check if is inserted
-     * @return true if is inserted o false if not
-     * **/
-    protected boolean quoteContained(String compareQuote){
-        for (String quote : quoteCurrencies)
-            if(compareQuote.equals(quote))
-                return true;
-        return false;
+     * This method is used check if is refreshing time <br>
+     * Any params required
+     *
+     * @return true only if current timestamp when this method is called minus last timestamp when this method is called,
+     * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #REFRESH_TIME}
+     **/
+    public boolean isRefreshTime() {
+        return (System.currentTimeMillis() - lastPricesRefresh) >= REFRESH_TIME;
     }
 
     /**
-     * This method is used check if is refreshing time <br>
-     * Any params required
-     * @return true only if current timestamp when this method is called minus last timestamp when this method is called,
-     * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #REFRESH_PRICES_TIME}
-     * **/
-    protected boolean isRefreshTime(){
-        return (System.currentTimeMillis() - lastPricesRefresh) >= REFRESH_PRICES_TIME;
+     * This method is used to set time to refresh the latest prices <br>
+     *
+     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     **/
+    public void setRefreshTime(int refreshTime) {
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
+        else
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
 
     /**
      * This method is used print error when request is made, if error is not in request
      * will print {@link Exception} error message
-     * **/
+     **/
     protected abstract void printError(String symbol, Exception e);
 
     /**
      * This method is to compute suggested quantity for an order
-     * @param symbol: symbol of cryptocurrency for the order
+     *
+     * @param symbol:       symbol of cryptocurrency for the order
      * @param testQuantity: quantity to test
      * @return suggested quantity value computed from exchange's limits as double
-     * **/
-    protected abstract double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception;
+     **/
+    public abstract double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception;
+
+    /**
+     * This method is to get list of the latest prices <br>
+     * Any params required
+     *
+     * @return last prices as {@link HashMap} of {@link T}
+     **/
+    public abstract <T> HashMap<String, T> getLatestPrices();
+
+    /**
+     * This method is to get last price of a symbol <br>
+     *
+     * @param symbol: symbol from fetch last price
+     * @return last prices as {@link HashMap} of {@link T}
+     **/
+    public abstract <T> T getLastPrice(String symbol);
 
     /**
      * This method is used to print disclaimer alert to warn user of responsibility of storage and manage
      * api keys create on exchange platforms. <br>
      * It is printed in all traders. <br>
      * Any params required
-     * **/
-    protected void printCredentialsDisclaimer(){
+     **/
+    protected void printCredentialsDisclaimer() {
         System.out.println("############################### DISCLAIMER ALERT ################################# \n" +
-                           "## Note: You are solely responsible for storing and using your api keys created ## \n" +
+                "## Note: You are solely responsible for storing and using your api keys created ## \n" +
                            "## on the exchange platforms, this is because they will never be saved in our   ## \n" +
                            "## infrastructures. Never share these personal credentials with anyone,         ## \n" +
                            "## Tecknobit will never ask you for any of the credentials external to our      ## \n" +

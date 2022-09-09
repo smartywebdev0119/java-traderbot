@@ -315,23 +315,77 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
+     *
+     * @param apiKey:               your Coinbase's api key
+     * @param apiSecret:            your Coinbase's secret key
+     * @param passphrase:           your Coinbase's api passphrase
+     * @param defaultErrorMessage:  custom error to show when is not a request error
+     * @param timeout:              custom timeout for request
+     * @param refreshTime:          is time in seconds to set to refresh the latest prices
+     * @param traderAccount:        manage account information and trading reports of auto trader account
+     * @param sendStatsReport:      flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency:         base currency to get all amount value of traders routine es. EUR
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote these keys will NOT store by library anywhere.
+     **/
+    public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
+                                 int timeout, int refreshTime, TraderAccount traderAccount, boolean sendStatsReport,
+                                 boolean printRoutineMessages, String baseCurrency) throws Exception {
+        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshTime);
+        this.traderAccount = traderAccount;
+        this.sendStatsReport = sendStatsReport;
+        this.printRoutineMessages = printRoutineMessages;
+        this.baseCurrency = baseCurrency;
+        checkingList = new HashMap<>();
+        walletList = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * Constructor to init {@link CoinbaseAutoTraderBot}
+     *
+     * @param apiKey:               your Coinbase's api key
+     * @param apiSecret:            your Coinbase's secret key
+     * @param passphrase:           your Coinbase's api passphrase
+     * @param timeout:              custom timeout for request
+     * @param refreshTime:          is time in seconds to set to refresh the latest prices
+     * @param traderAccount:        manage account information and trading reports of auto trader account
+     * @param sendStatsReport:      flag to insert to send or not reports
+     * @param printRoutineMessages: flag to insert to print or not routine messages
+     * @param baseCurrency:         base currency to get all amount value of traders routine es. EUR
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote these keys will NOT store by library anywhere.
+     **/
+    public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshTime,
+                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
+                                 String baseCurrency) throws Exception {
+        super(apiKey, apiSecret, passphrase, timeout, refreshTime);
+        this.traderAccount = traderAccount;
+        this.sendStatsReport = sendStatsReport;
+        this.printRoutineMessages = printRoutineMessages;
+        this.baseCurrency = baseCurrency;
+        checkingList = new HashMap<>();
+        walletList = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * Constructor to init {@link CoinbaseAutoTraderBot}
      * @param apiKey: your Coinbase's api key
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param timeout: custom timeout for request
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh the latest prices
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                                 int timeout, int refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
+                                 short refreshTime, TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshPricesTime);
+        super(apiKey, apiSecret, passphrase, defaultErrorMessage, refreshTime);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -342,73 +396,22 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
 
     /**
      * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param timeout: custom timeout for request
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param traderAccount: manage account information and trading reports of auto trader account
-     * @param sendStatsReport: flag to insert to send or not reports
+     *
+     * @param apiKey:               your Coinbase's api key
+     * @param apiSecret:            your Coinbase's secret key
+     * @param passphrase:           your Coinbase's api passphrase
+     * @param refreshTime:          is time in seconds to set to refresh the latest prices
+     * @param traderAccount:        manage account information and trading reports of auto trader account
+     * @param sendStatsReport:      flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
-     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @param baseCurrency:         base currency to get all amount value of traders routine es. EUR
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
-    public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshPricesTime,
+    public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, short refreshTime,
                                  TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                  String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, timeout, refreshPricesTime);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param traderAccount: manage account information and trading reports of auto trader account
-     * @param sendStatsReport: flag to insert to send or not reports
-     * @param printRoutineMessages: flag to insert to print or not routine messages
-     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by library anywhere.
-     **/
-    public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                                 short refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
-                                 boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, refreshPricesTime);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Constructor to init {@link CoinbaseAutoTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param traderAccount: manage account information and trading reports of auto trader account
-     * @param sendStatsReport: flag to insert to send or not reports
-     * @param printRoutineMessages: flag to insert to print or not routine messages
-     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by library anywhere.
-     **/
-    public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, short refreshPricesTime,
-                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
-                                 String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, refreshPricesTime);
+        super(apiKey, apiSecret, passphrase, refreshTime);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -425,19 +428,19 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param timeout: custom timeout for request
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices.
+     * @param refreshTime: is time in seconds to set to refresh the latest prices.
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                                 int timeout, ArrayList<String> quoteCurrencies, int refreshPricesTime,
+                                 int timeout, ArrayList<String> quoteCurrencies, int refreshTime,
                                  TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, refreshPricesTime);
+        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, refreshTime);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -453,18 +456,18 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param passphrase: your Coinbase's api passphrase
      * @param timeout: custom timeout for request
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices.
+     * @param refreshTime: is time in seconds to set to refresh the latest prices.
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
-                                 ArrayList<String> quoteCurrencies, int refreshPricesTime, TraderAccount traderAccount,
+                                 ArrayList<String> quoteCurrencies, int refreshTime, TraderAccount traderAccount,
                                  boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies, refreshPricesTime);
+        super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies, refreshTime);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -480,18 +483,18 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh the latest prices
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                                 ArrayList<String> quoteCurrencies, int refreshPricesTime, TraderAccount traderAccount,
+                                 ArrayList<String> quoteCurrencies, int refreshTime, TraderAccount traderAccount,
                                  boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, refreshPricesTime);
+        super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, refreshTime);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;
@@ -506,18 +509,18 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh the latest prices
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseAutoTraderBot(String apiKey, String apiSecret, String passphrase, ArrayList<String> quoteCurrencies,
-                                 int refreshPricesTime, TraderAccount traderAccount, boolean sendStatsReport,
+                                 int refreshTime, TraderAccount traderAccount, boolean sendStatsReport,
                                  boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, apiSecret, passphrase, quoteCurrencies, refreshPricesTime);
+        super(apiKey, apiSecret, passphrase, quoteCurrencies, refreshTime);
         this.traderAccount = traderAccount;
         this.sendStatsReport = sendStatsReport;
         this.printRoutineMessages = printRoutineMessages;

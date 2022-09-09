@@ -2,8 +2,8 @@ package com.tecknobit.traderbot.Routines.Android;
 
 import com.tecknobit.apimanager.Tools.Formatters.JsonHelper;
 import com.tecknobit.traderbot.Exceptions.SaveData;
+import com.tecknobit.traderbot.Records.Account.BotDetails;
 import com.tecknobit.traderbot.Records.Account.TraderAccount;
-import com.tecknobit.traderbot.Records.Account.TraderDetails;
 import com.tecknobit.traderbot.Records.Android.Routine;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig;
@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.tecknobit.traderbot.Records.Account.BotDetails.*;
 import static com.tecknobit.traderbot.Records.Account.Trader.TraderManager.*;
 import static com.tecknobit.traderbot.Records.Account.TraderAccount.TOTAL_INCOME_KEY;
-import static com.tecknobit.traderbot.Records.Account.TraderDetails.*;
 import static com.tecknobit.traderbot.Records.Android.Routine.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.CRYPTOCURRENCY_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Transaction.TRANSACTION_KEY;
@@ -134,7 +134,7 @@ public class AndroidWorkflow implements RoutineMessages {
                     printOperationStatus("[" + CHANGE_PASSWORD_OPE + "] Password successfully changed", true);
                     break;
                 case CHANGE_REFRESH_TIME_PRICES_OPE:
-                    trader.setRefreshPricesTime(parseInt(routine.getExtraValue()));
+                    trader.setRefreshTime(parseInt(routine.getExtraValue()));
                     printOperationStatus("[" + CHANGE_REFRESH_TIME_PRICES_OPE + "] Refresh prices time successfully changed",
                             true);
                     break;
@@ -557,9 +557,9 @@ public class AndroidWorkflow implements RoutineMessages {
         private final String secretKey;
 
         /**
-         * {@code traderDetails} is instance helpful to manage trader details
-         * **/
-        private TraderDetails traderDetails;
+         * {@code botDetails} is instance helpful to manage trader details
+         **/
+        private BotDetails botDetails;
 
         /** Constructor to init {@link Credentials}
          * @param mail: is instance that memorizes mail of user
@@ -590,16 +590,16 @@ public class AndroidWorkflow implements RoutineMessages {
          * Any params required
          * **/
         public void sendRegistrationRequest() throws Exception {
-            if(traderDetails != null && token == null){
+            if (botDetails != null && token == null) {
                 serverRequest = getPublicRequest();
                 assert serverRequest != null;
                 serverRequest.sendRequest(new JSONObject().put(MAIL_KEY, mail).put(PASSWORD_KEY, password)
-                        .put(TRADER_STATUS_KEY, traderDetails.getTraderStatus())
-                        .put(REFRESH_PRICES_TIME_KEY, traderDetails.getRefreshPricesTime())
-                        .put(TRADER_PLATFORM_KEY, traderDetails.getTraderPlatform())
-                        .put(LAST_TRADER_ACTIVITY_KEY, traderDetails.getLastTraderActivity())
-                        .put(RUNNING_FROM_DATE_KEY, traderDetails.getRunningFromDate())
-                        .put(TRADER_TYPE_KEY, traderDetails.getTraderType()), REGISTRATION_OPE);
+                        .put(TRADER_STATUS_KEY, botDetails.getTraderStatus())
+                        .put(REFRESH_TIME_KEY, botDetails.getRefreshTime())
+                        .put(TRADER_PLATFORM_KEY, botDetails.getTraderPlatform())
+                        .put(LAST_TRADER_ACTIVITY_KEY, botDetails.getLastTraderActivity())
+                        .put(RUNNING_FROM_DATE_KEY, botDetails.getRunningFromDate())
+                        .put(TRADER_TYPE_KEY, botDetails.getTraderType()), REGISTRATION_OPE);
                 response = serverRequest.readResponse();
                 if(response != null){
                     switch (response.getInt(STATUS_CODE)){
@@ -649,12 +649,12 @@ public class AndroidWorkflow implements RoutineMessages {
             assert serverRequest != null;
             serverRequest.sendRequest(new JSONObject().put(MAIL_KEY, mail).put(PASSWORD_KEY, password)
                     .put(AUTH_TOKEN_KEY, authToken)
-                    .put(TRADER_STATUS_KEY, traderDetails.getTraderStatus())
-                    .put(REFRESH_PRICES_TIME_KEY, traderDetails.getRefreshPricesTime())
-                    .put(TRADER_PLATFORM_KEY, traderDetails.getTraderPlatform())
-                    .put(LAST_TRADER_ACTIVITY_KEY, traderDetails.getLastTraderActivity())
-                    .put(RUNNING_FROM_DATE_KEY, traderDetails.getRunningFromDate())
-                    .put(TRADER_TYPE_KEY, traderDetails.getTraderType())
+                    .put(TRADER_STATUS_KEY, botDetails.getTraderStatus())
+                    .put(REFRESH_TIME_KEY, botDetails.getRefreshTime())
+                    .put(TRADER_PLATFORM_KEY, botDetails.getTraderPlatform())
+                    .put(LAST_TRADER_ACTIVITY_KEY, botDetails.getLastTraderActivity())
+                    .put(RUNNING_FROM_DATE_KEY, botDetails.getRunningFromDate())
+                    .put(TRADER_TYPE_KEY, botDetails.getTraderType())
                     .put(BASE_CURRENCY_KEY, baseCurrency)
                     .put(QUOTES_KEY, new JSONArray(quoteCurrencies)), LOGIN_OPE);
             response = serverRequest.readResponse();
@@ -735,8 +735,8 @@ public class AndroidWorkflow implements RoutineMessages {
             return secretKey;
         }
 
-        public void setTraderDetails(TraderDetails traderDetails){
-            this.traderDetails = traderDetails;
+        public void setTraderDetails(BotDetails botDetails) {
+            this.botDetails = botDetails;
         }
 
         @Override
@@ -749,7 +749,7 @@ public class AndroidWorkflow implements RoutineMessages {
                     ", password='" + password + '\'' +
                     ", ivSpec='" + ivSpec + '\'' +
                     ", secretKey='" + secretKey + '\'' +
-                    ", traderDetails=" + traderDetails +
+                    ", botDetails=" + botDetails +
                     '}';
         }
 

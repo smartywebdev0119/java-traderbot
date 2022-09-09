@@ -66,8 +66,8 @@ public class ServerRequest {
 
     /**
      * {@code CHANGE_REFRESH_TIME_PRICES_OPE} request
-     * **/
-    public static final String CHANGE_REFRESH_TIME_PRICES_OPE = "change_refresh_prices_time_ope";
+     **/
+    public static final String CHANGE_REFRESH_TIME_PRICES_OPE = "change_REFRESH_TIME_ope";
 
     /**
      * {@code CHANGE_TRADER_STATUS_OPE} request

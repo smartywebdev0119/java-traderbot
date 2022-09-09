@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.tecknobit.binancemanager.Managers.BinanceManager.BASE_ENDPOINTS;
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
@@ -30,10 +31,16 @@ import static java.lang.Math.ceil;
  * The {@code BinanceTraderBot} class is trader for {@link BinanceManager} library.<br>
  * This trader bot allow to manage user wallet, get transactions and make orders (BUY and SELL side) for a Binance's account.<br>
  * Is derived class of {@link TraderCoreRoutines} class from inherit all core routines methods and instances.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
 public class BinanceTraderBot extends TraderCoreRoutines {
+
+    /**
+     * {@code BINANCE_BASE_ENDPOINTS} is a list constant that contains list of Binance's main endpoints
+     * **/
+    public static final String[] BINANCE_BASE_ENDPOINTS = BASE_ENDPOINTS;
 
     /**
      * {@code MIN_NOTIONAL_FILTER} is instance that contains key for {@code MIN_NOTIONAL} filter
@@ -76,7 +83,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * {@code lastPrices} is a map that contains asset index (es. BTC) as key {@link String} and last ticker as {@link TickerPriceChange}
      * @apiNote values inserted in this map are only tickers of coins inserted in {@link #coins} list
      * @implNote refresh of last prices, by default, is every 10 seconds, but you can set programmatically
-     * {@link #REFRESH_PRICES_TIME} to customize refresh time.
+     * {@link #REFRESH_TIME} to customize refresh time.
      * **/
     protected HashMap<String, TickerPriceChange> lastPrices;
 
@@ -89,101 +96,109 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
         binanceMarketManager = new BinanceMarketManager();
-        REFRESH_PRICES_TIME = 10000L;
+        REFRESH_TIME = 10000L;
         initTrader();
     }
 
     /** Constructor to init {@link BinanceTraderBot}
      * @param apiKey: your Binance's api key
      * @param secretKey: your Binance's secret key
-     * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
+     * @param baseEndpoint: base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
      * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
         binanceMarketManager = new BinanceMarketManager();
-        REFRESH_PRICES_TIME = 10000L;
+        REFRESH_TIME = 10000L;
         initTrader();
     }
 
-    /** Constructor to init {@link BinanceTraderBot}
-     * @param apiKey: your Binance's api key
-     * @param secretKey: your Binance's secret key
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+    /**
+     * Constructor to init {@link BinanceTraderBot}
+     *
+     * @param apiKey:      your Binance's api key
+     * @param secretKey:   your Binance's secret key
+     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
-    public BinanceTraderBot(String apiKey, String secretKey, int refreshPricesTime) throws Exception {
+     **/
+    public BinanceTraderBot(String apiKey, String secretKey, int refreshTime) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
         binanceMarketManager = new BinanceMarketManager();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link BinanceTraderBot}
-     * @param apiKey: your Binance's api key
-     * @param secretKey: your Binance's secret key
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+    /**
+     * Constructor to init {@link BinanceTraderBot}
+     *
+     * @param apiKey:       your Binance's api key
+     * @param secretKey:    your Binance's secret key
+     * @param refreshTime:  is time in seconds to set to refresh the latest prices
+     * @param baseEndpoint: base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
-    public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshPricesTime) throws Exception {
+     **/
+    public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshTime) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
         binanceMarketManager = new BinanceMarketManager();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link BinanceTraderBot}
-     * @param apiKey: your Binance's api key
-     * @param secretKey: your Binance's secret key
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+    /**
+     * Constructor to init {@link BinanceTraderBot}
+     *
+     * @param apiKey:          your Binance's api key
+     * @param secretKey:       your Binance's secret key
+     * @param refreshTime:     is time in seconds to set to refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public BinanceTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies,
-                            int refreshPricesTime) throws Exception {
+                            int refreshTime) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
         binanceMarketManager = new BinanceMarketManager();
         this.quoteCurrencies = quoteCurrencies;
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link BinanceTraderBot}
-     * @param apiKey: your Binance's api key
-     * @param secretKey: your Binance's secret key
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
+    /**
+     * Constructor to init {@link BinanceTraderBot}
+     *
+     * @param apiKey:          your Binance's api key
+     * @param secretKey:       your Binance's secret key
+     * @param refreshTime:     is time in seconds to set to refresh the latest prices
+     * @param baseEndpoint:    base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
-                            int refreshPricesTime) throws Exception {
+                            int refreshTime) throws Exception {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
         binanceMarketManager = new BinanceMarketManager();
         this.quoteCurrencies = quoteCurrencies;
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
@@ -204,7 +219,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     /** Constructor to init {@link BinanceTraderBot}
      * @param apiKey: your Binance's api key
      * @param secretKey: your Binance's secret key
-     * @param baseEndpoint: base endpoint choose from BinanceManager.BASE_ENDPOINTS array
+     * @param baseEndpoint: base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @implNote these keys will NOT store by library anywhere.
      * **/
@@ -391,7 +406,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                                             order.getSide(),
                                             date,
                                             order.getCummulativeQuoteQty(),
-                                            order.getExecutedQty(),
+                                            order.getOrigQty(),
                                             lastTransactionCurrency,
                                             baseAsset
                                     ));
@@ -475,23 +490,32 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     /**
      * This method is used to get error of any requests<br>
      * Any params required
-     * **/
+     **/
     @Override
     public String getErrorResponse() {
         return binanceSpotManager.getErrorResponse();
     }
 
     /**
+     * Method to print error response <br>
+     * Any params required
+     **/
+    @Override
+    public void printErrorMessage() {
+        binanceSpotManager.printErrorResponse();
+    }
+
+    /**
      * This method is used to refresh latest prices<br>
      * Any params required
-     * **/
+     **/
     @Override
-    protected synchronized void refreshLatestPrice() throws Exception {
+    public synchronized void refreshLatestPrice() throws Exception {
         lastPricesRefresh = System.currentTimeMillis();
-        for(TickerPriceChange tickerPriceChange : binanceMarketManager.getTickerPriceChangeList()) {
+        for (TickerPriceChange tickerPriceChange : binanceMarketManager.getTickerPriceChangeList()) {
             String symbol = tickerPriceChange.getSymbol();
             try {
-                if(coins.get(tradingPairsList.get(symbol).getBaseAsset()).isTradingEnabled() || symbol.endsWith(USDT_CURRENCY))
+                if (coins.get(tradingPairsList.get(symbol).getBaseAsset()).isTradingEnabled() || symbol.endsWith(USDT_CURRENCY))
                     lastPrices.put(symbol, tickerPriceChange);
             }catch (NullPointerException ignored){
             }
@@ -546,13 +570,35 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                 else {
                     if ((quantity - minQty) % stepSize != 0)
                         quantity = ceil(quantity);
-                    if(quantity < minNotionalQty)
+                    if (quantity < minNotionalQty)
                         quantity = ceil(minNotionalQty);
                 }
             }
             return quantity;
         }
         throw new Exception("Symbol does not exits");
+    }
+
+    /**
+     * This method is to get list of the latest prices <br>
+     * Any params required
+     *
+     * @return last prices as {@link HashMap} of {@link TickerPriceChange}
+     **/
+    @Override
+    public HashMap<String, TickerPriceChange> getLatestPrices() {
+        return lastPrices;
+    }
+
+    /**
+     * This method is to get last price of a symbol <br>
+     *
+     * @param symbol: symbol from fetch last price es BTCBUSD
+     * @return last prices as {@link HashMap} of {@link TickerPriceChange}
+     **/
+    @Override
+    public TickerPriceChange getLastPrice(String symbol) {
+        return lastPrices.get(symbol);
     }
 
 }

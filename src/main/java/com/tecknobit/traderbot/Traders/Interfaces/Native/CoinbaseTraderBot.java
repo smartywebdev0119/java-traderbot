@@ -1,6 +1,5 @@
 package com.tecknobit.traderbot.Traders.Interfaces.Native;
 
-import com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool;
 import com.tecknobit.coinbasemanager.Managers.ExchangePro.Account.CoinbaseAccountManager;
 import com.tecknobit.coinbasemanager.Managers.ExchangePro.Account.Records.CoinbaseAccount;
 import com.tecknobit.coinbasemanager.Managers.ExchangePro.CoinbaseManager;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool.getCryptocurrencyName;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.*;
 import static java.lang.Math.ceil;
 
@@ -61,14 +61,9 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * {@code lastPrices} is a map that contains asset index (es. BTC) as key {@link String} and last ticker as {@link Ticker}
      * @apiNote values inserted in this map are only tickers of coins inserted in {@link #coins} list
      * @implNote refresh of last prices, by default, is every 10 seconds, but you can set programmatically
-     * {@link #REFRESH_PRICES_TIME} to customize refresh time.
+     * {@link #REFRESH_TIME} to customize refresh time.
      * **/
     protected HashMap<String, Ticker> lastPrices;
-
-    /**
-     * {@code cryptocurrencyTool} is instance helpful to manage cryptocurrencies details
-     * **/
-    protected final CryptocurrencyTool cryptocurrencyTool;
 
     /**
      * {@code coinbaseCurrenciesManager} is instance of {@link CoinbaseCurrenciesManager} helpful to fetch details about
@@ -90,7 +85,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        cryptocurrencyTool = new CryptocurrencyTool();
         initTrader();
     }
 
@@ -106,7 +100,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
-        cryptocurrencyTool = new CryptocurrencyTool();
         initTrader();
     }
 
@@ -122,7 +115,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        cryptocurrencyTool = new CryptocurrencyTool();
         initTrader();
     }
 
@@ -137,7 +129,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
-        cryptocurrencyTool = new CryptocurrencyTool();
         initTrader();
     }
 
@@ -156,7 +147,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, defaultErrorMessage, timeout);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, defaultErrorMessage, timeout);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
         initTrader();
     }
@@ -175,7 +165,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
         initTrader();
     }
@@ -194,7 +183,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
         initTrader();
     }
@@ -212,198 +200,205 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret:           your Coinbase's secret key
+     * @param passphrase:          your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param timeout: custom timeout for request
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @param timeout:             custom timeout for request
+     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                             int timeout, int refreshPricesTime) throws Exception {
+                             int timeout, int refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        cryptocurrencyTool = new CryptocurrencyTool();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param timeout: custom timeout for request
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:      your Coinbase's api key
+     * @param apiSecret:   your Coinbase's secret key
+     * @param passphrase:  your Coinbase's api passphrase
+     * @param timeout:     custom timeout for request
+     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
-    public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshPricesTime) throws Exception {
+     **/
+    public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
-        cryptocurrencyTool = new CryptocurrencyTool();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret:           your Coinbase's secret key
+     * @param passphrase:          your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                             short refreshPricesTime) throws Exception {
+                             short refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        cryptocurrencyTool = new CryptocurrencyTool();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:      your Coinbase's api key
+     * @param apiSecret:   your Coinbase's secret key
+     * @param passphrase:  your Coinbase's api passphrase
+     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
-    public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, short refreshPricesTime) throws Exception {
+     **/
+    public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, short refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
-        cryptocurrencyTool = new CryptocurrencyTool();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret:           your Coinbase's secret key
+     * @param passphrase:          your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param timeout: custom timeout for request
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @param timeout:             custom timeout for request
+     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param quoteCurrencies:     is a list of quote currencies used in past orders es (USD or EUR)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage, int timeout,
-                             ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
+                             ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, defaultErrorMessage, timeout);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, defaultErrorMessage, timeout);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        cryptocurrencyTool = new CryptocurrencyTool();
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         this.quoteCurrencies = quoteCurrencies;
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param timeout: custom timeout for request
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:          your Coinbase's api key
+     * @param apiSecret:       your Coinbase's secret key
+     * @param passphrase:      your Coinbase's api passphrase
+     * @param timeout:         custom timeout for request
+     * @param refreshTime:     is time in seconds to set to refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
-                             ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
+                             ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret:           your Coinbase's secret key
+     * @param passphrase:          your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
-     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param quoteCurrencies:     is a list of quote currencies used in past orders es (USD or EUR)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                             ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
+                             ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
-    /** Constructor to init {@link CoinbaseTraderBot}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
-     * @param refreshPricesTime: is time in seconds to set for refresh the latest prices
+    /**
+     * Constructor to init {@link CoinbaseTraderBot}
+     *
+     * @param apiKey:          your Coinbase's api key
+     * @param apiSecret:       your Coinbase's secret key
+     * @param passphrase:      your Coinbase's api passphrase
+     * @param refreshTime:     is time in seconds to set to refresh the latest prices
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @throws IllegalArgumentException if {@code refreshPricesTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase,
-                             ArrayList<String> quoteCurrencies, int refreshPricesTime) throws Exception {
+                             ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
         coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
         coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
         coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
-        cryptocurrencyTool = new CryptocurrencyTool();
         this.quoteCurrencies = quoteCurrencies;
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            REFRESH_PRICES_TIME = refreshPricesTime * 1000L;
+        if(refreshTime >= 5 && refreshTime <= 3600)
+            REFRESH_TIME = refreshTime * 1000L;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         initTrader();
     }
 
@@ -429,7 +424,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
             double balance = coin.getBalance();
             String index = coin.getCurrency();
             coins.put(index, new Coin(index,
-                    cryptocurrencyTool.getCryptocurrencyName(index),
+                    getCryptocurrencyName(index),
                     balance,
                     balance != 0
             ));
@@ -564,13 +559,14 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
                                 long timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                                         .parse((createdAt)).getTime();
                                 date = new SimpleDateFormat(dateFormat).format(new Date(timestamp));
-                            }else
+                            } else
                                 date = createdAt;
+                            double size = order.getSize();
                             transactions.add(new Transaction(symbol,
                                     order.getSide(),
                                     date,
-                                    order.getExecutedValue(),
-                                    order.getSize(),
+                                    size * order.getPrice(),
+                                    size,
                                     lastTransactionCurrency,
                                     baseAsset
                             ));
@@ -667,8 +663,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is used fetch details of a Coinbase's order request<br>
-     * @implNote you must call it when is placed an order before, so when {@link #buyMarket(java.lang.String, double)}
-     * or {@link #sellMarket(java.lang.String, double)} is being called.
+     * @implNote you must call it when is placed an order before, so when {@link TraderCoreRoutines#buyMarket(String, double)}
+     * or {@link TraderCoreRoutines#sellMarket(String, double)} is being called.
      * @param formatResponseType: this indicates the format of order status that have to return.
      * @implSpec if {@code formatResponseType} is equal to {@code String} order status will be returned as {@link String} <br>
      * if {@code formatResponseType} is equal to {@code JSON} order status will be returned as {@link JSONObject} or {@link JSONArray} <br>
@@ -682,18 +678,27 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     /**
      * This method is used to get error of any requests<br>
      * Any params required
-     * **/
+     **/
     @Override
     public String getErrorResponse() {
         return coinbaseAccountManager.getErrorResponse();
     }
 
     /**
+     * Method to print error response <br>
+     * Any params required
+     **/
+    @Override
+    public void printErrorMessage() {
+        coinbaseAccountManager.printErrorResponse();
+    }
+
+    /**
      * This method is used to refresh latest prices<br>
      * Any params required
-     * **/
+     **/
     @Override
-    protected synchronized void refreshLatestPrice() {
+    public synchronized void refreshLatestPrice() {
         lastPricesRefresh = System.currentTimeMillis();
         for (String productId : tradingPairsList.keySet()) {
             try {
@@ -718,17 +723,40 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is to compute suggested quantity for an order
-     * @param symbol: symbol of cryptocurrency for the order
+     *
+     * @param symbol:       symbol of cryptocurrency for the order
      * @param testQuantity: quantity to test
      * @return suggested quantity value computed from exchange's limits as double
-     * **/
+     **/
     @Override
     public double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception {
         Currency currency = coinbaseCurrenciesManager.getCurrencyObject(symbol);
-        if(testQuantity >= currency.getMinSize())
-            if(testQuantity % currency.getMaxPrecision() != 0)
+        if (testQuantity >= currency.getMinSize())
+            if (testQuantity % currency.getMaxPrecision() != 0)
                 return ceil(testQuantity);
         return -1;
+    }
+
+    /**
+     * This method is to get list of the latest prices <br>
+     * Any params required
+     *
+     * @return last prices as {@link HashMap} of {@link Ticker}
+     **/
+    @Override
+    public HashMap<String, Ticker> getLatestPrices() {
+        return lastPrices;
+    }
+
+    /**
+     * This method is to get last price of a symbol <br>
+     *
+     * @param symbol: symbol from fetch last price es BTCBUSD
+     * @return last prices as {@link HashMap} of {@link Ticker}
+     **/
+    @Override
+    public Ticker getLastPrice(String symbol) {
+        return lastPrices.get(symbol);
     }
 
     /**

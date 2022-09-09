@@ -4,12 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * The {@code TraderDetails} class is useful to contains details of trader used. <br>
+ * The {@code BotDetails} class is useful to contains details of trader used. <br>
  * Is useful for Android's type traders.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
-public final class TraderDetails extends Trader{
+public class BotDetails extends Trader {
 
     /**
      * {@code CUSTOM_DEF_COLOR} is instance that memorizes default color to use for example when asset is at pair
@@ -87,9 +88,9 @@ public final class TraderDetails extends Trader{
     public static final String TRADER_TYPE_KEY = "trader_type";
 
     /**
-     * {@code REFRESH_PRICES_TIME_KEY} is instance that memorizes refresh time key
-     * **/
-    public static final String REFRESH_PRICES_TIME_KEY = "refresh_time";
+     * {@code REFRESH_TIME_KEY} is instance that memorizes refresh time key
+     **/
+    public static final String REFRESH_TIME_KEY = "refresh_time";
 
     /**
      * {@code LAST_TRADER_ACTIVITY_KEY} is instance that memorizes last trader activity key
@@ -127,80 +128,80 @@ public final class TraderDetails extends Trader{
     private final String traderPlatform;
 
     /**
-     * {@code refreshPricesTime} is instance that memorizes time for refresh last prices
-     * @implNote this param can customize with {@link #setRefreshPricesTime(int)}
+     * {@code refreshTime} is instance that memorizes time to refresh last prices
+     * @implNote this param can customize with {@link #setRefreshTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
      * **/
-    private long refreshPricesTime;
+    private long refreshTime;
 
     /**
      * {@code traderPlatform} is instance that memorizes timestamp of date when trader has been started
      * **/
     private long runningFromDate;
 
-    /** Constructor to init {@link TraderDetails}
+    /** Constructor to init {@link BotDetails}
      * @param traderType: type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
      * @param traderPlatform: platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
      * @param runningFromDate: time stamp of date when trader has been started
      * @throws IllegalArgumentException if parameters range is not respected
      * **/
-    public TraderDetails(String traderType, String traderPlatform, long runningFromDate) {
+    public BotDetails(String traderType, String traderPlatform, long runningFromDate) {
         initTimeFormatters();
-        if(!traderType.equals(TRADER_TYPE_AUTONOMOUS) && !traderType.equals(TRADER_TYPE_MANUAL))
+        if (!traderType.equals(TRADER_TYPE_AUTONOMOUS) && !traderType.equals(TRADER_TYPE_MANUAL))
             throw new IllegalArgumentException("Trader type inserted is wrong value, can be AUTONOMOUS or MANUAL type");
         else
             this.traderType = traderType;
-        if(!traderPlatform.equals(BINANCE_TRADER_PLATFORM) && !traderPlatform.equals(COINBASE_TRADER_PLATFORM))
+        if (!traderPlatform.equals(BINANCE_TRADER_PLATFORM) && !traderPlatform.equals(COINBASE_TRADER_PLATFORM))
             throw new IllegalArgumentException("Trader platform inserted is not supported yet or is a wrong value");
         else
             this.traderPlatform = traderPlatform;
-        if(runningFromDate < 0)
+        if (runningFromDate < 0)
             throw new IllegalArgumentException("Running from date timestamp cannot be less than 0");
         else
             this.runningFromDate = runningFromDate;
     }
 
-    /** Constructor to init {@link TraderDetails}
+    /** Constructor to init {@link BotDetails}
      * @param lastTraderActivity: last time when bot contact server
      * @param traderType: type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
      * @param traderStatus: current status of trader {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
      * @param traderPlatform: platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
-     * @param refreshPricesTime: time for refresh last prices
+     * @param refreshTime: time to refresh last prices
      * @param runningFromDate: date when trader has been started
      * @throws IllegalArgumentException if parameters range is not respected
      * **/
-    public TraderDetails(long lastTraderActivity, String traderType, String traderStatus, String traderPlatform,
-                         int refreshPricesTime, long runningFromDate) {
+    public BotDetails(long lastTraderActivity, String traderType, String traderStatus, String traderPlatform,
+                      int refreshTime, long runningFromDate) {
         initTimeFormatters();
-        boolean isInMillis = refreshPricesTime > 3600;
-        if(lastTraderActivity < 0)
+        boolean isInMillis = refreshTime > 3600;
+        if (lastTraderActivity < 0)
             throw new IllegalArgumentException("Last trader activity timestamp cannot be less than 0");
         else {
             this.lastTraderActivity = timeFormat.format(new Date(lastTraderActivity));
             lastTraderActivityTimestamp = lastTraderActivity;
         }
-        if(!traderType.equals(TRADER_TYPE_AUTONOMOUS) && !traderType.equals(TRADER_TYPE_MANUAL))
+        if (!traderType.equals(TRADER_TYPE_AUTONOMOUS) && !traderType.equals(TRADER_TYPE_MANUAL))
             throw new IllegalArgumentException("Trader type inserted is wrong value, can be AUTONOMOUS or MANUAL type");
         else
             this.traderType = traderType;
-        if(!traderStatus.equals(RUNNING_TRADER_STATUS) && !traderStatus.equals(STOPPED_TRADER_STATUS))
+        if (!traderStatus.equals(RUNNING_TRADER_STATUS) && !traderStatus.equals(STOPPED_TRADER_STATUS))
             throw new IllegalArgumentException("Trader status inserted is wrong value, can be RUNNING or STOPPED status");
         else
             this.traderStatus = traderStatus;
-        if(!traderPlatform.equals(BINANCE_TRADER_PLATFORM) && !traderPlatform.equals(COINBASE_TRADER_PLATFORM))
+        if (!traderPlatform.equals(BINANCE_TRADER_PLATFORM) && !traderPlatform.equals(COINBASE_TRADER_PLATFORM))
             throw new IllegalArgumentException("Trader platform inserted is not supported yet or is a wrong value");
         else
             this.traderPlatform = traderPlatform;
-        if(isInMillis)
-            refreshPricesTime /= 1000;
-        if(refreshPricesTime < 5 || refreshPricesTime > 3600)
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+        if (isInMillis)
+            refreshTime /= 1000;
+        if (refreshTime < 5 || refreshTime > 3600)
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
         else {
-            if(isInMillis)
-                refreshPricesTime *= 1000;
-            this.refreshPricesTime = refreshPricesTime;
+            if (isInMillis)
+                refreshTime *= 1000;
+            this.refreshTime = refreshTime;
         }
-        if(runningFromDate < 0)
+        if (runningFromDate < 0)
             throw new IllegalArgumentException("Running from date timestamp cannot be less than 0");
         else
             this.runningFromDate = runningFromDate;
@@ -250,27 +251,32 @@ public final class TraderDetails extends Trader{
      * Any params required
      * @return color platform as {@link String}
      * **/
-    public String getTraderPlatformColor(){
-        switch (traderPlatform){
-            case BINANCE_TRADER_PLATFORM: return BINANCE_COLOR;
-            case COINBASE_TRADER_PLATFORM: return COINBASE_COLOR;
-            default: return CUSTOM_DEF_COLOR;
+    public String getTraderPlatformColor() {
+        switch (traderPlatform) {
+            case BINANCE_TRADER_PLATFORM:
+                return BINANCE_COLOR;
+            case COINBASE_TRADER_PLATFORM:
+                return COINBASE_COLOR;
+            default:
+                return CUSTOM_DEF_COLOR;
         }
     }
 
-    public long getRefreshPricesTime() {
-        return refreshPricesTime;
+    public long getRefreshTime() {
+        return refreshTime;
     }
 
-    /** Method to set {@link #refreshPricesTime}
-     * @param refreshPricesTime: time for refresh last prices
+    /**
+     * Method to set {@link #refreshTime}
+     *
+     * @param refreshTime: time to refresh last prices
      * @throws IllegalArgumentException when time value is less from 5 second or more 3600 seconds
-     * **/
-    public void setRefreshPricesTime(int refreshPricesTime) {
-        if(refreshPricesTime >= 5 && refreshPricesTime <= 3600)
-            this.refreshPricesTime = refreshPricesTime;
+     **/
+    public void setRefreshTime(int refreshTime) {
+        if (refreshTime >= 5 && refreshTime <= 3600)
+            this.refreshTime = refreshTime;
         else
-            throw new IllegalArgumentException("Refresh prices time must be more than 5 (5s) and less than 3600 (1h)");
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
 
     public long getRunningFromDate() {
@@ -307,7 +313,7 @@ public final class TraderDetails extends Trader{
         trader.put(RUNNING_FROM_DATE_KEY, runningFromDate);
         trader.put(TRADER_TYPE_KEY, traderType);
         trader.put(LAST_TRADER_ACTIVITY_KEY, lastTraderActivityTimestamp);
-        trader.put(REFRESH_PRICES_TIME_KEY, refreshPricesTime);
+        trader.put(REFRESH_TIME_KEY, refreshTime);
         trader.put(TRADER_PLATFORM_KEY, traderPlatform);
         trader.put(TRADER_STATUS_KEY, traderStatus);
         return trader;
@@ -315,13 +321,13 @@ public final class TraderDetails extends Trader{
 
     @Override
     public String toString() {
-        return "TraderDetails{" +
+        return "BotDetails{" +
                 "lastTraderActivity='" + lastTraderActivity + '\'' +
                 ", lastTraderActivityTimestamp=" + lastTraderActivityTimestamp +
                 ", traderType='" + traderType + '\'' +
                 ", traderStatus='" + traderStatus + '\'' +
                 ", traderPlatform='" + traderPlatform + '\'' +
-                ", refreshPricesTime=" + refreshPricesTime +
+                ", refreshTime=" + refreshTime +
                 ", runningFromDate=" + runningFromDate +
                 '}';
     }

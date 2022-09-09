@@ -1,9 +1,12 @@
 package com.tecknobit.traderbot.Routines.Interfaces;
 
+import com.tecknobit.traderbot.Records.Portfolio.Transaction;
+
 /**
  * The {@code RoutineMessages} interface defines base methods to print routine messages.<br>
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
 public interface RoutineMessages {
 
@@ -44,10 +47,30 @@ public interface RoutineMessages {
 
     /**
      * This method is used to print green output<br>
+     *
      * @param message: message to print of green
-     * **/
-    default void printGreen(String message){
+     **/
+    default void printGreen(String message) {
         System.out.println(ANSI_GREEN + message + ANSI_RESET);
+    }
+
+    /**
+     * This method is used to print a log message
+     *
+     * @param msg: message to print out
+     **/
+    default void printLog(String msg) {
+        System.out.println(Transaction.getDate(System.currentTimeMillis()) + " -> " + msg);
+    }
+
+    /**
+     * This method is used to print a log message colored
+     *
+     * @param msg: message to print out
+     * @apiNote this method is in beta yet, in the next updates will be fully implemented
+     **/
+    default void printLog(String msg, String color) {
+        System.out.println(color + Transaction.getDate(System.currentTimeMillis()) + " -> " + msg + ANSI_RESET);
     }
 
 }

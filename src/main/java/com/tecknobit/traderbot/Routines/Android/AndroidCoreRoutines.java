@@ -3,7 +3,7 @@ package com.tecknobit.traderbot.Routines.Android;
 import com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
 import com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages;
 
-import static com.tecknobit.traderbot.Records.Account.TraderDetails.TraderManager;
+import static com.tecknobit.traderbot.Records.Account.BotDetails.TraderManager;
 
 /**
  * The {@code RoutineMessages} interface defines base methods to Android's trader<br>

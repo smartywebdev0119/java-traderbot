@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.textualizeAssetPercent;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.BUY;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.SELL;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
@@ -15,8 +16,6 @@ import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Token.QUANTITY_KEY;
 import static com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines.*;
 import static java.lang.System.out;
-import static java.text.DateFormat.DATE_FIELD;
-import static java.text.DateFormat.getDateInstance;
 import static java.util.Locale.getDefault;
 
 /**
@@ -44,37 +43,47 @@ public class Transaction implements RecordDetails {
 
     /**
      * {@code VALUE_KEY} is instance that memorizes value key
-     * **/
+     **/
     public static final String VALUE_KEY = "value";
 
     /**
      * {@code TRANSACTION_TYPE_KEY} is instance that memorizes transaction type key
-     * **/
+     **/
     public static final String TRANSACTION_TYPE_KEY = "transaction_type";
 
     /**
+     * {@code dateFormatter} is instance that help to format date
+     **/
+    protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", getDefault());
+
+    /**
      * {@code symbol} is instance that memorizes symbol of transaction es. BTCBUSD or BTC-USD
-     * **/
+     **/
     protected final String symbol;
 
     /**
      * {@code side} is instance that memorizes side of transaction BUY or SELL
-     * **/
+     **/
     protected final String side;
 
     /**
-     * {@code transactionDate} is instance that memorizes date of that transaction es 21:08:22 24/05/2022
-     * **/
+     * {@code transactionDate} is instance that memorizes date of that transaction es 21:08:22 30/06/2022
+     **/
     protected final String transactionDate;
 
     /**
+     * {@code transactionDateTimestamp} is instance that memorizes date of that transaction es 1045868400000
+     **/
+    protected final long transactionDateTimestamp;
+
+    /**
      * {@code value} is instance that memorizes value of symbol in fiat currency amount of transaction transfered es. 1235 USD
-     * **/
+     **/
     protected final double value;
 
     /**
      * {@code quantity} is instance that memorizes value of quantity transfered in that transaction es. 1 BTC
-     * **/
+     **/
     protected final double quantity;
 
     /**
@@ -114,16 +123,21 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
-        if(transactionDate == null || transactionDate.isEmpty())
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        if (transactionDate == null || transactionDate.isEmpty())
             throw new IllegalArgumentException("Transaction date must contains characters");
-        else
+        else {
             this.transactionDate = transactionDate;
-        if(value < 0)
+            transactionDateTimestamp = getDateTimestamp(transactionDate);
+        }
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
@@ -158,16 +172,21 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
-        if(transactionDate == null || transactionDate.isEmpty())
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        if (transactionDate == null || transactionDate.isEmpty())
             throw new IllegalArgumentException("Transaction date must contains characters");
-        else
+        else {
             this.transactionDate = transactionDate;
-        if(value < 0)
+            transactionDateTimestamp = getDateTimestamp(transactionDate);
+        }
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
@@ -201,16 +220,21 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
-        if(transactionDate == null || transactionDate.isEmpty())
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        if (transactionDate == null || transactionDate.isEmpty())
             throw new IllegalArgumentException("Transaction date must contains characters");
-        else
+        else {
             this.transactionDate = transactionDate;
-        if(value < 0)
+            transactionDateTimestamp = getDateTimestamp(transactionDate);
+        }
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
@@ -237,16 +261,21 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
-        if(transactionDate == null || transactionDate.isEmpty())
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        if (transactionDate == null || transactionDate.isEmpty())
             throw new IllegalArgumentException("Transaction date must contains characters");
-        else
+        else {
             this.transactionDate = transactionDate;
-        if(value < 0)
+            transactionDateTimestamp = getDateTimestamp(transactionDate);
+        }
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
@@ -277,22 +306,26 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        transactionDateTimestamp = transactionDate;
         this.transactionDate = getDate(transactionDate);
-        if(value < 0)
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
         this.quantity = quantity;
-        if(quoteAsset == null || quoteAsset.isEmpty())
+        if (quoteAsset == null || quoteAsset.isEmpty())
             throw new IllegalArgumentException("Quote asset must contains characters");
         else
             this.quoteAsset = quoteAsset;
-        if(baseAsset == null || baseAsset.isEmpty())
+        if (baseAsset == null || baseAsset.isEmpty())
             throw new IllegalArgumentException("Base asset must contains characters");
         else
             this.baseAsset = baseAsset;
@@ -318,22 +351,26 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        transactionDateTimestamp = transactionDate;
         this.transactionDate = getDate(transactionDate);
-        if(value < 0)
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
         this.quantity = quantity;
-        if(quoteAsset == null || quoteAsset.isEmpty())
+        if (quoteAsset == null || quoteAsset.isEmpty())
             throw new IllegalArgumentException("Quote asset must contains characters");
         else
             this.quoteAsset = quoteAsset;
-        if(baseAsset == null || baseAsset.isEmpty())
+        if (baseAsset == null || baseAsset.isEmpty())
             throw new IllegalArgumentException("Base asset must contains characters");
         else
             this.baseAsset = baseAsset;
@@ -358,13 +395,17 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        transactionDateTimestamp = transactionDate;
         this.transactionDate = getDate(transactionDate);
-        if(value < 0)
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
@@ -391,18 +432,22 @@ public class Transaction implements RecordDetails {
             throw new IllegalArgumentException("Symbol must contains characters");
         else
             this.symbol = symbol;
-        side = side.toUpperCase();
-        if(!side.equals(BUY) && !side.equals(SELL))
-            throw new IllegalArgumentException("Side can be only value BUY or SELL");
-        else
-            this.side = side;
+        if (side != null) {
+            side = side.toUpperCase();
+            if (!side.equals(BUY) && !side.equals(SELL))
+                throw new IllegalArgumentException("Side can be only value BUY or SELL, if it is required is allowed also null");
+            else
+                this.side = side;
+        } else
+            this.side = null;
+        transactionDateTimestamp = transactionDate;
         this.transactionDate = getDate(transactionDate);
-        if(value < 0)
+        if (value < 0)
             throw new IllegalArgumentException("Value cannot be less than 0");
         else
             this.value = value;
         this.quantity = quantity;
-        if(incomePercent < -100)
+        if (incomePercent < -100)
             throw new IllegalArgumentException("Income percent must be bigger than -100");
         else
             this.incomePercent = incomePercent;
@@ -424,13 +469,12 @@ public class Transaction implements RecordDetails {
     }
 
     /**
-     * This method is used get {@link #transactionDate} instance formatted as long<br>
-     * Any params required
-     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
-     * @return {@link #transactionDate} timestamp as long
+     * This method is used to get from a timestamp a date formatted by Locale
+     * @param timestamp: timestamp of the date to get
+     * @return date value as {@link String}
      * **/
-    public long getTransactionTimestamp() {
-        return getDateTimestamp(transactionDate);
+    public static String getDate(long timestamp) {
+        return dateFormatter.format(new Date(timestamp));
     }
 
     public double getValue() {
@@ -472,20 +516,49 @@ public class Transaction implements RecordDetails {
     }
 
     /**
+     * This method is used to get from a date its timestamp value
+     *
+     * @param date: date to get timestamp
+     * @return date timestamp value as long
+     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
+     **/
+    public static long getDateTimestamp(String date) {
+        try {
+            return dateFormatter.parse(date).getTime();
+        } catch (ParseException e) {
+            return -1;
+        }
+    }
+
+    /**
      * This method is used get {@link #incomePercent} instance
+     *
      * @param decimals: number of decimal digits es. 2
      * @return {@link #incomePercent} formatted as 21.22
-     * **/
+     **/
     public double getIncomePercent(int decimals) {
         return roundValue(incomePercent, decimals);
     }
 
-    /** Method to set {@link #incomePercent}
+    /**
+     * This method is used get {@link #transactionDate} instance formatted as long<br>
+     * Any params required
+     *
+     * @return {@link #transactionDate} timestamp as long
+     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
+     **/
+    public long getTransactionTimestamp() {
+        return transactionDateTimestamp;
+    }
+
+    /**
+     * Method to set {@link #incomePercent}
+     *
      * @param incomePercent: income percent of cryptocurrency
      * @throws IllegalArgumentException when income percent value is less than 0
-     * **/
+     **/
     public void setIncomePercent(double incomePercent) {
-        if(incomePercent < -100)
+        if (incomePercent < -100)
             throw new IllegalArgumentException("Income percent cannot be less than -100");
         this.incomePercent = incomePercent;
     }
@@ -529,26 +602,24 @@ public class Transaction implements RecordDetails {
     }
 
     /**
-     * This method is used to get from a timestamp a date formatted by Locale
-     * @param timestamp: timestamp of the date to get
-     * @return date value as {@link String}
-     * **/
-    public static String getDate(long timestamp) {
-        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", getDefault()).format(new Date(timestamp));
+     * This method is used get {@link #incomePercent} instance <br>
+     * Any params required
+     *
+     * @return {@link #incomePercent} as {@link String} es. +2.3812%
+     **/
+    public String getIncomePercentText() {
+        return textualizeAssetPercent(incomePercent);
     }
 
     /**
-     * This method is used to get from a date its timestamp value
-     * @param date: date to get timestamp
-     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
-     * @return date timestamp value as long
-     * **/
-    public static long getDateTimestamp(String date) {
-        try {
-            return getDateInstance(DATE_FIELD, getDefault()).parse(date).getTime();
-        }catch (ParseException e){
-            return -1;
-        }
+     * This method is used get {@link #incomePercent} instance
+     *
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #incomePercent} as {@link String} es. +2.38%
+     * @throws IllegalArgumentException if decimalDigits is negative
+     **/
+    public String getIncomePercentText(int decimals) {
+        return textualizeAssetPercent(incomePercent, decimals);
     }
 
     /**
