@@ -1,6 +1,7 @@
 package com.tecknobit.traderbot.Routines.Android;
 
 import com.tecknobit.aesHelper.ClientCipher;
+import com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
 import org.json.JSONObject;
 
 import javax.crypto.BadPaddingException;
@@ -16,10 +17,11 @@ import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.ANSI_R
 import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.ANSI_RESET;
 
 /**
- * The {@code ServerRequest} class is useful to make server request for Android's traders<br>
- * Is useful for Android's type traders.
+ * The {@code ServerRequest} class is useful to make server request for Android's bots<br>
+ * Is useful for Android's type bots.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
 public class ServerRequest {
 
@@ -45,19 +47,19 @@ public class ServerRequest {
     public static final String LOGIN_OPE = "login_ope";
 
     /**
-     * {@code GET_TRADER_ACCOUNT_OPE} request
-     * **/
-    public static final String GET_TRADER_ACCOUNT_OPE = "get_trader_account_ope";
+     * {@code GET_ACCOUNT_OPE} request
+     **/
+    public static final String GET_ACCOUNT_OPE = "get_account_ope";
 
     /**
-     * {@code GET_ROUTINES_TRADER_OPE} request
+     * {@code GET_ROUTINES_OPE} request
      * **/
-    public static final String GET_ROUTINES_TRADER_OPE = "get_routines_trader_ope";
+    public static final String GET_ROUTINES_OPE = "get_routines_ope";
 
     /**
-     * {@code CHANGE_MAIL_OPE} request
+     * {@code CHANGE_EMAIL_OPE} request
      * **/
-    public static final String CHANGE_MAIL_OPE = "change_mail_ope";
+    public static final String CHANGE_EMAIL_OPE = "change_email_ope";
 
     /**
      * {@code CHANGE_PASSWORD_OPE} request
@@ -65,14 +67,14 @@ public class ServerRequest {
     public static final String CHANGE_PASSWORD_OPE = "change_password_ope";
 
     /**
-     * {@code CHANGE_REFRESH_TIME_PRICES_OPE} request
+     * {@code CHANGE_REFRESH_TIME_OPE} request
      **/
-    public static final String CHANGE_REFRESH_TIME_PRICES_OPE = "change_REFRESH_TIME_ope";
+    public static final String CHANGE_REFRESH_TIME_OPE = "change_refresh_time_ope";
 
     /**
-     * {@code CHANGE_TRADER_STATUS_OPE} request
+     * {@code CHANGE_BOT_STATUS_OPE} request
      * **/
-    public static final String CHANGE_TRADER_STATUS_OPE = "change_trader_status_ope";
+    public static final String CHANGE_BOT_STATUS_OPE = "change_bot_status_ope";
 
     /**
      * {@code CHANGE_LANGUAGE_OPE} request
@@ -85,9 +87,9 @@ public class ServerRequest {
     public static final String CHANGE_CURRENCY_OPE = "change_currency_ope";
 
     /**
-     * {@code CHANGE_ACCOUNT_TIME_DELETION_OPE} request
+     * {@code CHANGE_DELETION_ACCOUNT_TIME_OPE} request
      * **/
-    public static final String CHANGE_ACCOUNT_TIME_DELETION_OPE = "change_account_time_deletion_ope";
+    public static final String CHANGE_DELETION_ACCOUNT_TIME_OPE = "change_deletion_account_time_ope";
 
     /**
      * {@code INSERT_WALLET_BALANCE_OPE} request
@@ -191,14 +193,14 @@ public class ServerRequest {
     public static final String TOKEN_KEY = "token";
 
     /**
-     * {@code MAIL_KEY} key
+     * {@code EMAIL_KEY} key
      * **/
-    public static final String MAIL_KEY = "mail";
+    public static final String EMAIL_KEY = "email";
 
     /**
-     * {@code NEW_MAIL_KEY} key
+     * {@code NEW_EMAIL_KEY} key
      * **/
-    public static final String NEW_MAIL_KEY = "new_mail";
+    public static final String NEW_EMAIL_KEY = "new_email";
 
     /**
      * {@code PASSWORD_KEY} key
@@ -241,9 +243,9 @@ public class ServerRequest {
     public static final String CURRENCY_KEY = "currency";
 
     /**
-     * {@code TIME_DELETION_KEY} key
+     * {@code DELETION_TIME_KEY} key
      * **/
-    public static final String TIME_DELETION_KEY = "time_deletion";
+    public static final String DELETION_TIME_KEY = "deletion_time";
 
     /**
      * {@code QUOTE_KEY} key
@@ -331,12 +333,9 @@ public class ServerRequest {
      * @param port: port value
      **/
     public ServerRequest(String ivSpec, String secretKey, String authToken, String token, String host, int port) throws Exception {
-        clientCipher = new ClientCipher(ivSpec, secretKey, CBC_ALGORITHM);
-        ciphered = true;
+        this(ivSpec, secretKey, host, port);
         this.authToken = authToken;
         this.token = token;
-        this.host = host;
-        this.port = port;
     }
 
     /**
@@ -356,15 +355,33 @@ public class ServerRequest {
         token = null;
     }
 
-    /** Constructor to init {@link ServerRequest}
-     * @param host: host value
-     * @param port: port value
-     * **/
-    public ServerRequest(String host, int port) {
-        clientCipher = null;
-        ciphered = false;
+    /**
+     * Constructor to init {@link ServerRequest}
+     *
+     * @param credentials : instance that contains your Tecknobit's account credentials, not your private exchange keys
+     * @param host:       host value
+     * @param port:       port value
+     **/
+    public ServerRequest(Credentials credentials, String host, int port) throws Exception {
         this.host = host;
         this.port = port;
+        authToken = credentials.getAuthToken();
+        token = credentials.getToken();
+        clientCipher = new ClientCipher(credentials.getIvSpec(), credentials.getSecretKey(), CBC_ALGORITHM);
+        ciphered = true;
+    }
+
+    /**
+     * Constructor to init {@link ServerRequest}
+     *
+     * @param host: host value
+     * @param port: port value
+     **/
+    public ServerRequest(String host, int port) {
+        this.host = host;
+        this.port = port;
+        clientCipher = null;
+        ciphered = false;
     }
 
     /**
@@ -437,23 +454,24 @@ public class ServerRequest {
             while (socket != null);
             socket = new Socket(host, port);
             printWriter = new PrintWriter(socket.getOutputStream(), true);
-        }catch (ConnectException ignored){
+        }catch (ConnectException ignored) {
         }
     }
 
     /**
      * This method is used fetch public keys for public requests operation<br>
      * Any params required
+     *
      * @return new request object as {@link ServerRequest}
-     * **/
-    public static ServerRequest getPublicRequest() {
+     **/
+    public static ServerRequest getPublicRequest(String host, int port) {
         try {
-            ServerRequest serverRequest = new ServerRequest(HOST, PORT);
+            ServerRequest serverRequest = new ServerRequest(host, port);
             serverRequest.sendRequest(new JSONObject(), GET_KEYS_OPE);
             response = serverRequest.readResponse();
-            if(response != null)
+            if (response != null)
                 return new ServerRequest(response.getString(IV_SPEC_KEY), response.getString(SECRET_KEY), HOST, PORT);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException(SERVICE_UNAVAILABLE);
         }
         return null;

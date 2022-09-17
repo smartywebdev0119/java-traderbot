@@ -37,12 +37,12 @@ public abstract class TraderCoreRoutines {
     /**
      * {@code BUY} is constant for buy side
      **/
-    public static final String BUY = BUY_SIDE;
+    public static final String BUY = BUY_SIDE.toUpperCase();
 
     /**
      * {@code SELL} is constant for buy side
      **/
-    public static final String SELL = SELL_SIDE;
+    public static final String SELL = SELL_SIDE.toUpperCase();
 
     /**
      * {@code transactions} is a list of transactions made by user account plus transactions made by a
@@ -110,10 +110,11 @@ public abstract class TraderCoreRoutines {
 
     /**
      * {@code REFRESH_TIME} is instance that memorizes time to refresh last prices.
+     *
      * @implNote this param can customize with {@link #setRefreshTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
-     * **/
-    protected long REFRESH_TIME;
+     **/
+    protected int REFRESH_TIME;
 
     /**
      * {@code lastPricesRefresh} is instance that memorizes last time that prices are updated.
@@ -296,9 +297,9 @@ public abstract class TraderCoreRoutines {
      * This method is used to get {@link #REFRESH_TIME}<br>
      * Any params required.
      *
-     * @return {@link #REFRESH_TIME} list long
+     * @return {@link #REFRESH_TIME} as int
      **/
-    public long getRefreshTime() {
+    public int getRefreshTime() {
         return REFRESH_TIME;
     }
 
@@ -372,7 +373,7 @@ public abstract class TraderCoreRoutines {
      **/
     public void setRefreshTime(int refreshTime) {
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -396,17 +397,36 @@ public abstract class TraderCoreRoutines {
      * This method is to get list of the latest prices <br>
      * Any params required
      *
-     * @return last prices as {@link HashMap} of {@link T}
+     * @return last prices as {@link ArrayList} of {@link Double}
      **/
-    public abstract <T> HashMap<String, T> getLatestPrices();
+    public abstract ArrayList<Double> getLatestPrices();
+
+    /**
+     * This method is to get list of the latest prices
+     *
+     * @param decimals: number of digits to round final value
+     * @return last prices as {@link ArrayList} of {@link Double}
+     * @throws IllegalArgumentException if decimal digits are negative
+     **/
+    public abstract ArrayList<Double> getLatestPrices(int decimals);
 
     /**
      * This method is to get last price of a symbol <br>
      *
      * @param symbol: symbol from fetch last price
-     * @return last prices as {@link HashMap} of {@link T}
+     * @return last price as double
      **/
-    public abstract <T> T getLastPrice(String symbol);
+    public abstract double getLastPrice(String symbol);
+
+    /**
+     * This method is to get last price of a symbol
+     *
+     * @param symbol:   symbol from fetch last price
+     * @param decimals: number of digits to round final value
+     * @return last price as double
+     * @throws IllegalArgumentException if decimal digits are negative
+     **/
+    public abstract double getLastPrice(String symbol, int decimals);
 
     /**
      * This method is used to print disclaimer alert to warn user of responsibility of storage and manage

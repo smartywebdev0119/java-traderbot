@@ -136,7 +136,7 @@ public final class TraderAccount extends Trader implements RecordDetails {
      * **/
     public TraderAccount(ServerRequest serverRequest) throws Exception {
         cryptocurrencies = new ConcurrentHashMap<>();
-        serverRequest.sendTokenRequest(new JSONObject(), GET_TRADER_ACCOUNT_OPE);
+        serverRequest.sendTokenRequest(new JSONObject(), GET_ACCOUNT_OPE);
         response = serverRequest.readResponse();
         if(response != null) {
             if(response.getInt(STATUS_CODE) == SUCCESSFUL_RESPONSE){
@@ -359,26 +359,48 @@ public final class TraderAccount extends Trader implements RecordDetails {
     /**
      * This method is used to get wallet list of cryptocurrencies <br>
      * Any params required
-     * @implNote is useful and able to use only in Android's interfaces
+     *
      * @return wallet list as {@link ConcurrentHashMap} of {@link Cryptocurrency}
-     * **/
+     * @implNote is useful and able to use only in Android's interfaces
+     **/
     public ConcurrentHashMap<String, Cryptocurrency> getWalletCryptocurrencies() {
         return cryptocurrencies;
     }
 
     /**
+     * This method is used to get account details <br>
+     * Any params required
+     *
+     * @return account details as {@link HashMap} of {@link Object}
+     **/
+    public HashMap<String, Object> getAccount() {
+        HashMap<String, Object> trader = new HashMap<>();
+        trader.put(ACTIVATION_DATE_KEY, activationDate);
+        trader.put(GAINS_KEY, salesAtGain);
+        trader.put(LOSSES_KEY, salesAtLoss);
+        trader.put(PAIRS_KEY, salesAtPair);
+        trader.put(TOTAL_INCOME_KEY, totalIncome);
+        return trader;
+    }
+
+    /**
      * This method is used to print details of {@link TraderAccount} object <br>
      * Any params required
-     * **/
+     **/
     @Override
     public void printDetails() {
-        out.println("### [ ACCOUNT STATUS ]\n" +
+        out.println(this);
+    }
+
+    @Override
+    public String toString() {
+        return "### [ ACCOUNT STATUS ]\n" +
                 "## Total: " + getTotalSales() + "\n" +
                 "## At loss: " + ANSI_RED + salesAtLoss + ANSI_RESET + "\n" +
-                "## At gain: " + ANSI_GREEN + salesAtGain + ANSI_RESET +"\n" +
+                "## At gain: " + ANSI_GREEN + salesAtGain + ANSI_RESET + "\n" +
                 "## At pair: " + salesAtPair + "\n" +
                 getIncomeColorLine("## Total income: ", computeTotalIncome(2)) +
-                "######################");
+                "######################";
     }
 
     /**
@@ -395,34 +417,6 @@ public final class TraderAccount extends Trader implements RecordDetails {
             return tail + ANSI_RED + textIncome + ANSI_RESET + "\n";
         else
             return tail + textIncome + "\n";
-    }
-
-    /**
-     * This method is used to get account details <br>
-     * Any params required
-     * @return account details as {@link HashMap} of {@link Object}
-     * **/
-    public HashMap<String, Object> getAccount() {
-        HashMap<String, Object> trader = new HashMap<>();
-        trader.put(ACTIVATION_DATE_KEY, activationDate);
-        trader.put(GAINS_KEY, salesAtGain);
-        trader.put(LOSSES_KEY, salesAtLoss);
-        trader.put(PAIRS_KEY, salesAtPair);
-        trader.put(TOTAL_INCOME_KEY, totalIncome);
-        return trader;
-    }
-
-    @Override
-    public String toString() {
-        return "TraderAccount{" +
-                "salesAtLoss=" + salesAtLoss +
-                ", salesAtGain=" + salesAtGain +
-                ", salesAtPair=" + salesAtPair +
-                ", activationDate=" + activationDate +
-                ", incomes=" + incomes +
-                ", cryptocurrencies=" + cryptocurrencies +
-                ", totalIncome=" + totalIncome +
-                '}';
     }
 
 }

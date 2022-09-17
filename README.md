@@ -100,7 +100,7 @@ All data will be stored and restored automatically, **will be not saved** your e
 //In registration you have to init Credentials object with your email and password for Tecknobit's account.
 
 Credentials credentials = new Credentials(
-    "yourEmail@mail.com",
+    "yourEmail@email.com",
     "yourPassword"
 );
 
@@ -109,7 +109,7 @@ Credentials credentials = new Credentials(
 /*{
         "secret_key": "valueOfSecretKey",
         "password": "yourPasswordInserted",
-        "mail": "yourEmailInserted@mail.com",
+        "email": "yourEmailInserted@email.com",
         "iv_spec": "valueOfIvSpec",
         "auth_token": "valueOfAuthToken",
         "token": "valueOfToken"
@@ -126,7 +126,7 @@ Credentials credentials = new Credentials(
 
 Credentials credentials = new Credentials(
     "valueOfAuthToken",
-    "yourEmail@mail.com",
+    "yourEmail@email.com",
     "yourPassword",
     "valueOfIvSpec",
     "valueOfSecretKey"

@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * The {@code BotDetails} class is useful to contains details of trader used. <br>
- * Is useful for Android's type traders.
+ * The {@code BotDetails} class is useful to contains details of bot used. <br>
+ * Is useful for Android's type bots.
  *
  * @author Tecknobit N7ghtm4r3
  **/
@@ -43,49 +43,49 @@ public class BotDetails extends Trader {
     public static final String COINBASE_COLOR = "#1652f0";
 
     /**
-     * {@code TRADER_TYPE_AUTONOMOUS} is instance that memorizes AUTONOMOUS trader type in use
-     * **/
-    public static final String TRADER_TYPE_AUTONOMOUS = "AUTONOMOUS";
+     * {@code BOT_TYPE_AUTONOMOUS} is instance that memorizes AUTONOMOUS bot type in use
+     **/
+    public static final String BOT_TYPE_AUTONOMOUS = "AUTONOMOUS";
 
     /**
-     * {@code TRADER_TYPE_MANUAL} is instance that memorizes MANUAL trader type in use
+     * {@code BOT_TYPE_MANUAL} is instance that memorizes MANUAL bot type in use
      * **/
-    public static final String TRADER_TYPE_MANUAL = "MANUAL";
+    public static final String BOT_TYPE_MANUAL = "MANUAL";
 
     /**
-     * {@code BINANCE_TRADER_PLATFORM} is instance that memorizes BINANCE trader platform in use
+     * {@code BINANCE_PLATFORM} is instance that memorizes BINANCE bot platform in use
      * **/
-    public static final String BINANCE_TRADER_PLATFORM = "BINANCE";
+    public static final String BINANCE_PLATFORM = "BINANCE";
 
     /**
-     * {@code COINBASE_TRADER_PLATFORM} is instance that memorizes COINBASE trader platform in use
+     * {@code COINBASE_PLATFORM} is instance that memorizes COINBASE bot platform in use
      * **/
-    public static final String COINBASE_TRADER_PLATFORM = "COINBASE";
+    public static final String COINBASE_PLATFORM = "COINBASE";
 
     /**
-     * {@code RUNNING_TRADER_STATUS} is instance that memorizes RUNNING trader current status
+     * {@code RUNNING_BOT_STATUS} is instance that memorizes RUNNING bot current status
      * **/
-    public static final String RUNNING_TRADER_STATUS = "RUNNING";
+    public static final String RUNNING_BOT_STATUS = "RUNNING";
 
     /**
-     * {@code STOPPED_TRADER_STATUS} is instance that memorizes STOPPED trader current status
+     * {@code STOPPED_BOT_STATUS} is instance that memorizes STOPPED bot current status
      * **/
-    public static final String STOPPED_TRADER_STATUS = "STOPPED";
+    public static final String STOPPED_BOT_STATUS = "STOPPED";
 
     /**
-     * {@code TRADER_STATUS_KEY} is instance that memorizes trader status key
+     * {@code BOT_STATUS_KEY} is instance that memorizes bot status key
      * **/
-    public static final String TRADER_STATUS_KEY = "trader_status";
+    public static final String BOT_STATUS_KEY = "bot_status";
 
     /**
-     * {@code TRADER_PLATFORM_KEY} is instance that memorizes trader platform key
+     * {@code BOT_PLATFORM_KEY} is instance that memorizes bot platform key
      * **/
-    public static final String TRADER_PLATFORM_KEY = "trader_platform";
+    public static final String BOT_PLATFORM_KEY = "bot_platform";
 
     /**
-     * {@code TRADER_TYPE_KEY} is instance that memorizes trader type key
+     * {@code BOT_TYPE_KEY} is instance that memorizes bot type key
      * **/
-    public static final String TRADER_TYPE_KEY = "trader_type";
+    public static final String BOT_TYPE_KEY = "bot_type";
 
     /**
      * {@code REFRESH_TIME_KEY} is instance that memorizes refresh time key
@@ -93,68 +93,63 @@ public class BotDetails extends Trader {
     public static final String REFRESH_TIME_KEY = "refresh_time";
 
     /**
-     * {@code LAST_TRADER_ACTIVITY_KEY} is instance that memorizes last trader activity key
+     * {@code LAST_BOT_ACTIVITY_KEY} is instance that memorizes last bot activity key
      * **/
-    public static final String LAST_TRADER_ACTIVITY_KEY = "last_trader_activity";
+    public static final String LAST_BOT_ACTIVITY_KEY = "last_bot_activity";
 
     /**
      * {@code RUNNING_FROM_DATE_KEY} is instance that memorizes running from date key
      * **/
     public static final String RUNNING_FROM_DATE_KEY = "running_from_date";
-
     /**
-     * {@code lastTraderActivity} is instance that memorizes last time when bot contact server
-     * **/
-    private String lastTraderActivity;
-
+     * {@code botType} is instance that memorizes type of bot in use {@link #BOT_TYPE_AUTONOMOUS} or {@link #BOT_TYPE_MANUAL}
+     **/
+    private final String botType;
     /**
-     * {@code lastTraderActivityTimestamp} is instance that memorizes last time when bot contact server in timestamp format
-     * **/
-    private long lastTraderActivityTimestamp;
-
+     * {@code botPlatform} is instance that memorizes platform of bot in use {@link #BINANCE_PLATFORM} or {@link #COINBASE_PLATFORM}
+     **/
+    private final String botPlatform;
     /**
-     * {@code traderType} is instance that memorizes type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
-     * **/
-    private final String traderType;
-
+     * {@code lastBotActivity} is instance that memorizes last time when bot contact server
+     **/
+    private String lastBotActivity;
     /**
-     * {@code traderStatus} is instance that memorizes current status of trader {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
-     * **/
-    private String traderStatus;
-
+     * {@code lastBotActivityTimestamp} is instance that memorizes last time when bot contact server in timestamp format
+     **/
+    private long lastBotActivityTimestamp;
     /**
-     * {@code traderPlatform} is instance that memorizes platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
-     * **/
-    private final String traderPlatform;
-
+     * {@code botStatus} is instance that memorizes current status of bot {@link #RUNNING_BOT_STATUS} or {@link #STOPPED_BOT_STATUS}
+     **/
+    private String botStatus;
     /**
      * {@code refreshTime} is instance that memorizes time to refresh last prices
+     *
      * @implNote this param can customize with {@link #setRefreshTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
-     * **/
-    private long refreshTime;
+     **/
+    private int refreshTime;
 
     /**
-     * {@code traderPlatform} is instance that memorizes timestamp of date when trader has been started
+     * {@code botPlatform} is instance that memorizes timestamp of date when bot has been started
      * **/
     private long runningFromDate;
 
     /** Constructor to init {@link BotDetails}
-     * @param traderType: type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
-     * @param traderPlatform: platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
-     * @param runningFromDate: time stamp of date when trader has been started
+     * @param botType: type of bot in use {@link #BOT_TYPE_AUTONOMOUS} or {@link #BOT_TYPE_MANUAL}
+     * @param botPlatform: platform of bot in use {@link #BINANCE_PLATFORM} or {@link #COINBASE_PLATFORM}
+     * @param runningFromDate: time stamp of date when bot has been started
      * @throws IllegalArgumentException if parameters range is not respected
      * **/
-    public BotDetails(String traderType, String traderPlatform, long runningFromDate) {
+    public BotDetails(String botType, String botPlatform, long runningFromDate) {
         initTimeFormatters();
-        if (!traderType.equals(TRADER_TYPE_AUTONOMOUS) && !traderType.equals(TRADER_TYPE_MANUAL))
-            throw new IllegalArgumentException("Trader type inserted is wrong value, can be AUTONOMOUS or MANUAL type");
+        if (!botType.equals(BOT_TYPE_AUTONOMOUS) && !botType.equals(BOT_TYPE_MANUAL))
+            throw new IllegalArgumentException("bot type inserted is wrong value, can be AUTONOMOUS or MANUAL type");
         else
-            this.traderType = traderType;
-        if (!traderPlatform.equals(BINANCE_TRADER_PLATFORM) && !traderPlatform.equals(COINBASE_TRADER_PLATFORM))
-            throw new IllegalArgumentException("Trader platform inserted is not supported yet or is a wrong value");
+            this.botType = botType;
+        if (!botPlatform.equals(BINANCE_PLATFORM) && !botPlatform.equals(COINBASE_PLATFORM))
+            throw new IllegalArgumentException("bot platform inserted is not supported yet or is a wrong value");
         else
-            this.traderPlatform = traderPlatform;
+            this.botPlatform = botPlatform;
         if (runningFromDate < 0)
             throw new IllegalArgumentException("Running from date timestamp cannot be less than 0");
         else
@@ -162,36 +157,36 @@ public class BotDetails extends Trader {
     }
 
     /** Constructor to init {@link BotDetails}
-     * @param lastTraderActivity: last time when bot contact server
-     * @param traderType: type of trader in use {@link #TRADER_TYPE_AUTONOMOUS} or {@link #TRADER_TYPE_MANUAL}
-     * @param traderStatus: current status of trader {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
-     * @param traderPlatform: platform of trader in use {@link #BINANCE_TRADER_PLATFORM} or {@link #COINBASE_TRADER_PLATFORM}
+     * @param lastBotActivity: last time when bot contact server
+     * @param botType: type of bot in use {@link #BOT_TYPE_AUTONOMOUS} or {@link #BOT_TYPE_MANUAL}
+     * @param botStatus: current status of bot {@link #RUNNING_BOT_STATUS} or {@link #STOPPED_BOT_STATUS}
+     * @param botPlatform: platform of bot in use {@link #BINANCE_PLATFORM} or {@link #COINBASE_PLATFORM}
      * @param refreshTime: time to refresh last prices
-     * @param runningFromDate: date when trader has been started
+     * @param runningFromDate: date when bot has been started
      * @throws IllegalArgumentException if parameters range is not respected
      * **/
-    public BotDetails(long lastTraderActivity, String traderType, String traderStatus, String traderPlatform,
+    public BotDetails(long lastBotActivity, String botType, String botStatus, String botPlatform,
                       int refreshTime, long runningFromDate) {
         initTimeFormatters();
         boolean isInMillis = refreshTime > 3600;
-        if (lastTraderActivity < 0)
-            throw new IllegalArgumentException("Last trader activity timestamp cannot be less than 0");
+        if (lastBotActivity < 0)
+            throw new IllegalArgumentException("Last bot activity timestamp cannot be less than 0");
         else {
-            this.lastTraderActivity = timeFormat.format(new Date(lastTraderActivity));
-            lastTraderActivityTimestamp = lastTraderActivity;
+            this.lastBotActivity = timeFormat.format(new Date(lastBotActivity));
+            lastBotActivityTimestamp = lastBotActivity;
         }
-        if (!traderType.equals(TRADER_TYPE_AUTONOMOUS) && !traderType.equals(TRADER_TYPE_MANUAL))
-            throw new IllegalArgumentException("Trader type inserted is wrong value, can be AUTONOMOUS or MANUAL type");
+        if (!botType.equals(BOT_TYPE_AUTONOMOUS) && !botType.equals(BOT_TYPE_MANUAL))
+            throw new IllegalArgumentException("bot type inserted is wrong value, can be AUTONOMOUS or MANUAL type");
         else
-            this.traderType = traderType;
-        if (!traderStatus.equals(RUNNING_TRADER_STATUS) && !traderStatus.equals(STOPPED_TRADER_STATUS))
-            throw new IllegalArgumentException("Trader status inserted is wrong value, can be RUNNING or STOPPED status");
+            this.botType = botType;
+        if (!botStatus.equals(RUNNING_BOT_STATUS) && !botStatus.equals(STOPPED_BOT_STATUS))
+            throw new IllegalArgumentException("bot status inserted is wrong value, can be RUNNING or STOPPED status");
         else
-            this.traderStatus = traderStatus;
-        if (!traderPlatform.equals(BINANCE_TRADER_PLATFORM) && !traderPlatform.equals(COINBASE_TRADER_PLATFORM))
-            throw new IllegalArgumentException("Trader platform inserted is not supported yet or is a wrong value");
+            this.botStatus = botStatus;
+        if (!botPlatform.equals(BINANCE_PLATFORM) && !botPlatform.equals(COINBASE_PLATFORM))
+            throw new IllegalArgumentException("bot platform inserted is not supported yet or is a wrong value");
         else
-            this.traderPlatform = traderPlatform;
+            this.botPlatform = botPlatform;
         if (isInMillis)
             refreshTime /= 1000;
         if (refreshTime < 5 || refreshTime > 3600)
@@ -207,55 +202,60 @@ public class BotDetails extends Trader {
             this.runningFromDate = runningFromDate;
     }
 
-    public String getLastTraderActivity() {
-        if((System.currentTimeMillis() - lastTraderActivityTimestamp) >= ((86400 * 1000) / 2))
-            lastTraderActivity = dayPassFormat.format(new Date(lastTraderActivityTimestamp));
-        return lastTraderActivity;
-    }
-
-    /** Method to set {@link #lastTraderActivity}
-     * @param lastTraderActivity: last time when bot contact server value
-     * @throws IllegalArgumentException when time value is less than 0
-     * **/
-    public void setLastTraderActivity(long lastTraderActivity) {
-        if(lastTraderActivity < 0)
-            throw new IllegalArgumentException("Last trader activity timestamp cannot be less than 0");
-        this.lastTraderActivity = timeFormat.format(new Date(lastTraderActivity));
-        lastTraderActivityTimestamp = lastTraderActivity;
-    }
-
-    public String getTraderType() {
-        return traderType;
-    }
-
-    public String getTraderStatus() {
-        return traderStatus;
-    }
-
-    /** Method to set {@link #traderStatus}
-     * @param traderStatus: current status of trader
-     * @throws IllegalArgumentException when time value is different from {@link #RUNNING_TRADER_STATUS} or {@link #STOPPED_TRADER_STATUS}
-     * **/
-    public void setTraderStatus(String traderStatus) {
-        if(!traderStatus.equals(RUNNING_TRADER_STATUS) && !traderStatus.equals(STOPPED_TRADER_STATUS))
-            throw new IllegalArgumentException("Trader status inserted is wrong value, can be RUNNING or STOPPED status");
-        this.traderStatus = traderStatus;
-    }
-
-    public String getTraderPlatform() {
-        return traderPlatform;
+    public String getLastBotActivity() {
+        if ((System.currentTimeMillis() - lastBotActivityTimestamp) >= ((86400 * 1000) / 2))
+            lastBotActivity = dayPassFormat.format(new Date(lastBotActivityTimestamp));
+        return lastBotActivity;
     }
 
     /**
-     * This method is used to get color of platform that trader is using<br>
+     * Method to set {@link #lastBotActivity}
+     *
+     * @param lastBotActivity: last time when bot contact server value
+     * @throws IllegalArgumentException when time value is less than 0
+     **/
+    public void setLastBotActivity(long lastBotActivity) {
+        if (lastBotActivity < 0)
+            throw new IllegalArgumentException("Last bot activity timestamp cannot be less than 0");
+        this.lastBotActivity = timeFormat.format(new Date(lastBotActivity));
+        lastBotActivityTimestamp = lastBotActivity;
+    }
+
+    public String getBotType() {
+        return botType;
+    }
+
+    public String getBotStatus() {
+        return botStatus;
+    }
+
+    /**
+     * Method to set {@link #botStatus}
+     *
+     * @param botStatus: current status of bot
+     * @throws IllegalArgumentException when time value is different from {@link #RUNNING_BOT_STATUS} or {@link #STOPPED_BOT_STATUS}
+     **/
+    public void setBotStatus(String botStatus) {
+        if (!botStatus.equals(RUNNING_BOT_STATUS) && !botStatus.equals(STOPPED_BOT_STATUS))
+            throw new IllegalArgumentException("bot status inserted is wrong value, can be RUNNING or STOPPED status");
+        this.botStatus = botStatus;
+    }
+
+    public String getBotPlatform() {
+        return botPlatform;
+    }
+
+    /**
+     * This method is used to get color of platform that bot is using<br>
      * Any params required
+     *
      * @return color platform as {@link String}
-     * **/
-    public String getTraderPlatformColor() {
-        switch (traderPlatform) {
-            case BINANCE_TRADER_PLATFORM:
+     **/
+    public String getBotPlatformColor() {
+        switch (botPlatform) {
+            case BINANCE_PLATFORM:
                 return BINANCE_COLOR;
-            case COINBASE_TRADER_PLATFORM:
+            case COINBASE_PLATFORM:
                 return COINBASE_COLOR;
             default:
                 return CUSTOM_DEF_COLOR;
@@ -284,7 +284,7 @@ public class BotDetails extends Trader {
     }
 
     /** Method to set {@link #runningFromDate}
-     * @param runningFromDate: timestamp of date when trader has been started
+     * @param runningFromDate: timestamp of date when bot has been started
      * @throws IllegalArgumentException when timestamp value is lesser than 0
      * **/
     public void setRunningFromDate(long runningFromDate){
@@ -304,29 +304,30 @@ public class BotDetails extends Trader {
     }
 
     /**
-     * This method is used to get trader details <br>
+     * This method is used to get bot details <br>
      * Any params required
-     * @return trader details as {@link HashMap} of {@link Object}
-     * **/
-    public HashMap<String, Object> getTrader() {
-        HashMap<String, Object> trader = new HashMap<>();
-        trader.put(RUNNING_FROM_DATE_KEY, runningFromDate);
-        trader.put(TRADER_TYPE_KEY, traderType);
-        trader.put(LAST_TRADER_ACTIVITY_KEY, lastTraderActivityTimestamp);
-        trader.put(REFRESH_TIME_KEY, refreshTime);
-        trader.put(TRADER_PLATFORM_KEY, traderPlatform);
-        trader.put(TRADER_STATUS_KEY, traderStatus);
-        return trader;
+     *
+     * @return bot details as {@link HashMap} of {@link Object}
+     **/
+    public HashMap<String, Object> getBot() {
+        HashMap<String, Object> bot = new HashMap<>();
+        bot.put(RUNNING_FROM_DATE_KEY, runningFromDate);
+        bot.put(BOT_TYPE_KEY, botType);
+        bot.put(LAST_BOT_ACTIVITY_KEY, lastBotActivityTimestamp);
+        bot.put(REFRESH_TIME_KEY, refreshTime);
+        bot.put(BOT_PLATFORM_KEY, botPlatform);
+        bot.put(BOT_STATUS_KEY, botStatus);
+        return bot;
     }
 
     @Override
     public String toString() {
         return "BotDetails{" +
-                "lastTraderActivity='" + lastTraderActivity + '\'' +
-                ", lastTraderActivityTimestamp=" + lastTraderActivityTimestamp +
-                ", traderType='" + traderType + '\'' +
-                ", traderStatus='" + traderStatus + '\'' +
-                ", traderPlatform='" + traderPlatform + '\'' +
+                "lastBotActivity='" + lastBotActivity + '\'' +
+                ", lastBotActivityTimestamp=" + lastBotActivityTimestamp +
+                ", botType='" + botType + '\'' +
+                ", botStatus='" + botStatus + '\'' +
+                ", botPlatform='" + botPlatform + '\'' +
                 ", refreshTime=" + refreshTime +
                 ", runningFromDate=" + runningFromDate +
                 '}';

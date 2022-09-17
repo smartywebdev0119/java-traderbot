@@ -96,7 +96,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
         binanceMarketManager = new BinanceMarketManager();
-        REFRESH_TIME = 10000L;
+        REFRESH_TIME = 10000;
         initTrader();
     }
 
@@ -110,7 +110,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
         binanceMarketManager = new BinanceMarketManager();
-        REFRESH_TIME = 10000L;
+        REFRESH_TIME = 10000;
         initTrader();
     }
 
@@ -124,14 +124,11 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceTraderBot(String apiKey, String secretKey, int refreshTime) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
-        binanceMarketManager = new BinanceMarketManager();
+        this(apiKey, secretKey);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -145,14 +142,11 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshTime) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
-        binanceMarketManager = new BinanceMarketManager();
+        this(apiKey, secretKey, baseEndpoint);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -167,15 +161,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      **/
     public BinanceTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies,
                             int refreshTime) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
-        binanceMarketManager = new BinanceMarketManager();
+        this(apiKey, secretKey, refreshTime);
         this.quoteCurrencies = quoteCurrencies;
-        if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
-        else
-            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -191,15 +178,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                             int refreshTime) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
-        binanceMarketManager = new BinanceMarketManager();
+        this(apiKey, secretKey, baseEndpoint, refreshTime);
         this.quoteCurrencies = quoteCurrencies;
-        if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
-        else
-            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /** Constructor to init {@link BinanceTraderBot}
@@ -209,11 +189,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
-        binanceMarketManager = new BinanceMarketManager();
+        this(apiKey, secretKey);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /** Constructor to init {@link BinanceTraderBot}
@@ -224,11 +201,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
-        binanceMarketManager = new BinanceMarketManager();
+        this(apiKey, secretKey, baseEndpoint);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /**
@@ -583,22 +557,53 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * This method is to get list of the latest prices <br>
      * Any params required
      *
-     * @return last prices as {@link HashMap} of {@link TickerPriceChange}
+     * @return last prices as {@link ArrayList} of {@link Double}
      **/
     @Override
-    public HashMap<String, TickerPriceChange> getLatestPrices() {
+    public ArrayList<Double> getLatestPrices() {
+        ArrayList<Double> lastPrices = new ArrayList<>();
+        for (TickerPriceChange tickerPriceChange : this.lastPrices.values())
+            lastPrices.add(tickerPriceChange.getLastPrice());
+        return lastPrices;
+    }
+
+    /**
+     * This method is to get list of the latest prices
+     *
+     * @param decimals: number of digits to round final value
+     * @return last prices as {@link ArrayList} of {@link Double}
+     * @throws IllegalArgumentException if decimal digits are negative
+     **/
+    @Override
+    public ArrayList<Double> getLatestPrices(int decimals) {
+        ArrayList<Double> lastPrices = new ArrayList<>();
+        for (TickerPriceChange tickerPriceChange : this.lastPrices.values())
+            lastPrices.add(tickerPriceChange.getLastPrice(decimals));
         return lastPrices;
     }
 
     /**
      * This method is to get last price of a symbol <br>
      *
-     * @param symbol: symbol from fetch last price es BTCBUSD
-     * @return last prices as {@link HashMap} of {@link TickerPriceChange}
+     * @param symbol: symbol from fetch last price
+     * @return last price as double
      **/
     @Override
-    public TickerPriceChange getLastPrice(String symbol) {
-        return lastPrices.get(symbol);
+    public double getLastPrice(String symbol) {
+        return lastPrices.get(symbol).getLastPrice();
+    }
+
+    /**
+     * This method is to get last price of a symbol
+     *
+     * @param symbol:   symbol from fetch last price
+     * @param decimals: number of digits to round final value
+     * @return last price as double
+     * @throws IllegalArgumentException if decimal digits are negative
+     **/
+    @Override
+    public double getLastPrice(String symbol, int decimals) {
+        return lastPrices.get(symbol).getLastPrice(decimals);
     }
 
 }

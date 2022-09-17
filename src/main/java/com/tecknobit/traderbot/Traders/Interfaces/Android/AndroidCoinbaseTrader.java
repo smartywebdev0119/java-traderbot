@@ -28,7 +28,6 @@ import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
-import static java.lang.Math.toIntExact;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 
@@ -45,46 +44,33 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
 
     /**
      * {@code transactionDateFormat} is instance helpful to format transaction date
-     * **/
+     **/
     private final DateFormat transactionDateFormat;
 
     /**
      * {@code botDetails} is instance helpful to manage trader details
      *
-     * @implNote will be instantiated with default values by {@link AndroidBinanceTrader}
+     * @implNote will be instantiated with default values by {@link AndroidCoinbaseTrader}
      **/
-    private final BotDetails botDetails;
+    private static final BotDetails botDetails;
+
+    static {
+        long timestamp = System.currentTimeMillis();
+        botDetails = new BotDetails(timestamp, BOT_TYPE_MANUAL, RUNNING_BOT_STATUS, COINBASE_PLATFORM,
+                10000, timestamp);
+    }
 
     /**
      * {@code traderAccount} is instance helpful to manage trader account stats
+     *
      * @implNote will be instantiated with account values with server request
-     * **/
+     **/
     private final TraderAccount traderAccount;
 
     /**
      * {@code androidWorkflow} is instance helpful to manage Android's workflow
-     * **/
+     **/
     private final AndroidWorkflow androidWorkflow;
-
-    /**
-     * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
-     * **/
-    private final String authToken;
-
-    /**
-     * {@code token} is instance that memorizes identifier of user to log in and requests operations
-     * **/
-    private final String token;
-
-    /**
-     * {@code ivSpec} is instance that memorizes initialization vector used in server requests
-     * **/
-    private final String ivSpec;
-
-    /**
-     * {@code secretKey} is instance that memorizes secret key used in server requests
-     * **/
-    private final String secretKey;
 
     /**
      * {@code symbol} is instance that memorizes symbol of cryptocurrency es. BTCBUSD or BTC-USD
@@ -131,15 +117,9 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshTime);
         this.baseCurrency = baseCurrency;
         long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
         initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
+        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
@@ -165,14 +145,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         super(apiKey, apiSecret, passphrase, timeout, refreshTime);
         this.baseCurrency = baseCurrency;
         long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
         initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
+        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         transactionDateFormat = getDateTimeInstance();
@@ -199,14 +173,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         setRefreshTime(refreshTime);
         this.baseCurrency = baseCurrency;
         long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
         initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
+        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         transactionDateFormat = getDateTimeInstance();
@@ -233,14 +201,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         setRefreshTime(refreshTime);
         this.baseCurrency = baseCurrency;
         long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
         initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
+        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
         androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
         traderAccount = new TraderAccount(serverRequest);
         transactionDateFormat = getDateTimeInstance();
@@ -265,22 +227,9 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     public AndroidCoinbaseTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  int timeout, ArrayList<String> quoteCurrencies, String baseCurrency, int refreshTime,
                                  Credentials credentials, boolean printRoutineMessages) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, refreshTime);
-        this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
-        initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
-        transactionDateFormat = getDateTimeInstance();
-        walletList = traderAccount.getWalletCryptocurrencies();
-        workflowHandler();
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, baseCurrency, refreshTime, credentials,
+                printRoutineMessages);
+        this.quoteCurrencies = quoteCurrencies;
     }
 
     /** Constructor to init {@link AndroidCoinbaseTrader}
@@ -299,23 +248,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     public AndroidCoinbaseTrader(String apiKey, String apiSecret, String passphrase, int timeout,
                                  ArrayList<String> quoteCurrencies, String baseCurrency, int refreshTime,
                                  Credentials credentials, boolean printRoutineMessages) throws Exception {
-        super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies);
-        setRefreshTime(refreshTime);
-        this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
-        initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
-        transactionDateFormat = getDateTimeInstance();
-        walletList = traderAccount.getWalletCryptocurrencies();
-        workflowHandler();
+        this(apiKey, apiSecret, passphrase, timeout, baseCurrency, refreshTime, credentials, printRoutineMessages);
+        this.quoteCurrencies = quoteCurrencies;
     }
 
     /** Constructor to init {@link AndroidCoinbaseTrader}
@@ -334,22 +268,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     public AndroidCoinbaseTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  ArrayList<String> quoteCurrencies, String baseCurrency, int refreshTime,
                                  Credentials credentials, boolean printRoutineMessages) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, refreshTime);
-        this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
-        initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
-        transactionDateFormat = getDateTimeInstance();
-        walletList = traderAccount.getWalletCryptocurrencies();
-        workflowHandler();
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, baseCurrency, refreshTime, credentials, printRoutineMessages);
+        this.quoteCurrencies = quoteCurrencies;
     }
 
     /** Constructor to init {@link AndroidCoinbaseTrader}
@@ -367,22 +287,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     public AndroidCoinbaseTrader(String apiKey, String apiSecret, String passphrase, ArrayList<String> quoteCurrencies,
                                  String baseCurrency, int refreshTime, Credentials credentials,
                                  boolean printRoutineMessages) throws Exception {
-        super(apiKey, apiSecret, passphrase, quoteCurrencies, refreshTime);
-        this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
-        botDetails = new BotDetails(timestamp, TRADER_TYPE_MANUAL, RUNNING_TRADER_STATUS, COINBASE_TRADER_PLATFORM,
-                toIntExact(REFRESH_TIME), timestamp);
-        initCredentials(credentials);
-        authToken = credentials.getAuthToken();
-        token = credentials.getToken();
-        ivSpec = credentials.getIvSpec();
-        secretKey = credentials.getSecretKey();
-        ServerRequest serverRequest = new ServerRequest(ivSpec, secretKey, authToken, token, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
-        transactionDateFormat = getDateTimeInstance();
-        walletList = traderAccount.getWalletCryptocurrencies();
-        workflowHandler();
+        this(apiKey, apiSecret, passphrase, baseCurrency, refreshTime, credentials, printRoutineMessages);
+        this.quoteCurrencies = quoteCurrencies;
     }
 
     /**
@@ -402,11 +308,11 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     @Override
     public void initCredentials(Credentials credentials) throws Exception {
         checkCredentialsValidity(credentials);
-        credentials.setTraderDetails(botDetails);
+        credentials.setBotDetails(botDetails);
         if(credentials.getToken() == null)
-            credentials.sendRegistrationRequest();
+            credentials.sendRegistrationRequest(HOST, PORT);
         else
-            credentials.sendLoginRequest(baseCurrency, quoteCurrencies);
+            credentials.sendLoginRequest(baseCurrency, HOST, PORT, quoteCurrencies);
     }
 
     /**
@@ -677,23 +583,23 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     /**
      * This method is used to disable running mode of trader
      * @implNote in Android's interfaces this method updates also
-     * {@link #botDetails} status instance to STOPPED_TRADER_STATUS
+     * {@link #botDetails} status instance to STOPPED_BOT_STATUS
      * **/
     @Override
     public void disableTrader() {
         runningTrader = false;
-        botDetails.setTraderStatus(STOPPED_TRADER_STATUS);
+        botDetails.setBotStatus(STOPPED_BOT_STATUS);
     }
 
     /**
      * This method is used to enable running mode of trader
      * @implNote in Android's interfaces this method updates also
-     * {@link #botDetails} status instance to RUNNING_TRADER_STATUS
+     * {@link #botDetails} status instance to RUNNING_BOT_STATUS
      * **/
     @Override
     public void enableTrader() {
         runningTrader = true;
-        botDetails.setTraderStatus(RUNNING_TRADER_STATUS);
+        botDetails.setBotStatus(RUNNING_BOT_STATUS);
     }
 
     /**

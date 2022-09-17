@@ -6,9 +6,10 @@ import com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages;
 import static com.tecknobit.traderbot.Records.Account.BotDetails.TraderManager;
 
 /**
- * The {@code RoutineMessages} interface defines base methods to Android's trader<br>
+ * The {@code RoutineMessages} interface defines base methods to Android's trader
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
 public interface AndroidCoreRoutines extends TraderManager, RoutineMessages {
 

@@ -458,37 +458,6 @@ public class Cryptocurrency extends Token implements RecordDetails {
     }
 
     /**
-     * This method is used to print details of {@link Cryptocurrency} object <br>
-     * Any params required
-     * **/
-    @Override
-    public void printDetails() {
-        out.println("## [" + symbol + "]\n" +
-                getANSIText("## Income: ", getTextIncomePercent(2)) +
-                "## Last price: " + lastPrice + "\n" +
-                "## Quantity: " + quantity + "\n" +
-                getANSIText("## Asset trend: ", getTextPriceChangePercent(2)) +
-                "## Portfolio balance: " + getCryptocurrencyBalance(2) + "\n" +
-                getANSIText("## Estimated asset trend: ", getTextTptopIndex(2)) +
-                "######################");
-    }
-
-    /**
-     * This method is used to format colored string for percent detail line.<br>
-     * @param tail: text to indicate the info es. Trend:
-     * @param percent: value of percent to color es +8%
-     * @return percent string colored and formatted as {@link String}
-     * **/
-    private String getANSIText(String tail, String percent){
-        if(percent.contains("+"))
-            return tail + ANSI_GREEN + percent + ANSI_RESET + "\n";
-        else if (percent.contains("-"))
-            return tail + ANSI_RED + percent + ANSI_RESET + "\n";
-        else
-            return tail + percent + "\n";
-    }
-
-    /**
      * This method is used to get cryptocurrency details <br>
      * Any params required
      * @return cryptocurrency details as {@link HashMap} of {@link Object}
@@ -506,41 +475,58 @@ public class Cryptocurrency extends Token implements RecordDetails {
         crypto.put(PRICE_CHANGE_PERCENT_KEY, priceChangePercent);
         crypto.put(QUOTE_ASSET_KEY, quoteAsset);
         crypto.put(INCOME_PERCENT_KEY, getIncomePercent());
-        if(tradingConfig != null)
+        if (tradingConfig != null)
             crypto.put(MODEL_ID_KEY, tradingConfig.getModelId());
         crypto.put(FIRST_PRICES_SUM_KEY, getFirstPrice());
         crypto.put(FIRST_PRICES_SIZE_KEY, firstPricesSize);
         return crypto;
     }
 
+    /**
+     * This method is used to print details of {@link Cryptocurrency} object <br>
+     * Any params required
+     **/
+    @Override
+    public void printDetails() {
+        out.println(this);
+    }
+
     @Override
     public String toString() {
-        return "Cryptocurrency{" +
-                "symbol='" + symbol + '\'' +
-                ", firstPrices=" + firstPrices +
-                ", lastPrice=" + lastPrice +
-                ", tptopIndex=" + tptopIndex +
-                ", candleGap=" + candleGap +
-                ", priceChangePercent=" + priceChangePercent +
-                ", quoteAsset='" + quoteAsset + '\'' +
-                ", incomePercent=" + incomePercent +
-                ", tradingConfig=" + tradingConfig +
-                ", firstPricesSum=" + firstPricesSum +
-                ", previousFirstPricesSize=" + previousFirstPricesSize +
-                ", firstPricesSize=" + firstPricesSize +
-                ", assetIndex='" + assetIndex + '\'' +
-                ", assetName='" + assetName + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return "## [" + symbol + "]\n" +
+                getANSIText("## Income: ", getTextIncomePercent(2)) +
+                "## Last price: " + lastPrice + "\n" +
+                "## Quantity: " + quantity + "\n" +
+                getANSIText("## Asset trend: ", getTextPriceChangePercent(2)) +
+                "## Portfolio balance: " + getCryptocurrencyBalance(2) + "\n" +
+                getANSIText("## Estimated asset trend: ", getTextTptopIndex(2)) +
+                "######################";
+    }
+
+    /**
+     * This method is used to format colored string for percent detail line.<br>
+     *
+     * @param tail:    text to indicate the info es. Trend:
+     * @param percent: value of percent to color es +8%
+     * @return percent string colored and formatted as {@link String}
+     **/
+    private String getANSIText(String tail, String percent) {
+        if (percent.contains("+"))
+            return tail + ANSI_GREEN + percent + ANSI_RESET + "\n";
+        else if (percent.contains("-"))
+            return tail + ANSI_RED + percent + ANSI_RESET + "\n";
+        else
+            return tail + percent + "\n";
     }
 
     /**
      * The {@code TradingConfig} class is useful for trading operation.<br>
      * Represent model to use for a {@link Cryptocurrency} in trading phases. (BUY and SELL)
+     *
      * @author Tecknobit N7ghtm4r3
-     * **/
+     **/
 
-    public static final class TradingConfig{
+    public static final class TradingConfig {
 
         /**
          * {@code MAX_FAILS_NUMBER} is instance that memorizes max fails number key

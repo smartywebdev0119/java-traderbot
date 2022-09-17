@@ -10,10 +10,6 @@ import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
-import com.tecknobit.traderbot.Traders.Autonomous.Android.AndroidBinanceAutoTrader;
-import com.tecknobit.traderbot.Traders.Autonomous.Android.AndroidCoinbaseAutoTrader;
-import com.tecknobit.traderbot.Traders.Interfaces.Android.AndroidBinanceTrader;
-import com.tecknobit.traderbot.Traders.Interfaces.Android.AndroidCoinbaseTrader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,47 +31,48 @@ import static java.lang.System.*;
 import static org.apache.commons.validator.routines.EmailValidator.getInstance;
 
 /**
- * The {@code AndroidWorkflow} class is useful to manage Android's traders workflow<br>
- * Is useful for Android's type traders.
+ * The {@code AndroidWorkflow} class is useful to manage Android's bots workflow<br>
+ * Is useful for Android's type bots.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
 public class AndroidWorkflow implements RoutineMessages {
 
     /**
      * {@code alreadyInstantiated} flag to lock multiple instantiations of {@link AndroidWorkflow} object
-     * **/
-    private static boolean alreadyInstantiated = false;
+     **/
+    protected static boolean alreadyInstantiated = false;
 
     /**
-     * {@code serverRequest} instance to make server request for Android's traders
+     * {@code serverRequest} instance to make server request for Android's bots
      * **/
-    private final ServerRequest serverRequest;
+    protected final ServerRequest serverRequest;
 
     /**
      * {@code trader} instance of Android's traders used
      * **/
-    private final TraderCoreRoutines trader;
+    protected final TraderCoreRoutines trader;
 
     /**
-     * {@code credentials} instance contains your Tecknobit's account credentials, not your private exchange keys
+     * {@code credentials} instance that contains your Tecknobit's account credentials, not your private exchange keys
      * **/
-    private final Credentials credentials;
+    protected final Credentials credentials;
 
     /**
      * {@code printRoutineMessages} flag to insert to print or not routine messages
      * **/
-    private boolean printRoutineMessages;
+    protected boolean printRoutineMessages;
 
     /**
      * {@code workflowStarted} flag to indicate if Android's workflow has been started
      * **/
-    private boolean workflowStarted;
+    protected boolean workflowStarted;
 
     /** Constructor to init {@link AndroidWorkflow}
      * @param serverRequest: instance to make server request for Android's traders
      * @param trader: instance of Android's traders used
-     * @param credentials : instance contains your Tecknobit's account credentials, not your private exchange keys
+     * @param credentials : instance that contains your Tecknobit's account credentials, not your private exchange keys
      * @param printRoutineMessages: flag to insert to print or not routine messages
      * **/
     public AndroidWorkflow(ServerRequest serverRequest, TraderCoreRoutines trader, Credentials credentials,
@@ -122,63 +119,47 @@ public class AndroidWorkflow implements RoutineMessages {
      * This method is used to perform routines of Android's workflow <br>
      * Any params required
      * **/
-    private void performRoutines() {
-        for (Routine routine : getRoutines()){
-            switch (routine.getRoutine()){
-                case CHANGE_MAIL_OPE:
-                    credentials.setMail(routine.getExtraValue());
-                    printOperationStatus("[" + CHANGE_MAIL_OPE + "] Mail successfully changed", true);
+    protected void performRoutines() {
+        for (Routine routine : getRoutines()) {
+            switch (routine.getRoutine()) {
+                case CHANGE_EMAIL_OPE:
+                    credentials.setEmail(routine.getExtraValue());
+                    printOperationStatus("[" + CHANGE_EMAIL_OPE + "] Email successfully changed", true);
                     break;
                 case CHANGE_PASSWORD_OPE:
                     credentials.setPassword(routine.getExtraValue());
                     printOperationStatus("[" + CHANGE_PASSWORD_OPE + "] Password successfully changed", true);
                     break;
-                case CHANGE_REFRESH_TIME_PRICES_OPE:
+                case CHANGE_REFRESH_TIME_OPE:
                     trader.setRefreshTime(parseInt(routine.getExtraValue()));
-                    printOperationStatus("[" + CHANGE_REFRESH_TIME_PRICES_OPE + "] Refresh prices time successfully changed",
+                    printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh prices time successfully changed",
                             true);
                     break;
-                case CHANGE_TRADER_STATUS_OPE:
-                    printOperationStatus("[" + CHANGE_TRADER_STATUS_OPE + "] Trader status successfully changed",
+                case CHANGE_BOT_STATUS_OPE:
+                    printOperationStatus("[" + CHANGE_BOT_STATUS_OPE + "] Bot status successfully changed",
                             true);
-                    if(routine.getExtraValue().equals(STOPPED_TRADER_STATUS)){
-                        if(trader instanceof AndroidBinanceTrader)
-                            ((AndroidBinanceTrader)trader).disableTrader();
-                        else if (trader instanceof AndroidCoinbaseTrader)
-                            ((AndroidCoinbaseTrader)trader).disableTrader();
-                        else if (trader instanceof AndroidBinanceAutoTrader)
-                            ((AndroidBinanceAutoTrader)trader).disableTrader();
-                        else if (trader instanceof AndroidCoinbaseAutoTrader)
-                            ((AndroidCoinbaseAutoTrader)trader).disableTrader();
-                        printOperationStatus("Trader status: [" + STOPPED_TRADER_STATUS + "]", false);
-                    }else{
-                        if(trader instanceof AndroidBinanceTrader)
-                            ((AndroidBinanceTrader)trader).enableTrader();
-                        else if (trader instanceof AndroidCoinbaseTrader)
-                            ((AndroidCoinbaseTrader)trader).enableTrader();
-                        else if (trader instanceof AndroidBinanceAutoTrader)
-                            ((AndroidBinanceAutoTrader)trader).enableTrader();
-                        else if (trader instanceof AndroidCoinbaseAutoTrader)
-                            ((AndroidCoinbaseAutoTrader)trader).enableTrader();
-                        printOperationStatus("Trader status: [" + RUNNING_TRADER_STATUS+ "]", true);
+                    if (routine.getExtraValue().equals(STOPPED_BOT_STATUS)) {
+                        if (trader instanceof AndroidCoreRoutines) {
+                            ((AndroidCoreRoutines) trader).disableTrader();
+                            printOperationStatus("Bot status: [" + STOPPED_BOT_STATUS + "]", false);
+                        }
+                    } else {
+                        if (trader instanceof AndroidCoreRoutines) {
+                            ((AndroidCoreRoutines) trader).enableTrader();
+                            printOperationStatus("Bot status: [" + RUNNING_BOT_STATUS + "]", true);
+                        }
                     }
                     break;
                 case CHANGE_CURRENCY_OPE:
-                    if(trader instanceof AndroidBinanceTrader)
-                        ((AndroidBinanceTrader)trader).setBaseCurrency(routine.getExtraValue());
-                    else if (trader instanceof AndroidCoinbaseTrader)
-                        ((AndroidCoinbaseTrader)trader).setBaseCurrency(routine.getExtraValue());
-                    else if (trader instanceof AndroidBinanceAutoTrader)
-                        ((AndroidBinanceAutoTrader)trader).setBaseCurrency(routine.getExtraValue());
-                    else if (trader instanceof AndroidCoinbaseAutoTrader)
-                        ((AndroidCoinbaseAutoTrader)trader).setBaseCurrency(routine.getExtraValue());
-                    printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Base currency successfully changed",
-                            true);
+                    if (trader instanceof AndroidCoreRoutines) {
+                        ((AndroidCoreRoutines) trader).setBaseCurrency(routine.getExtraValue());
+                        printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Base currency successfully changed", true);
+                    }
                     break;
                 case INSERT_QUOTE_OPE:
                     String quoteAdd = routine.getExtraValue();
                     trader.insertQuoteCurrency(quoteAdd);
-                    printOperationStatus("[" + INSERT_QUOTE_OPE + "] Quote currency [" + quoteAdd +  "] successfully inserted",
+                    printOperationStatus("[" + INSERT_QUOTE_OPE + "] Quote currency [" + quoteAdd + "] successfully inserted",
                             true);
                     break;
                 case REMOVE_QUOTE_OPE:
@@ -194,25 +175,25 @@ public class AndroidWorkflow implements RoutineMessages {
      * This method is used to fetch routines of Android's workflow <br>
      * Any params required
      * **/
-    private ArrayList<Routine> getRoutines() {
+    protected ArrayList<Routine> getRoutines() {
         ArrayList<Routine> routines = new ArrayList<>();
         try {
-            serverRequest.sendTokenRequest(new JSONObject(), GET_ROUTINES_TRADER_OPE);
+            serverRequest.sendTokenRequest(new JSONObject(), GET_ROUTINES_OPE);
             response = serverRequest.readResponse();
-            if(response != null) {
-                if(response.getInt(STATUS_CODE) != -1){
+            if (response != null) {
+                if (response.getInt(STATUS_CODE) != -1) {
                     JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY, new JSONArray());
                     for (int j = 0; j < jsonRoutines.length(); j++) {
                         JSONObject routine = jsonRoutines.getJSONObject(j);
                         routines.add(new Routine(routine.getString(ROUTINE_KEY), routine.getString(ROUTINE_EXTRA_VALUE_KEY)));
                     }
                 }else{
-                    printRed("[ACCOUNT DELETED] You deleted account for trader, we hope to see you again soon!");
+                    printRed("[ACCOUNT DELETED] You deleted account for the bot, we hope to see you again soon!");
                     exit(0);
                 }
             }
         } catch (Exception e) {
-            printOperationFailed(GET_ROUTINES_TRADER_OPE);
+            printOperationFailed(GET_ROUTINES_OPE);
         }
         return routines;
     }
@@ -437,9 +418,9 @@ public class AndroidWorkflow implements RoutineMessages {
      * @param msg: message to print out
      * @param greenPrint: flag to print green or red
      * **/
-    private void printOperationStatus(String msg, boolean greenPrint) {
-        if(printRoutineMessages){
-            if(greenPrint) {
+    protected void printOperationStatus(String msg, boolean greenPrint) {
+        if (printRoutineMessages) {
+            if (greenPrint) {
                 printGreen(getDate(currentTimeMillis()) + " -> " + msg);
             } else
                 printRed(getDate(currentTimeMillis()) + " -> " + msg);
@@ -450,8 +431,8 @@ public class AndroidWorkflow implements RoutineMessages {
      * This method is used to print message about a failed operation<br>
      * @param ope: message to print out
      * **/
-    public void printOperationFailed(String ope){
-        if(printRoutineMessages)
+    protected void printOperationFailed(String ope) {
+        if (printRoutineMessages)
             printRed(getDate(currentTimeMillis()) + " -> [" + ope + "] Operation failed");
     }
 
@@ -459,8 +440,8 @@ public class AndroidWorkflow implements RoutineMessages {
      * This method is used to print message about a successful operation <br>
      * @param ope: message to print out
      * **/
-    private void printOperationSuccess(String ope){
-        if(printRoutineMessages)
+    protected void printOperationSuccess(String ope) {
+        if (printRoutineMessages)
             printGreen(getDate(currentTimeMillis()) + " -> [" + ope + "] Operation ended successfully");
     }
 
@@ -522,7 +503,7 @@ public class AndroidWorkflow implements RoutineMessages {
         public static final int MIN_TOKEN_LENGTH = 8;
 
         /**
-         * {@code serverRequest} instance to make server request for Android's traders
+         * {@code serverRequest} instance to make server request for Android's bots
          * **/
         private ServerRequest serverRequest;
 
@@ -537,9 +518,9 @@ public class AndroidWorkflow implements RoutineMessages {
         private final String token;
 
         /**
-         * {@code mail} is instance that memorizes mail of user
+         * {@code email} is instance that memorizes email of user
          * **/
-        private String mail;
+        private String email;
 
         /**
          * {@code password} is instance that memorizes password of user
@@ -557,25 +538,25 @@ public class AndroidWorkflow implements RoutineMessages {
         private final String secretKey;
 
         /**
-         * {@code botDetails} is instance helpful to manage trader details
+         * {@code botDetails} is instance helpful to manage bot details
          **/
         private BotDetails botDetails;
 
         /** Constructor to init {@link Credentials}
-         * @param mail: is instance that memorizes mail of user
+         * @param email: is instance that memorizes email of user
          * @param password: is instance that memorizes password of user
          * @implNote this constructor must call to register a new account
          * **/
-        public Credentials(String mail, String password) {
-            if(!alreadyInstantiated)
+        public Credentials(String email, String password) {
+            if (!alreadyInstantiated)
                 alreadyInstantiated = true;
             else
                 exitWithError();
-            if(!getInstance().isValid(mail))
-                throw new IllegalArgumentException("Mail must be a valid mail");
+            if (!getInstance().isValid(email))
+                throw new IllegalArgumentException("Email must be a valid email");
             else
-                this.mail = mail;
-            if(wrongPasswordValidity(password))
+                this.email = email;
+            if (wrongPasswordValidity(password))
                 throw new IllegalArgumentException("Password must be 8 - 32 characters length");
             else
                 this.password = password;
@@ -586,54 +567,23 @@ public class AndroidWorkflow implements RoutineMessages {
         }
 
         /**
-         * This method is used to register a new Tecknobit's account <br>
-         * Any params required
-         * **/
-        public void sendRegistrationRequest() throws Exception {
-            if (botDetails != null && token == null) {
-                serverRequest = getPublicRequest();
-                assert serverRequest != null;
-                serverRequest.sendRequest(new JSONObject().put(MAIL_KEY, mail).put(PASSWORD_KEY, password)
-                        .put(TRADER_STATUS_KEY, botDetails.getTraderStatus())
-                        .put(REFRESH_TIME_KEY, botDetails.getRefreshTime())
-                        .put(TRADER_PLATFORM_KEY, botDetails.getTraderPlatform())
-                        .put(LAST_TRADER_ACTIVITY_KEY, botDetails.getLastTraderActivity())
-                        .put(RUNNING_FROM_DATE_KEY, botDetails.getRunningFromDate())
-                        .put(TRADER_TYPE_KEY, botDetails.getTraderType()), REGISTRATION_OPE);
-                response = serverRequest.readResponse();
-                if(response != null){
-                    switch (response.getInt(STATUS_CODE)){
-                        case SUCCESSFUL_RESPONSE:
-                            throw new SaveData(new JSONObject().put(TOKEN_KEY, response.getString(TOKEN_KEY))
-                                    .put(AUTH_TOKEN_KEY, response.getString(AUTH_TOKEN_KEY))
-                                    .put(IV_SPEC_KEY, response.getString(IV_SPEC_KEY))
-                                    .put(SECRET_KEY, response.getString(SECRET_KEY))
-                                    .put(MAIL_KEY, mail)
-                                    .put(PASSWORD_KEY, password));
-                        case GENERIC_ERROR_RESPONSE: throw new IllegalAccessException("Mail not available");
-                        default: throw new IllegalAccessException("Operation failed");
-                    }
-                }else
-                    throw new IllegalStateException(ANSI_RED + "Service is not available for serve your request, wait" + ANSI_RESET);
-            }
-        }
-
-        /** Constructor to init {@link Credentials}
+         * Constructor to init {@link Credentials}
+         *
          * @param authToken: is instance that memorizes identifier of server trader to log in and requests operations
-         * @param mail: is instance that memorizes mail of user
-         * @param password: is instance that memorizes password of user
-         * @param token: instance that memorizes identifier of user to log in and requests operations
-         * @param ivSpec: instance initialization vector used in server requests
+         * @param email:     is instance that memorizes email of user
+         * @param password:  is instance that memorizes password of user
+         * @param token:     instance that memorizes identifier of user to log in and requests operations
+         * @param ivSpec:    instance initialization vector used in server requests
          * @param secretKey: is instance secret key used in server requests
          * @implNote this constructor must call to log in
-         * **/
-        public Credentials(String authToken, String mail, String password, String token, String ivSpec, String secretKey) {
-            if(!alreadyInstantiated)
+         **/
+        public Credentials(String authToken, String email, String password, String token, String ivSpec, String secretKey) {
+            if (!alreadyInstantiated)
                 alreadyInstantiated = true;
             else
                 exitWithError();
             this.authToken = authToken;
-            this.mail = mail;
+            this.email = email;
             this.password = password;
             this.token = token;
             this.ivSpec = ivSpec;
@@ -641,20 +591,55 @@ public class AndroidWorkflow implements RoutineMessages {
         }
 
         /**
+         * This method is used to register a new Tecknobit's account <br>
+         * Any params required
+         **/
+        public void sendRegistrationRequest(String host, int port) throws Exception {
+            if (botDetails != null && token == null) {
+                serverRequest = getPublicRequest(host, port);
+                assert serverRequest != null;
+                serverRequest.sendRequest(new JSONObject().put(EMAIL_KEY, email).put(PASSWORD_KEY, password)
+                        .put(BOT_STATUS_KEY, botDetails.getBotStatus())
+                        .put(REFRESH_TIME_KEY, botDetails.getRefreshTime())
+                        .put(BOT_PLATFORM_KEY, botDetails.getBotPlatform())
+                        .put(LAST_BOT_ACTIVITY_KEY, botDetails.getLastBotActivity())
+                        .put(RUNNING_FROM_DATE_KEY, botDetails.getRunningFromDate())
+                        .put(BOT_TYPE_KEY, botDetails.getBotType()), REGISTRATION_OPE);
+                response = serverRequest.readResponse();
+                if (response != null) {
+                    switch (response.getInt(STATUS_CODE)) {
+                        case SUCCESSFUL_RESPONSE:
+                            throw new SaveData(new JSONObject().put(TOKEN_KEY, response.getString(TOKEN_KEY))
+                                    .put(AUTH_TOKEN_KEY, response.getString(AUTH_TOKEN_KEY))
+                                    .put(IV_SPEC_KEY, response.getString(IV_SPEC_KEY))
+                                    .put(SECRET_KEY, response.getString(SECRET_KEY))
+                                    .put(EMAIL_KEY, email)
+                                    .put(PASSWORD_KEY, password));
+                        case GENERIC_ERROR_RESPONSE:
+                            throw new IllegalAccessException("Email not available");
+                        default:
+                            throw new IllegalAccessException("Operation failed");
+                    }
+                }else
+                    throw new IllegalStateException(ANSI_RED + "Service is not available for serve your request, wait" + ANSI_RESET);
+            }
+        }
+
+        /**
          * This method is used to log in a Tecknobit's account <br>
          * Any params required
-         * **/
-        public void sendLoginRequest(String baseCurrency, ArrayList<String> quoteCurrencies) throws Exception {
-            serverRequest = getPublicRequest();
+         **/
+        public void sendLoginRequest(String baseCurrency, String host, int port, ArrayList<String> quoteCurrencies) throws Exception {
+            serverRequest = getPublicRequest(host, port);
             assert serverRequest != null;
-            serverRequest.sendRequest(new JSONObject().put(MAIL_KEY, mail).put(PASSWORD_KEY, password)
+            serverRequest.sendRequest(new JSONObject().put(EMAIL_KEY, email).put(PASSWORD_KEY, password)
                     .put(AUTH_TOKEN_KEY, authToken)
-                    .put(TRADER_STATUS_KEY, botDetails.getTraderStatus())
+                    .put(BOT_STATUS_KEY, botDetails.getBotStatus())
                     .put(REFRESH_TIME_KEY, botDetails.getRefreshTime())
-                    .put(TRADER_PLATFORM_KEY, botDetails.getTraderPlatform())
-                    .put(LAST_TRADER_ACTIVITY_KEY, botDetails.getLastTraderActivity())
+                    .put(BOT_PLATFORM_KEY, botDetails.getBotPlatform())
+                    .put(LAST_BOT_ACTIVITY_KEY, botDetails.getLastBotActivity())
                     .put(RUNNING_FROM_DATE_KEY, botDetails.getRunningFromDate())
-                    .put(TRADER_TYPE_KEY, botDetails.getTraderType())
+                    .put(BOT_TYPE_KEY, botDetails.getBotType())
                     .put(BASE_CURRENCY_KEY, baseCurrency)
                     .put(QUOTES_KEY, new JSONArray(quoteCurrencies)), LOGIN_OPE);
             response = serverRequest.readResponse();
@@ -703,14 +688,14 @@ public class AndroidWorkflow implements RoutineMessages {
             return authToken;
         }
 
-        public String getMail() {
-            return mail;
+        public String getEmail() {
+            return email;
         }
 
-        public void setMail(String mail) {
-            if(!getInstance().isValid(mail))
-                throw new IllegalArgumentException("Mail must be a valid mail");
-            this.mail = mail;
+        public void setEmail(String email) {
+            if (!getInstance().isValid(email))
+                throw new IllegalArgumentException("Email must be a valid email");
+            this.email = email;
         }
 
         public String getPassword() {
@@ -718,7 +703,7 @@ public class AndroidWorkflow implements RoutineMessages {
         }
 
         public void setPassword(String password) {
-            if(wrongPasswordValidity(password))
+            if (wrongPasswordValidity(password))
                 throw new IllegalArgumentException("Password must be 8 - 32 characters length");
             this.password = password;
         }
@@ -735,7 +720,7 @@ public class AndroidWorkflow implements RoutineMessages {
             return secretKey;
         }
 
-        public void setTraderDetails(BotDetails botDetails) {
+        public void setBotDetails(BotDetails botDetails) {
             this.botDetails = botDetails;
         }
 
@@ -745,7 +730,7 @@ public class AndroidWorkflow implements RoutineMessages {
                     "serverRequest=" + serverRequest +
                     ", authToken='" + authToken + '\'' +
                     ", token='" + token + '\'' +
-                    ", mail='" + mail + '\'' +
+                    ", email='" + email + '\'' +
                     ", password='" + password + '\'' +
                     ", ivSpec='" + ivSpec + '\'' +
                     ", secretKey='" + secretKey + '\'' +

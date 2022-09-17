@@ -81,10 +81,10 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              int timeout) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
+        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
+        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
+        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
+        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
         initTrader();
     }
 
@@ -143,12 +143,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage, int timeout,
                              ArrayList<String> quoteCurrencies) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, defaultErrorMessage, timeout);
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /** Constructor to init {@link CoinbaseTraderBot}
@@ -161,12 +157,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
                              ArrayList<String> quoteCurrencies) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
+        this(apiKey, apiSecret, passphrase, timeout);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /** Constructor to init {@link CoinbaseTraderBot}
@@ -179,12 +171,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              ArrayList<String> quoteCurrencies) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /** Constructor to init {@link CoinbaseTraderBot}
@@ -196,12 +184,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase,
                              ArrayList<String> quoteCurrencies) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
+        this(apiKey, apiSecret, passphrase);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /**
@@ -218,15 +202,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              int timeout, int refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -241,15 +221,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
+        this(apiKey, apiSecret, passphrase, timeout);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -265,15 +241,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              short refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -287,15 +259,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, short refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
+        this(apiKey, apiSecret, passphrase);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -313,16 +281,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage, int timeout,
                              ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, defaultErrorMessage, timeout);
-        if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
-        else
-            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshTime);
         this.quoteCurrencies = quoteCurrencies;
-        initTrader();
     }
 
     /**
@@ -339,16 +299,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout,
                              ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
+        this(apiKey, apiSecret, passphrase, timeout, refreshTime);
         this.quoteCurrencies = quoteCurrencies;
-        if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
-        else
-            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -365,16 +317,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        this.quoteCurrencies = quoteCurrencies;
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -390,16 +337,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase,
                              ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
-        coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
-        this.quoteCurrencies = quoteCurrencies;
+        this(apiKey, apiSecret, passphrase, quoteCurrencies);
         if(refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000L;
+            REFRESH_TIME = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        initTrader();
     }
 
     /**
@@ -741,30 +683,62 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * This method is to get list of the latest prices <br>
      * Any params required
      *
-     * @return last prices as {@link HashMap} of {@link Ticker}
+     * @return last prices as {@link ArrayList} of {@link Double}
      **/
     @Override
-    public HashMap<String, Ticker> getLatestPrices() {
+    public ArrayList<Double> getLatestPrices() {
+        ArrayList<Double> lastPrices = new ArrayList<>();
+        for (Ticker ticker : this.lastPrices.values())
+            lastPrices.add(ticker.getPrice());
+        return lastPrices;
+    }
+
+    /**
+     * This method is to get list of the latest prices
+     *
+     * @param decimals: number of digits to round final value
+     * @return last prices as {@link ArrayList} of {@link Double}
+     * @throws IllegalArgumentException if decimal digits are negative
+     **/
+    @Override
+    public ArrayList<Double> getLatestPrices(int decimals) {
+        ArrayList<Double> lastPrices = new ArrayList<>();
+        for (Ticker ticker : this.lastPrices.values())
+            lastPrices.add(ticker.getPrice(decimals));
         return lastPrices;
     }
 
     /**
      * This method is to get last price of a symbol <br>
      *
-     * @param symbol: symbol from fetch last price es BTCBUSD
-     * @return last prices as {@link HashMap} of {@link Ticker}
+     * @param symbol: symbol from fetch last price
+     * @return last price as double
      **/
     @Override
-    public Ticker getLastPrice(String symbol) {
-        return lastPrices.get(symbol);
+    public double getLastPrice(String symbol) {
+        return lastPrices.get(symbol).getPrice();
+    }
+
+    /**
+     * This method is to get last price of a symbol
+     *
+     * @param symbol:   symbol from fetch last price
+     * @param decimals: number of digits to round final value
+     * @return last price as double
+     * @throws IllegalArgumentException if decimal digits are negative
+     **/
+    @Override
+    public double getLastPrice(String symbol, int decimals) {
+        return lastPrices.get(symbol).getPrice(decimals);
     }
 
     /**
      * This method is used to assemble right symbol with {@link #USDT_CURRENCY} combination.
+     *
      * @param currency: currency for the request es. EUR
      * @return USDT-currency inserted es. USDT-EUR.
-     * **/
-    private String getUSDTSymbol(String currency){
+     **/
+    private String getUSDTSymbol(String currency) {
         return USDT_CURRENCY + "-" + currency;
     }
 

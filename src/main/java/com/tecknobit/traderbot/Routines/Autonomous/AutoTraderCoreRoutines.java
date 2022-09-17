@@ -80,7 +80,7 @@ public interface AutoTraderCoreRoutines extends TraderManager, RoutineMessages {
      * **/
     default TradingConfig fetchTradingConfig(TradingConfig actualModel){
         try {
-            ServerRequest serverRequest = getPublicRequest();
+            ServerRequest serverRequest = getPublicRequest(HOST, PORT);
             assert serverRequest != null;
             serverRequest.sendRequest(new JSONObject(), GET_TRADING_CONFIGS_OPE);
             response = serverRequest.readResponse();
@@ -204,7 +204,7 @@ public interface AutoTraderCoreRoutines extends TraderManager, RoutineMessages {
      * **/
     default void sendStatsReport(long modelId, double percent){
         try {
-            ServerRequest serverRequest = getPublicRequest();
+            ServerRequest serverRequest = getPublicRequest(HOST, PORT);
             assert serverRequest != null;
             serverRequest.sendRequest(new JSONObject().put(MODEL_ID_KEY, modelId).put(MODEL_FAILED_KEY, percent <= 0),
                     SEND_STATS_REPORT_OPE);

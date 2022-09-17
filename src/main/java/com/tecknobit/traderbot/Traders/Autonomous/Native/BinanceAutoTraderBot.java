@@ -169,13 +169,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, int refreshTime, TraderAccount traderAccount,
                                 boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, secretKey, refreshTime);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
+        this(apiKey, secretKey, traderAccount, sendStatsReport, printRoutineMessages, baseCurrency);
+        setRefreshTime(refreshTime);
     }
 
     /**
@@ -195,13 +190,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshTime,
                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                 String baseCurrency) throws Exception {
-        super(apiKey, secretKey, baseEndpoint, refreshTime);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
+        this(apiKey, secretKey, baseEndpoint, traderAccount, sendStatsReport, printRoutineMessages, baseCurrency);
+        setRefreshTime(refreshTime);
     }
 
     /**
@@ -221,13 +211,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     public BinanceAutoTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies, int refreshTime,
                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                 String baseCurrency) throws Exception {
-        super(apiKey, secretKey, quoteCurrencies, refreshTime);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
+        this(apiKey, secretKey, quoteCurrencies, traderAccount, sendStatsReport, printRoutineMessages, baseCurrency);
+        setRefreshTime(refreshTime);
     }
 
     /**
@@ -247,13 +232,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 int refreshTime, TraderAccount traderAccount, boolean sendStatsReport,
                                 boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, secretKey, baseEndpoint, quoteCurrencies, refreshTime);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
+        this(apiKey, secretKey, baseEndpoint, quoteCurrencies, traderAccount, sendStatsReport, printRoutineMessages, baseCurrency);
+        setRefreshTime(refreshTime);
     }
 
     /**
@@ -269,13 +249,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      **/
     public BinanceAutoTraderBot(String apiKey, String secretKey, ArrayList<String> quoteCurrencies, TraderAccount traderAccount,
                                 boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency) throws Exception {
-        super(apiKey, secretKey, quoteCurrencies);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
+        this(apiKey, secretKey, traderAccount, sendStatsReport, printRoutineMessages, baseCurrency);
+        this.quoteCurrencies = quoteCurrencies;
     }
 
     /**
@@ -293,13 +268,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     public BinanceAutoTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 TraderAccount traderAccount, boolean sendStatsReport, boolean printRoutineMessages,
                                 String baseCurrency) throws Exception {
-        super(apiKey, secretKey, baseEndpoint, quoteCurrencies);
-        this.traderAccount = traderAccount;
-        this.sendStatsReport = sendStatsReport;
-        this.printRoutineMessages = printRoutineMessages;
-        this.baseCurrency = baseCurrency;
-        checkingList = new HashMap<>();
-        walletList = new ConcurrentHashMap<>();
+        this(apiKey, secretKey, baseEndpoint, traderAccount, sendStatsReport, printRoutineMessages, baseCurrency);
+        this.quoteCurrencies = quoteCurrencies;
     }
 
     /**

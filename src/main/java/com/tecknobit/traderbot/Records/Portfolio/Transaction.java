@@ -21,10 +21,16 @@ import static java.util.Locale.getDefault;
 /**
  * The {@code Transaction} class defines Transaction object. <br>
  * This object is useful for fetch and format transactions list details.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
 public class Transaction implements RecordDetails {
+
+    /**
+     * {@code TRANSACTIONS_KEY} is instance that memorizes transactions key
+     * **/
+    public static final String TRANSACTIONS_KEY = "transactions";
 
     /**
      * {@code TRANSACTION_KEY} is instance that memorizes transaction key
@@ -575,33 +581,6 @@ public class Transaction implements RecordDetails {
     }
 
     /**
-     * This method is used to print details of {@link Transaction} object <br>
-     * Any params required
-     * **/
-    @Override
-    public void printDetails() {
-        out.println("## [" + symbol + "]\n" +
-                getSideInfoLine() +
-                "## Date: " + transactionDate + "\n" +
-                "## Amount value: " + value + "\n" +
-                "## Quantity: " + quantity + "\n" +
-                "## Base asset: " + baseAsset + "\n" +
-                "## Quote asset: " + quoteAsset + "\n" +
-                "######################");
-    }
-
-    /**
-     * This method is used to format colored string for side detail line.<br>
-     * Any params required
-     * @return side string colored and formatted as {@link String}
-     * **/
-    protected String getSideInfoLine(){
-        if(side.equals(BUY))
-            return "## Side: " + ANSI_GREEN + side + ANSI_RESET + "\n";
-        return "## Side: " + ANSI_RED + side + ANSI_RESET + "\n";
-    }
-
-    /**
      * This method is used get {@link #incomePercent} instance <br>
      * Any params required
      *
@@ -636,26 +615,44 @@ public class Transaction implements RecordDetails {
         transaction.put(QUOTE_ASSET_KEY, quoteAsset);
         transaction.put(VALUE_KEY, value);
         transaction.put(BASE_ASSET_KEY, baseAsset);
-        if(incomePercent != ASSET_NOT_TRADABLE)
+        if (incomePercent != ASSET_NOT_TRADABLE)
             transaction.put(INCOME_PERCENT_KEY, incomePercent);
-        if(transactionType != null)
+        if (transactionType != null)
             transaction.put(TRANSACTION_TYPE_KEY, transactionType);
         return transaction;
     }
 
+    /**
+     * This method is used to print details of {@link Transaction} object <br>
+     * Any params required
+     **/
+    @Override
+    public void printDetails() {
+        out.println(this);
+    }
+
     @Override
     public String toString() {
-        return "Transaction{" +
-                "symbol='" + symbol + '\'' +
-                ", side='" + side + '\'' +
-                ", transactionDate='" + transactionDate + '\'' +
-                ", value=" + value +
-                ", quantity=" + quantity +
-                ", quoteAsset='" + quoteAsset + '\'' +
-                ", baseAsset='" + baseAsset + '\'' +
-                ", incomePercent=" + incomePercent +
-                ", transactionType='" + transactionType + '\'' +
-                '}';
+        return "## [" + symbol + "]\n" +
+                getSideInfoLine(side) +
+                "## Date: " + transactionDate + "\n" +
+                "## Amount value: " + value + "\n" +
+                "## Quantity: " + quantity + "\n" +
+                "## Base asset: " + baseAsset + "\n" +
+                "## Quote asset: " + quoteAsset + "\n" +
+                "######################";
+    }
+
+    /**
+     * This method is used to format colored string for side detail line.
+     *
+     * @param side: side of {@link Transaction}
+     * @return side string colored and formatted as {@link String}
+     **/
+    protected String getSideInfoLine(String side) {
+        if (side.equals(BUY))
+            return "## Side: " + ANSI_GREEN + side + ANSI_RESET + "\n";
+        return "## Side: " + ANSI_RED + side + ANSI_RESET + "\n";
     }
 
 }
