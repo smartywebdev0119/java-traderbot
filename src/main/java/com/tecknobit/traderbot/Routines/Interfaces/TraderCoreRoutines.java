@@ -109,17 +109,17 @@ public abstract class TraderCoreRoutines {
     protected String lastAssetCurrency;
 
     /**
-     * {@code REFRESH_TIME} is instance that memorizes time to refresh last prices.
+     * {@code refreshTime} is instance that memorizes time to refresh last prices.
      *
      * @implNote this param can customize with {@link #setRefreshTime(int)}
      * @implSpec valid values are from 5 second to 3600 seconds other will generate an {@link Exception}
      **/
-    protected int REFRESH_TIME;
+    protected int refreshTime;
 
     /**
      * {@code lastPricesRefresh} is instance that memorizes last time that prices are updated.
      * @implNote when is called {@link #isRefreshTime()} if timestamp of the call minus
-     * {@code lastPricesRefresh} is bigger or equal than {@link #REFRESH_TIME} execute refresh.
+     * {@code lastPricesRefresh} is bigger or equal than {@link #refreshTime} execute refresh.
      * **/
     protected long lastPricesRefresh;
 
@@ -294,13 +294,13 @@ public abstract class TraderCoreRoutines {
     public abstract void refreshLatestPrice() throws Exception;
 
     /**
-     * This method is used to get {@link #REFRESH_TIME}<br>
+     * This method is used to get {@link #refreshTime}<br>
      * Any params required.
      *
-     * @return {@link #REFRESH_TIME} as int
+     * @return {@link #refreshTime} as int
      **/
     public int getRefreshTime() {
-        return REFRESH_TIME;
+        return refreshTime;
     }
 
     /**
@@ -359,10 +359,10 @@ public abstract class TraderCoreRoutines {
      * Any params required
      *
      * @return true only if current timestamp when this method is called minus last timestamp when this method is called,
-     * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #REFRESH_TIME}
+     * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #refreshTime}
      **/
     public boolean isRefreshTime() {
-        return (System.currentTimeMillis() - lastPricesRefresh) >= REFRESH_TIME;
+        return (System.currentTimeMillis() - lastPricesRefresh) >= refreshTime;
     }
 
     /**
@@ -373,7 +373,7 @@ public abstract class TraderCoreRoutines {
      **/
     public void setRefreshTime(int refreshTime) {
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }

@@ -108,22 +108,27 @@ public class ServerRequest {
 
     /**
      * {@code INSERT_REFRESHED_PRICES} request
-     * **/
+     **/
     public static final String INSERT_REFRESHED_PRICES = "insert_refreshed_prices_ope";
 
     /**
      * {@code INSERT_QUOTE_OPE} request
-     * **/
+     **/
     public static final String INSERT_QUOTE_OPE = "insert_quote_ope";
 
     /**
+     * {@code INSERT_QUOTES_OPE} request
+     **/
+    public static final String INSERT_QUOTES_OPE = "insert_quotes_ope";
+
+    /**
      * {@code REMOVE_QUOTE_OPE} request
-     * **/
+     **/
     public static final String REMOVE_QUOTE_OPE = "remove_quote_ope";
 
     /**
      * {@code INSERT_CHECKING_LIST_OPE} request
-     * **/
+     **/
     public static final String INSERT_CHECKING_LIST_OPE = "insert_checking_list_ope";
 
     /**

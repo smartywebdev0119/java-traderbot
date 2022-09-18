@@ -83,7 +83,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * {@code lastPrices} is a map that contains asset index (es. BTC) as key {@link String} and last ticker as {@link TickerPriceChange}
      * @apiNote values inserted in this map are only tickers of coins inserted in {@link #coins} list
      * @implNote refresh of last prices, by default, is every 10 seconds, but you can set programmatically
-     * {@link #REFRESH_TIME} to customize refresh time.
+     * {@link #refreshTime} to customize refresh time.
      * **/
     protected HashMap<String, TickerPriceChange> lastPrices;
 
@@ -96,7 +96,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
         binanceMarketManager = new BinanceMarketManager();
-        REFRESH_TIME = 10000;
+        refreshTime = 10000;
         initTrader();
     }
 
@@ -110,7 +110,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
         binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
         binanceMarketManager = new BinanceMarketManager();
-        REFRESH_TIME = 10000;
+        refreshTime = 10000;
         initTrader();
     }
 
@@ -126,7 +126,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     public BinanceTraderBot(String apiKey, String secretKey, int refreshTime) throws Exception {
         this(apiKey, secretKey);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -144,7 +144,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, int refreshTime) throws Exception {
         this(apiKey, secretKey, baseEndpoint);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }

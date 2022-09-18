@@ -61,7 +61,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * {@code lastPrices} is a map that contains asset index (es. BTC) as key {@link String} and last ticker as {@link Ticker}
      * @apiNote values inserted in this map are only tickers of coins inserted in {@link #coins} list
      * @implNote refresh of last prices, by default, is every 10 seconds, but you can set programmatically
-     * {@link #REFRESH_TIME} to customize refresh time.
+     * {@link #refreshTime} to customize refresh time.
      * **/
     protected HashMap<String, Ticker> lastPrices;
 
@@ -204,7 +204,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
                              int timeout, int refreshTime) throws Exception {
         this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -223,7 +223,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout, int refreshTime) throws Exception {
         this(apiKey, apiSecret, passphrase, timeout);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -243,7 +243,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
                              short refreshTime) throws Exception {
         this(apiKey, apiSecret, passphrase, defaultErrorMessage);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -261,7 +261,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, short refreshTime) throws Exception {
         this(apiKey, apiSecret, passphrase);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -319,7 +319,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
                              ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
         this(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies);
         if (refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }
@@ -339,7 +339,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
                              ArrayList<String> quoteCurrencies, int refreshTime) throws Exception {
         this(apiKey, apiSecret, passphrase, quoteCurrencies);
         if(refreshTime >= 5 && refreshTime <= 3600)
-            REFRESH_TIME = refreshTime * 1000;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }

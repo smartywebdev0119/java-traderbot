@@ -382,7 +382,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * **/
     @Override
     public void sellMarket(String symbol, double quantity) throws Exception {
-        if(runningTrader) {
+        if (runningTrader) {
             super.sellMarket(symbol, quantity);
             androidWorkflow.removeCryptocurrency(cryptocurrencySold.getAssetIndex(),
                     androidWorkflow.assembleTransaction(cryptocurrencySold, SELL, transactionDateFormat));
@@ -390,7 +390,58 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     }
 
     /**
-     * This method is used to set time to refresh data <br>
+     * This method is used to set new list of {@link #quoteCurrencies} overwritten the past list
+     *
+     * @param quoteCurrencies: list of quote currencies to insert.
+     **/
+    @Override
+    public void setQuoteCurrencies(ArrayList<String> quoteCurrencies) {
+        if (androidWorkflow != null) {
+            if (androidWorkflow.insertQuoteCurrencyList(quoteCurrencies))
+                this.quoteCurrencies = quoteCurrencies;
+        } else
+            this.quoteCurrencies = quoteCurrencies;
+    }
+
+    /**
+     * This method is used to insert a new quote currency in {@link #quoteCurrencies} list<br>
+     * If this value is already inserted in list will be not inserted to avoid duplicate values.
+     *
+     * @param newQuote: quote currency to insert es. SOL
+     **/
+    @Override
+    public void insertQuoteCurrency(String newQuote) {
+        if (!quoteCurrencies.contains(newQuote)) {
+            if (androidWorkflow != null) {
+                if (androidWorkflow.insertQuoteCurrency(newQuote))
+                    quoteCurrencies.add(newQuote);
+            } else
+                quoteCurrencies.add(newQuote);
+        }
+    }
+
+    /**
+     * This method is used to remove a quote currency from {@link #quoteCurrencies} list<br>
+     * If this value is not inserted in list will be not removed and will be returned false.
+     *
+     * @param quoteToRemove: quote currency to remove es. SOL
+     * @return status of deletion for {@code quoteToRemove}, will be true only if that value exists in list and can
+     * be removed
+     **/
+    @Override
+    public boolean removeQuoteCurrency(String quoteToRemove) {
+        if (quoteCurrencies.contains(quoteToRemove)) {
+            if (androidWorkflow != null) {
+                if (androidWorkflow.removeQuoteCurrency(quoteToRemove))
+                    return quoteCurrencies.remove(quoteToRemove);
+            } else
+                return quoteCurrencies.remove(quoteToRemove);
+        }
+        return false;
+    }
+
+    /**
+     * This method is used to set time to refresh data
      *
      * @param refreshTime: is time in seconds to set to refresh data.
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
@@ -398,10 +449,20 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      **/
     @Override
     public void setRefreshTime(int refreshTime) {
-        super.setRefreshTime(refreshTime);
-        if (androidWorkflow != null)
-            androidWorkflow.changeRefreshTime(refreshTime);
-        botDetails.setRefreshTime(refreshTime);
+        if (this.refreshTime / 1000 != refreshTime) {
+            if (refreshTime >= 5 && refreshTime <= 3600) {
+                if (androidWorkflow != null) {
+                    if (androidWorkflow.changeRefreshTime(refreshTime)) {
+                        botDetails.setRefreshTime(refreshTime);
+                        this.refreshTime = refreshTime * 1000;
+                    }
+                } else {
+                    botDetails.setRefreshTime(refreshTime);
+                    this.refreshTime = refreshTime * 1000;
+                }
+            } else
+                throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
+        }
     }
 
     /**
@@ -412,8 +473,17 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      **/
     @Override
     public void disableBot() {
-        super.disableBot();
-        botDetails.setBotStatus(STOPPED_BOT_STATUS);
+        if (runningTrader) {
+            if (androidWorkflow != null) {
+                if (androidWorkflow.disableBot()) {
+                    runningTrader = false;
+                    botDetails.setBotStatus(STOPPED_BOT_STATUS);
+                }
+            } else {
+                runningTrader = false;
+                botDetails.setBotStatus(STOPPED_BOT_STATUS);
+            }
+        }
     }
 
     /**
@@ -424,8 +494,17 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      **/
     @Override
     public void enableBot() {
-        super.enableBot();
-        botDetails.setBotStatus(RUNNING_BOT_STATUS);
+        if (!runningTrader) {
+            if (androidWorkflow != null) {
+                if (androidWorkflow.enableBot()) {
+                    runningTrader = true;
+                    botDetails.setBotStatus(RUNNING_BOT_STATUS);
+                }
+            } else {
+                runningTrader = true;
+                botDetails.setBotStatus(RUNNING_BOT_STATUS);
+            }
+        }
     }
 
     /**
@@ -471,19 +550,38 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * **/
     @Override
     public double getTotalSales() {
-        if(runningTrader)
+        if (runningTrader)
             return super.getTotalSales();
         return -1;
     }
 
     /**
+     * This method is used to set base currency for change amount value
+     *
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
+     **/
+    @Override
+    public void setBaseCurrency(String baseCurrency) {
+        if (baseCurrency == null || baseCurrency.isEmpty())
+            throw new IllegalArgumentException("Currency cannot be null or empty, but for example EUR or USDT");
+        if (!this.baseCurrency.equals(baseCurrency)) {
+            if (androidWorkflow != null) {
+                if (androidWorkflow.changeBaseCurrency(baseCurrency))
+                    this.baseCurrency = baseCurrency;
+            } else
+                this.baseCurrency = baseCurrency;
+        }
+    }
+
+    /**
      * This method is used to get base currency for change amount value <br>
      * Any params required
+     *
      * @implNote if {@link #runningTrader} is false will return null
-     * **/
+     **/
     @Override
     public String getBaseCurrency() {
-        if(runningTrader)
+        if (runningTrader)
             return super.getBaseCurrency();
         return null;
     }

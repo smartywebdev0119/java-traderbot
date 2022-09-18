@@ -168,10 +168,12 @@ public class AndroidWorkflow implements RoutineMessages {
                     }
                     break;
                 case INSERT_QUOTE_OPE:
-                    String quoteAdd = routine.getExtraValue();
-                    trader.insertQuoteCurrency(quoteAdd);
-                    printOperationStatus("[" + INSERT_QUOTE_OPE + "] Quote currency [" + quoteAdd + "] successfully inserted",
-                            true);
+                    String addQuote = routine.getExtraValue();
+                    if (!trader.getQuoteCurrencies().contains(addQuote)) {
+                        trader.insertQuoteCurrency(addQuote);
+                        printOperationStatus("[" + INSERT_QUOTE_OPE + "] Quote currency [" + addQuote + "] successfully inserted",
+                                true);
+                    }
                     break;
                 case REMOVE_QUOTE_OPE:
                     String quoteRemove = routine.getExtraValue();
@@ -208,11 +210,91 @@ public class AndroidWorkflow implements RoutineMessages {
     }
 
     /**
+     * This method is used to set new list of quote currencies overwritten the past list
+     *
+     * @param quoteCurrencies: list of quote currencies to insert
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
+     **/
+    public boolean insertQuoteCurrencyList(ArrayList<String> quoteCurrencies) {
+        try {
+            serverRequest.sendServerRequest(new JSONObject().put(QUOTES_KEY, new JSONArray(quoteCurrencies)), INSERT_QUOTES_OPE);
+            response = serverRequest.readResponse();
+            switch (response.getInt(STATUS_CODE)) {
+                case SUCCESSFUL_RESPONSE:
+                    if (printRoutineMessages)
+                        printOperationSuccess(INSERT_QUOTES_OPE);
+                    return true;
+                case GENERIC_ERROR_RESPONSE:
+                    printOperationStatus("[" + INSERT_QUOTES_OPE + "] Insert a valid list of quotes first", false);
+                    return false;
+                default:
+                    printOperationFailed(INSERT_QUOTES_OPE);
+                    return false;
+            }
+        } catch (Exception e) {
+            printOperationFailed(INSERT_QUOTES_OPE);
+            return false;
+        }
+    }
+
+    /**
+     * This method is used to insert a new quote currency. <br>
+     * If this value is already inserted in list will be not inserted to avoid duplicate values.
+     *
+     * @param newQuote: quote currency to insert es. SOL
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
+     **/
+    public boolean insertQuoteCurrency(String newQuote) {
+        return manageQuoteCurrency(newQuote, INSERT_QUOTE_OPE);
+    }
+
+    /**
+     * This method is used to remove a quote currency<br>
+     * If this value is not inserted in list will be not removed.
+     *
+     * @param quoteToRemove: quote currency to remove es. SOL
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
+     **/
+    public boolean removeQuoteCurrency(String quoteToRemove) {
+        return manageQuoteCurrency(quoteToRemove, REMOVE_QUOTE_OPE);
+    }
+
+    /**
+     * This method is used to manage quote currencies list
+     *
+     * @param quote: quote to remove or to add
+     * @param ope:   {@link ServerRequest#INSERT_QUOTE_OPE} or {@link ServerRequest#REMOVE_QUOTE_OPE}
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
+     **/
+    private boolean manageQuoteCurrency(String quote, String ope) {
+        try {
+            serverRequest.sendServerRequest(new JSONObject().put(QUOTE_KEY, quote), ope);
+            response = serverRequest.readResponse();
+            switch (response.getInt(STATUS_CODE)) {
+                case SUCCESSFUL_RESPONSE:
+                    if (printRoutineMessages)
+                        printOperationSuccess(ope);
+                    return true;
+                case GENERIC_ERROR_RESPONSE:
+                    printOperationStatus("[" + ope + "] Insert a valid quote first", false);
+                    return false;
+                default:
+                    printOperationFailed(ope);
+                    return false;
+            }
+        } catch (Exception e) {
+            printOperationFailed(ope);
+            return false;
+        }
+    }
+
+    /**
      * This method is used to change refresh time
      *
      * @param refreshTime: is time in seconds to set to refresh data
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
-    public void changeRefreshTime(int refreshTime) {
+    public boolean changeRefreshTime(int refreshTime) {
         try {
             serverRequest.sendServerRequest(new JSONObject().put(REFRESH_TIME_KEY, refreshTime), CHANGE_REFRESH_TIME_OPE);
             response = serverRequest.readResponse();
@@ -220,39 +302,46 @@ public class AndroidWorkflow implements RoutineMessages {
                 case SUCCESSFUL_RESPONSE:
                     if (printRoutineMessages)
                         printOperationSuccess(CHANGE_REFRESH_TIME_OPE);
-                    break;
+                    return true;
                 case GENERIC_ERROR_RESPONSE:
                     printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh time must be more than 5 (5s) and less than 3600 (1h)",
                             false);
-                    break;
+                    return false;
                 default:
                     printOperationFailed(CHANGE_REFRESH_TIME_OPE);
+                    return false;
             }
         } catch (Exception e) {
             printOperationFailed(CHANGE_REFRESH_TIME_OPE);
+            return false;
         }
     }
 
     /**
      * This method is used to disable running mode of a bot
+     *
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
-    public void disableBot() {
-        changeBotStatus(STOPPED_BOT_STATUS);
+    public boolean disableBot() {
+        return changeBotStatus(STOPPED_BOT_STATUS);
     }
 
     /**
      * This method is used to enable running mode of a bot
+     *
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
-    public void enableBot() {
-        changeBotStatus(RUNNING_BOT_STATUS);
+    public boolean enableBot() {
+        return changeBotStatus(RUNNING_BOT_STATUS);
     }
 
     /**
      * This method is used to change status of a bot
      *
      * @param status: {@link BotDetails#RUNNING_BOT_STATUS} or {@link BotDetails#STOPPED_BOT_STATUS}
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
-    private void changeBotStatus(String status) {
+    private boolean changeBotStatus(String status) {
         try {
             serverRequest.sendTokenRequest(new JSONObject().put(BOT_STATUS_KEY, status), CHANGE_BOT_STATUS_OPE);
             response = serverRequest.readResponse();
@@ -260,15 +349,17 @@ public class AndroidWorkflow implements RoutineMessages {
                 case SUCCESSFUL_RESPONSE:
                     if (printRoutineMessages)
                         printOperationSuccess(CHANGE_BOT_STATUS_OPE);
-                    break;
+                    return true;
                 case GENERIC_ERROR_RESPONSE:
                     printOperationStatus("[" + CHANGE_BOT_STATUS_OPE + "] Not a valid status has been inserted", false);
-                    break;
+                    return false;
                 default:
                     printOperationFailed(CHANGE_BOT_STATUS_OPE);
+                    return false;
             }
         } catch (Exception e) {
             printOperationFailed(CHANGE_BOT_STATUS_OPE);
+            return false;
         }
     }
 
@@ -277,7 +368,7 @@ public class AndroidWorkflow implements RoutineMessages {
      *
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
      **/
-    public void changeBaseCurrency(String baseCurrency) {
+    public boolean changeBaseCurrency(String baseCurrency) {
         try {
             serverRequest.sendServerRequest(new JSONObject().put(CURRENCY_KEY, baseCurrency), CHANGE_CURRENCY_OPE);
             response = serverRequest.readResponse();
@@ -285,15 +376,17 @@ public class AndroidWorkflow implements RoutineMessages {
                 case SUCCESSFUL_RESPONSE:
                     if (printRoutineMessages)
                         printOperationSuccess(CHANGE_CURRENCY_OPE);
-                    break;
+                    return true;
                 case GENERIC_ERROR_RESPONSE:
                     printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Insert a valid currency first", false);
-                    break;
+                    return false;
                 default:
                     printOperationFailed(CHANGE_CURRENCY_OPE);
+                    return false;
             }
         } catch (Exception e) {
             printOperationFailed(CHANGE_CURRENCY_OPE);
+            return false;
         }
     }
 
