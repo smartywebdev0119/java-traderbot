@@ -119,7 +119,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      *
      * @param apiKey:      your Binance's api key
      * @param secretKey:   your Binance's secret key
-     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -136,7 +136,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      *
      * @param apiKey:       your Binance's api key
      * @param secretKey:    your Binance's secret key
-     * @param refreshTime:  is time in seconds to set to refresh the latest prices
+     * @param refreshTime:  is time in seconds to set to refresh data
      * @param baseEndpoint: base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
@@ -154,7 +154,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      *
      * @param apiKey:          your Binance's api key
      * @param secretKey:       your Binance's secret key
-     * @param refreshTime:     is time in seconds to set to refresh the latest prices
+     * @param refreshTime:     is time in seconds to set to refresh data
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
@@ -170,7 +170,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      *
      * @param apiKey:          your Binance's api key
      * @param secretKey:       your Binance's secret key
-     * @param refreshTime:     is time in seconds to set to refresh the latest prices
+     * @param refreshTime:     is time in seconds to set to refresh data
      * @param baseEndpoint:    base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)

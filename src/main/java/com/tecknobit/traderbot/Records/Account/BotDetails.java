@@ -10,12 +10,13 @@ import java.util.HashMap;
  * @author Tecknobit N7ghtm4r3
  **/
 
-public class BotDetails extends Trader {
+public class BotDetails extends TecknobitBot {
 
     /**
      * {@code CUSTOM_DEF_COLOR} is instance that memorizes default color to use for example when asset is at pair
+     *
      * @implSpec not available for console color
-     * **/
+     **/
     public static final String CUSTOM_DEF_COLOR = "#A8A8A8";
 
     /**

@@ -105,19 +105,19 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidBinanceTrader(String apiKey, String secretKey, Credentials credentials, boolean printRoutineMessages,
                                 String baseCurrency, int refreshTime) throws Exception {
         super(apiKey, secretKey);
-        long timestamp = currentTimeMillis();
+        this.baseCurrency = baseCurrency;
         setRefreshTime(refreshTime);
         initCredentials(credentials);
-        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        traderAccount = new TraderAccount(credentials);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
         workflowHandler();
@@ -132,7 +132,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -140,12 +140,11 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
                                 boolean printRoutineMessages, String baseCurrency, int refreshTime) throws Exception {
         super(apiKey, secretKey, baseEndpoint);
         this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
         setRefreshTime(refreshTime);
         initCredentials(credentials);
-        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        traderAccount = new TraderAccount(credentials);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
         workflowHandler();
@@ -156,7 +155,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      *
      * @param apiKey:              your Binance's api key
      * @param secretKey:           your Binance's secret key
-     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param refreshTime:         is time in seconds to set to refresh data
      * @param quoteCurrencies:     is a list of quote currencies used in past orders es (USD or EUR)
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -170,18 +169,20 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
         this.quoteCurrencies = quoteCurrencies;
     }
 
-    /** Constructor to init {@link AndroidBinanceTrader}
-     * @param apiKey: your Binance's api key
-     * @param secretKey: your Binance's secret key
-     * @param refreshTime: is time in seconds to set to refresh the latest prices
-     * @param baseEndpoint: base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
-     * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
+    /**
+     * Constructor to init {@link AndroidBinanceTrader}
+     *
+     * @param apiKey:              your Binance's api key
+     * @param secretKey:           your Binance's secret key
+     * @param refreshTime:         is time in seconds to set to refresh data
+     * @param baseEndpoint:        base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
+     * @param quoteCurrencies:     is a list of quote currencies used in past orders es (USD or EUR)
+     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public AndroidBinanceTrader(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                 Credentials credentials, boolean printRoutineMessages,
                                 String baseCurrency, int refreshTime) throws Exception {
@@ -219,7 +220,7 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * **/
     @Override
     public void workflowHandler() {
-        enableTrader();
+        enableBot();
         refreshWalletList();
         androidWorkflow.startWorkflow();
     }
@@ -448,47 +449,66 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
     }
 
     /**
-     * This method is used to set time to refresh the latest prices <br>
-     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * This method is used to set time to refresh data <br>
+     *
+     * @param refreshTime: is time in seconds to set to refresh data.
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote in Android's interfaces this method updates also {@link #botDetails} instance
-     * **/
+     **/
     @Override
     public void setRefreshTime(int refreshTime) {
-        super.setRefreshTime(refreshTime);
-        if(botDetails != null)
-            botDetails.setRefreshTime(refreshTime);
+        if (this.REFRESH_TIME / 1000 != refreshTime) {
+            if (refreshTime >= 5 && refreshTime <= 3600) {
+                if (androidWorkflow != null)
+                    androidWorkflow.changeRefreshTime(refreshTime);
+                botDetails.setRefreshTime(refreshTime);
+                REFRESH_TIME = refreshTime * 1000;
+            } else
+                throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
+        }
     }
+
 
     /**
      * This method is used to get if bot is in running mode
+     *
      * @return flag that indicates if the bot is running
-     * **/
+     **/
     @Override
-    public boolean isTraderRunning() {
+    public boolean isBotRunning() {
         return runningTrader;
     }
 
     /**
      * This method is used to disable running mode of trader
+     *
      * @implNote in Android's interfaces this method updates also
      * {@link #botDetails} status instance to STOPPED_BOT_STATUS
-     * **/
+     **/
     @Override
-    public void disableTrader() {
-        runningTrader = false;
-        botDetails.setBotStatus(STOPPED_BOT_STATUS);
+    public void disableBot() {
+        if (runningTrader) {
+            if (androidWorkflow != null)
+                androidWorkflow.disableBot();
+            runningTrader = false;
+            botDetails.setBotStatus(STOPPED_BOT_STATUS);
+        }
     }
 
     /**
      * This method is used to enable running mode of trader
+     *
      * @implNote in Android's interfaces this method updates also
      * {@link #botDetails} status instance to RUNNING_BOT_STATUS
-     * **/
+     **/
     @Override
-    public void enableTrader() {
-        runningTrader = true;
-        botDetails.setBotStatus(RUNNING_BOT_STATUS);
+    public void enableBot() {
+        if (!runningTrader) {
+            if (androidWorkflow != null)
+                androidWorkflow.enableBot();
+            runningTrader = true;
+            botDetails.setBotStatus(RUNNING_BOT_STATUS);
+        }
     }
 
     /**
@@ -545,9 +565,13 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      * **/
     @Override
     public void setBaseCurrency(String baseCurrency) {
-        if(baseCurrency == null || baseCurrency.isEmpty())
+        if (baseCurrency == null || baseCurrency.isEmpty())
             throw new IllegalArgumentException("Currency cannot be null or empty, but for example EUR or USDT");
-        this.baseCurrency = baseCurrency;
+        if (!this.baseCurrency.equals(baseCurrency)) {
+            if (androidWorkflow != null)
+                androidWorkflow.changeBaseCurrency(baseCurrency);
+            this.baseCurrency = baseCurrency;
+        }
     }
 
     /**

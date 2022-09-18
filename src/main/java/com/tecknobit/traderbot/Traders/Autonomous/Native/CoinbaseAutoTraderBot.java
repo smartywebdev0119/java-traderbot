@@ -36,8 +36,8 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     /**
      * {@code TraderAccount} is instance that memorizes and manage account information and trading reports of auto trader
      * account
-     * **/
-    protected final TraderAccount traderAccount;
+     **/
+    protected TraderAccount traderAccount;
 
     /**
      * {@code MIN_NOTIONAL_FILTER} is instance that contains key for {@code MIN_NOTIONAL} filter
@@ -302,7 +302,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param passphrase:           your Coinbase's api passphrase
      * @param defaultErrorMessage:  custom error to show when is not a request error
      * @param timeout:              custom timeout for request
-     * @param refreshTime:          is time in seconds to set to refresh the latest prices
+     * @param refreshTime:          is time in seconds to set to refresh data
      * @param traderAccount:        manage account information and trading reports of auto trader account
      * @param sendStatsReport:      flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -325,7 +325,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param apiSecret:            your Coinbase's secret key
      * @param passphrase:           your Coinbase's api passphrase
      * @param timeout:              custom timeout for request
-     * @param refreshTime:          is time in seconds to set to refresh the latest prices
+     * @param refreshTime:          is time in seconds to set to refresh data
      * @param traderAccount:        manage account information and trading reports of auto trader account
      * @param sendStatsReport:      flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -346,7 +346,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh data
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -368,7 +368,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param apiKey:               your Coinbase's api key
      * @param apiSecret:            your Coinbase's secret key
      * @param passphrase:           your Coinbase's api passphrase
-     * @param refreshTime:          is time in seconds to set to refresh the latest prices
+     * @param refreshTime:          is time in seconds to set to refresh data
      * @param traderAccount:        manage account information and trading reports of auto trader account
      * @param sendStatsReport:      flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -391,7 +391,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param timeout: custom timeout for request
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * @param refreshTime: is time in seconds to set to refresh data.
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -415,7 +415,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param passphrase: your Coinbase's api passphrase
      * @param timeout: custom timeout for request
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * @param refreshTime: is time in seconds to set to refresh data.
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -438,7 +438,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param passphrase: your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh data
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -460,7 +460,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @param apiSecret: your Coinbase's secret key
      * @param passphrase: your Coinbase's api passphrase
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshTime: is time in seconds to set to refresh the latest prices
+     * @param refreshTime: is time in seconds to set to refresh data
      * @param traderAccount: manage account information and trading reports of auto trader account
      * @param sendStatsReport: flag to insert to send or not reports
      * @param printRoutineMessages: flag to insert to print or not routine messages
@@ -491,9 +491,9 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     /**
      * This method is used to start {@link CoinbaseAutoTraderBot}<br>
      * Any params required
-     * @implNote the running mode if is disabled (using {@link #disableTrader()}) trader will not do more trading operations,
+     * @implNote the running mode if is disabled (using {@link #disableBot()}) trader will not do more trading operations,
      * but trader will continue to listen for reactivation of the running mode
-     * (using {@link #enableTrader()}) and trading operations will start again.
+     * (using {@link #enableBot()}) and trading operations will start again.
      * **/
     @Override
     public void start() throws Exception {
@@ -806,7 +806,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * @return flag that indicates if the bot is running
      * **/
     @Override
-    public boolean isTraderRunning() {
+    public boolean isBotRunning() {
         return runningTrader;
     }
 
@@ -814,7 +814,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * This method is used to disable running mode of bot
      * **/
     @Override
-    public void disableTrader() {
+    public void disableBot() {
         runningTrader = false;
     }
 
@@ -822,7 +822,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * This method is used to enable running mode of bot
      * **/
     @Override
-    public void enableTrader() {
+    public void enableBot() {
         runningTrader = true;
     }
 

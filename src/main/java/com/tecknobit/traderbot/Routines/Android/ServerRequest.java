@@ -259,13 +259,18 @@ public class ServerRequest {
 
     /**
      * {@code QUOTES_KEY} key
-     * **/
+     **/
     public static final String QUOTES_KEY = "quotes";
 
     /**
      * {@code BALANCE_KEY} key
      **/
     public static final String BALANCE_KEY = "balance";
+
+    /**
+     * {@code SERVER_REQUEST_KEY} key
+     **/
+    public static final String SERVER_REQUEST_KEY = "server_request";
 
     /**
      * {@code response} object for requests response
@@ -275,7 +280,8 @@ public class ServerRequest {
     /**
      * {@code HOST} host value
      **/
-    public static final String HOST = "194.50.19.168";
+    // TODO: 17/09/2022 CHANGE HOST
+    public static final String HOST = "localhost";
 
     /**
      * {@code PORT} port value
@@ -418,19 +424,37 @@ public class ServerRequest {
             String messageToSent = clientCipher.encryptRequest(message.toString()) + "#" + token;
             printWriter.println(messageToSent);
             printWriter.flush();
-        }catch (NullPointerException ignored){
+        } catch (NullPointerException ignored) {
+        }
+    }
+
+    /**
+     * This method is used fetch public keys for public requests operation<br>
+     * Any params required
+     *
+     * @return new request object as {@link ServerRequest}
+     **/
+    public static ServerRequest getPublicRequest(String host, int port) {
+        try {
+            ServerRequest serverRequest = new ServerRequest(host, port);
+            serverRequest.sendRequest(new JSONObject(), GET_KEYS_OPE);
+            response = serverRequest.readResponse();
+            return new ServerRequest(response.getString(IV_SPEC_KEY), response.getString(SECRET_KEY), host, port);
+        } catch (Exception e) {
+            throw new IllegalStateException(SERVICE_UNAVAILABLE);
         }
     }
 
     /**
      * This method is used to read request <br>
      * Any params required
+     *
      * @return response of the server as {@link JSONObject}
-     * **/
+     **/
     public JSONObject readResponse() {
         try {
             String response = new BufferedReader(new InputStreamReader(socket.getInputStream())).readLine();
-            if(ciphered) {
+            if (ciphered) {
                 assert clientCipher != null;
                 try{
                     response = clientCipher.decryptResponse(response);
@@ -459,22 +483,14 @@ public class ServerRequest {
     }
 
     /**
-     * This method is used fetch public keys for public requests operation<br>
-     * Any params required
+     * This method is used to send request with tokens
      *
-     * @return new request object as {@link ServerRequest}
+     * @param message:   message for the request
+     * @param operation: operation for the server
      **/
-    public static ServerRequest getPublicRequest(String host, int port) {
-        try {
-            ServerRequest serverRequest = new ServerRequest(host, port);
-            serverRequest.sendRequest(new JSONObject(), GET_KEYS_OPE);
-            response = serverRequest.readResponse();
-            if (response != null)
-                return new ServerRequest(response.getString(IV_SPEC_KEY), response.getString(SECRET_KEY), HOST, PORT);
-        } catch (Exception e) {
-            throw new IllegalStateException(SERVICE_UNAVAILABLE);
-        }
-        return null;
+    public void sendServerRequest(JSONObject message, String operation) throws Exception {
+        message.put(SERVER_REQUEST_KEY, true);
+        sendTokenRequest(message, operation);
     }
 
 }

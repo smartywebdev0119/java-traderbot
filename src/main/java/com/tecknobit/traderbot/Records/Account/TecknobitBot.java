@@ -8,23 +8,23 @@ import static java.text.DateFormat.getDateInstance;
 import static java.util.Locale.getDefault;
 
 /**
- * The {@code Trader} class is useful for {@link BotDetails} and {@link TraderAccount} objects<br>
+ * The {@code TecknobitBot} class is useful for {@link BotDetails} and {@link TraderAccount} objects<br>
  * Is useful for Android's type traders.
  *
  * @author Tecknobit N7ghtm4r3
  **/
 
-public abstract class Trader {
+public abstract class TecknobitBot {
 
     /**
      * {@code dayPassFormat} is instance that memorizes format when a day from last activity
      * is passed
-     * **/
+     **/
     protected static DateFormat dayPassFormat;
 
     /**
      * {@code timeFormat} is instance that memorizes default format
-     * **/
+     **/
     protected static SimpleDateFormat timeFormat;
 
     /**
@@ -68,17 +68,17 @@ public abstract class Trader {
          * This method is used to get if bot is in running mode
          * @return flag that indicates if the bot is running
          * **/
-        boolean isTraderRunning();
+        boolean isBotRunning();
 
         /**
          * This method is used to disable running mode of trader
          * **/
-        void disableTrader();
+        void disableBot();
 
         /**
          * This method is used to enable running mode of trader
          * **/
-        void enableTrader();
+        void enableBot();
 
         /**
          * This method is used to get sales at loss

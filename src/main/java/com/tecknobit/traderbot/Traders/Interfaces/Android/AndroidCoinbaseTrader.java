@@ -98,29 +98,30 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * **/
     private String baseCurrency;
 
-    /** Constructor to init {@link AndroidCoinbaseTrader}
-     * @param apiKey: your Coinbase's api key
-     * @param apiSecret: your Coinbase's secret key
-     * @param passphrase: your Coinbase's api passphrase
+    /**
+     * Constructor to init {@link AndroidCoinbaseTrader}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret:           your Coinbase's secret key
+     * @param passphrase:          your Coinbase's api passphrase
      * @param defaultErrorMessage: custom error to show when is not a request error
-     * @param timeout: custom timeout for request
+     * @param timeout:             custom timeout for request
      * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
+     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
-     * **/
+     **/
     public AndroidCoinbaseTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                  int timeout, String baseCurrency, int refreshTime,
                                  Credentials credentials, boolean printRoutineMessages) throws Exception {
         super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, refreshTime);
         this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
         initCredentials(credentials);
-        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        traderAccount = new TraderAccount(credentials);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
         workflowHandler();
@@ -136,7 +137,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -144,11 +145,10 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
                                  int refreshTime, Credentials credentials, boolean printRoutineMessages) throws Exception {
         super(apiKey, apiSecret, passphrase, timeout, refreshTime);
         this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
         initCredentials(credentials);
-        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        traderAccount = new TraderAccount(credentials);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
         workflowHandler();
@@ -162,7 +162,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime    : is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      * **/
@@ -172,11 +172,10 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         super(apiKey, apiSecret, passphrase, defaultErrorMessage);
         setRefreshTime(refreshTime);
         this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
         initCredentials(credentials);
-        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        traderAccount = new TraderAccount(credentials);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
         workflowHandler();
@@ -191,7 +190,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -200,11 +199,10 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         super(apiKey, apiSecret, passphrase);
         setRefreshTime(refreshTime);
         this.baseCurrency = baseCurrency;
-        long timestamp = currentTimeMillis();
         initCredentials(credentials);
-        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
-        androidWorkflow = new AndroidWorkflow(serverRequest, this, credentials, printRoutineMessages);
-        traderAccount = new TraderAccount(serverRequest);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT),
+                this, credentials, printRoutineMessages);
+        traderAccount = new TraderAccount(credentials);
         transactionDateFormat = getDateTimeInstance();
         walletList = traderAccount.getWalletCryptocurrencies();
         workflowHandler();
@@ -219,7 +217,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime    : is time in seconds to set to refresh data
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
@@ -240,7 +238,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime    : is time in seconds to set to refresh data
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
@@ -260,7 +258,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime    : is time in seconds to set to refresh data
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
@@ -279,7 +277,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime    : is time in seconds to set to refresh data
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
@@ -321,7 +319,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * **/
     @Override
     public void workflowHandler() {
-        enableTrader();
+        enableBot();
         refreshWalletList();
         androidWorkflow.startWorkflow();
     }
@@ -558,9 +556,9 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
     }
 
     /**
-     * This method is used to set time to refresh the latest prices <br>
+     * This method is used to set time to refresh data <br>
      *
-     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * @param refreshTime: is time in seconds to set to refresh data.
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote in Android's interfaces this method updates also {@link #botDetails} instance
      **/
@@ -573,31 +571,34 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
 
     /**
      * This method is used to get if bot is in running mode
+     *
      * @return flag that indicates if the bot is running
-     * **/
+     **/
     @Override
-    public boolean isTraderRunning() {
+    public boolean isBotRunning() {
         return runningTrader;
     }
 
     /**
      * This method is used to disable running mode of trader
+     *
      * @implNote in Android's interfaces this method updates also
      * {@link #botDetails} status instance to STOPPED_BOT_STATUS
-     * **/
+     **/
     @Override
-    public void disableTrader() {
+    public void disableBot() {
         runningTrader = false;
         botDetails.setBotStatus(STOPPED_BOT_STATUS);
     }
 
     /**
      * This method is used to enable running mode of trader
+     *
      * @implNote in Android's interfaces this method updates also
      * {@link #botDetails} status instance to RUNNING_BOT_STATUS
-     * **/
+     **/
     @Override
-    public void enableTrader() {
+    public void enableBot() {
         runningTrader = true;
         botDetails.setBotStatus(RUNNING_BOT_STATUS);
     }

@@ -366,9 +366,9 @@ public abstract class TraderCoreRoutines {
     }
 
     /**
-     * This method is used to set time to refresh the latest prices <br>
+     * This method is used to set time to refresh data
      *
-     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * @param refreshTime: is time in seconds to set to refresh data.
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      **/
     public void setRefreshTime(int refreshTime) {
@@ -437,12 +437,12 @@ public abstract class TraderCoreRoutines {
     protected void printCredentialsDisclaimer() {
         System.out.println("############################### DISCLAIMER ALERT ################################# \n" +
                 "## Note: You are solely responsible for storing and using your api keys created ## \n" +
-                           "## on the exchange platforms, this is because they will never be saved in our   ## \n" +
-                           "## infrastructures. Never share these personal credentials with anyone,         ## \n" +
-                           "## Tecknobit will never ask you for any of the credentials external to our      ## \n" +
-                           "## service outside of starting the interfaces, therefore not by email, messages,## \n" +
-                           "## forums or social networks.                                                   ## \n" +
-                           "##################################################################################\n");
+                "## on the exchange platforms, this is because they will never be saved in our   ## \n" +
+                "## infrastructures. Never share these personal credentials with anyone,         ## \n" +
+                "## Tecknobit will never ask you for any of the credentials external to our      ## \n" +
+                "## service outside of starting the interfaces, therefore not by email, messages,## \n" +
+                "## forums or social networks.                                                   ## \n" +
+                "##################################################################################\n");
     }
 
 }

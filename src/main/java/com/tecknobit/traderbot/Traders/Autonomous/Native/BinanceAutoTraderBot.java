@@ -38,8 +38,8 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     /**
      * {@code TraderAccount} is instance that memorizes and manage account information and trading reports of auto trader
      * account
-     * **/
-    protected final TraderAccount traderAccount;
+     **/
+    protected TraderAccount traderAccount;
 
     /**
      * {@code walletList} is a map that contains wallet list assets and index (es. BTCBUSD) as key {@link String} and {@link Cryptocurrency}
@@ -159,7 +159,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      *
      * @param apiKey:              your Binance's api key
      * @param secretKey            : your Binance's secret key
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @param traderAccount        : manage account information and trading reports of auto trader account
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -179,7 +179,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param apiKey:              your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @param traderAccount        : manage account information and trading reports of auto trader account
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -200,7 +200,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param apiKey:              your Binance's api key
      * @param secretKey            : your Binance's secret key
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshTime          : is time in seconds to set to refresh the latest prices
+     * @param refreshTime          : is time in seconds to set to refresh data
      * @param traderAccount        : manage account information and trading reports of auto trader account
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -221,7 +221,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @param secretKey            : your Binance's secret key
      * @param baseEndpoint         : base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
      * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param refreshTime    : is time in seconds to set to refresh the latest prices
+     * @param refreshTime    : is time in seconds to set to refresh data
      * @param traderAccount        : manage account information and trading reports of auto trader account
      * @param sendStatsReport      : flag to insert to send or not reports
      * @param printRoutineMessages : flag to insert to print or not routine messages
@@ -287,9 +287,9 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     /**
      * This method is used to start {@link BinanceAutoTraderBot}<br>
      * Any params required
-     * @implNote the running mode if is disabled (using {@link #disableTrader()}) trader will not do more trading operations,
+     * @implNote the running mode if is disabled (using {@link #disableBot()}) trader will not do more trading operations,
      * but trader will continue to listen for reactivation of the running mode
-     * (using {@link #enableTrader()}) and trading operations will start again.
+     * (using {@link #enableBot()}) and trading operations will start again.
      * **/
     @Override
     public void start() throws Exception {
@@ -608,7 +608,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * @return flag that indicates if the bot is running
      * **/
     @Override
-    public boolean isTraderRunning() {
+    public boolean isBotRunning() {
         return runningTrader;
     }
 
@@ -616,7 +616,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * This method is used to disable running mode of bot
      * **/
     @Override
-    public void disableTrader() {
+    public void disableBot() {
         runningTrader = false;
     }
 
@@ -624,7 +624,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
      * This method is used to enable running mode of bot
      * **/
     @Override
-    public void enableTrader(){
+    public void enableBot() {
         runningTrader = true;
     }
 

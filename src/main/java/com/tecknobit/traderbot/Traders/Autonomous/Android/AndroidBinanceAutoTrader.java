@@ -27,7 +27,6 @@ import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Transaction.TRANSACTION_KEY;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
-import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 
 /**
@@ -74,17 +73,16 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param refreshTime:         is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, boolean sendStatsReport, boolean printRoutineMessages,
                                     String baseCurrency, Credentials credentials, int refreshTime) throws Exception {
-        super(apiKey, secretKey, new TraderAccount(new ServerRequest(credentials, HOST, PORT)), sendStatsReport,
-                printRoutineMessages, baseCurrency);
-        long timestamp = currentTimeMillis();
+        super(apiKey, secretKey, null, sendStatsReport, printRoutineMessages, baseCurrency);
         setRefreshTime(refreshTime);
         initCredentials(credentials);
+        traderAccount = new TraderAccount(credentials);
         androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
                 printRoutineMessages);
         transactionDateFormat = getDateTimeInstance();
@@ -102,18 +100,17 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param refreshTime:         is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, String baseEndpoint, boolean sendStatsReport,
                                     boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                     int refreshTime) throws Exception {
-        super(apiKey, secretKey, baseEndpoint, new TraderAccount(new ServerRequest(credentials, HOST, PORT)), sendStatsReport,
-                printRoutineMessages, baseCurrency);
-        long timestamp = currentTimeMillis();
+        super(apiKey, secretKey, baseEndpoint, null, sendStatsReport, printRoutineMessages, baseCurrency);
         setRefreshTime(refreshTime);
         initCredentials(credentials);
+        traderAccount = new TraderAccount(credentials);
         androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
                 printRoutineMessages);
         transactionDateFormat = getDateTimeInstance();
@@ -131,7 +128,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param refreshTime:         is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -153,7 +150,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * @param printRoutineMessages : flag to insert to print or not routine messages
      * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
      * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh the latest prices
+     * @param refreshTime:         is time in seconds to set to refresh data
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote these keys will NOT store by library anywhere.
      **/
@@ -195,7 +192,7 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * **/
     @Override
     public void workflowHandler() {
-        enableTrader();
+        enableBot();
         androidWorkflow.checkWalletList(walletList);
         androidWorkflow.startWorkflow();
     }
@@ -393,37 +390,41 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     }
 
     /**
-     * This method is used to set time to refresh the latest prices <br>
-     * @param refreshTime: is time in seconds to set to refresh the latest prices.
+     * This method is used to set time to refresh data <br>
+     *
+     * @param refreshTime: is time in seconds to set to refresh data.
      * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
      * @implNote in Android's interfaces this method updates also {@link #botDetails} instance
-     * **/
+     **/
     @Override
     public void setRefreshTime(int refreshTime) {
         super.setRefreshTime(refreshTime);
-        if (botDetails != null)
-            botDetails.setRefreshTime(refreshTime);
+        if (androidWorkflow != null)
+            androidWorkflow.changeRefreshTime(refreshTime);
+        botDetails.setRefreshTime(refreshTime);
     }
 
     /**
      * This method is used to disable running mode of trader
+     *
      * @implNote in Android's interfaces this method updates also
      * {@link #botDetails} status instance to STOPPED_BOT_STATUS
-     * **/
+     **/
     @Override
-    public void disableTrader() {
-        super.disableTrader();
+    public void disableBot() {
+        super.disableBot();
         botDetails.setBotStatus(STOPPED_BOT_STATUS);
     }
 
     /**
      * This method is used to enable running mode of trader
+     *
      * @implNote in Android's interfaces this method updates also
      * {@link #botDetails} status instance to RUNNING_BOT_STATUS
-     * **/
+     **/
     @Override
-    public void enableTrader() {
-        super.enableTrader();
+    public void enableBot() {
+        super.enableBot();
         botDetails.setBotStatus(RUNNING_BOT_STATUS);
     }
 

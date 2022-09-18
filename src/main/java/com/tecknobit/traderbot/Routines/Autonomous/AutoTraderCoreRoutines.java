@@ -1,5 +1,6 @@
 package com.tecknobit.traderbot.Routines.Autonomous;
 
+import com.tecknobit.traderbot.Records.Account.TecknobitBot;
 import com.tecknobit.traderbot.Records.Account.TraderAccount;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig;
@@ -9,27 +10,27 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.tecknobit.traderbot.Records.Account.Trader.TraderManager;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.*;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
 
 /**
  * The {@code AutoTraderCoreRoutines} interface defines base routines methods for auto traders bot.<br>
  * These routines allow the different auto traders to do some operations about wallet info and make trading operations autonomously.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
-public interface AutoTraderCoreRoutines extends TraderManager, RoutineMessages {
+public interface AutoTraderCoreRoutines extends TecknobitBot.TraderManager, RoutineMessages {
 
     /**
      * {@code CHECKING_GAP_TIME} is instance that memorizes time gap for checking routine
      * **/
-    long CHECKING_GAP_TIME = 60000*5L;
+    long CHECKING_GAP_TIME = 60000 * 5L;
 
     /**
      * {@code BUYING_GAP_TIME} is instance that memorizes time gap for buying routine
      * **/
-    long BUYING_GAP_TIME = 1800*1000L;
+    long BUYING_GAP_TIME = 1800 * 1000L;
 
     /**
      * {@code UPDATING_GAP_TIME} is instance that memorizes time gap for updating routine
@@ -81,7 +82,6 @@ public interface AutoTraderCoreRoutines extends TraderManager, RoutineMessages {
     default TradingConfig fetchTradingConfig(TradingConfig actualModel){
         try {
             ServerRequest serverRequest = getPublicRequest(HOST, PORT);
-            assert serverRequest != null;
             serverRequest.sendRequest(new JSONObject(), GET_TRADING_CONFIGS_OPE);
             response = serverRequest.readResponse();
             if(response != null) {
@@ -205,7 +205,6 @@ public interface AutoTraderCoreRoutines extends TraderManager, RoutineMessages {
     default void sendStatsReport(long modelId, double percent){
         try {
             ServerRequest serverRequest = getPublicRequest(HOST, PORT);
-            assert serverRequest != null;
             serverRequest.sendRequest(new JSONObject().put(MODEL_ID_KEY, modelId).put(MODEL_FAILED_KEY, percent <= 0),
                     SEND_STATS_REPORT_OPE);
             if(response != null){

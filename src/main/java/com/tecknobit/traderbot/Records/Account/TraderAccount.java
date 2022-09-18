@@ -16,19 +16,20 @@ import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.apimanager.Tools.Trading.TradingTools.textualizeAssetPercent;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.*;
+import static com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.*;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
 import static com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines.ASSET_NOT_TRADABLE;
-import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.*;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.out;
 
 /**
  * The {@code TraderAccount} class is useful to contains reports of trading. <br>
  * Is useful for autonomous traders and Android's traders.
+ *
  * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
-public final class TraderAccount extends Trader implements RecordDetails {
+public final class TraderAccount extends TecknobitBot implements RecordDetails {
 
     /**
      * {@code ACTIVATION_DATE_KEY} is instance that memorizes activation date key
@@ -130,16 +131,19 @@ public final class TraderAccount extends Trader implements RecordDetails {
         initTimeFormatters();
     }
 
-    /** Constructor to init {@link TraderAccount} <br>
-     * @param serverRequest: object to send request to server
+    /**
+     * Constructor to init {@link TraderAccount}
+     *
+     * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @implNote is useful for Android's use
-     * **/
-    public TraderAccount(ServerRequest serverRequest) throws Exception {
+     **/
+    public TraderAccount(Credentials credentials) throws Exception {
         cryptocurrencies = new ConcurrentHashMap<>();
+        ServerRequest serverRequest = new ServerRequest(credentials, HOST, PORT);
         serverRequest.sendTokenRequest(new JSONObject(), GET_ACCOUNT_OPE);
         response = serverRequest.readResponse();
-        if(response != null) {
-            if(response.getInt(STATUS_CODE) == SUCCESSFUL_RESPONSE){
+        if (response != null) {
+            if (response.getInt(STATUS_CODE) == SUCCESSFUL_RESPONSE) {
                 salesAtLoss = response.getInt(LOSSES_KEY);
                 salesAtGain = response.getInt(GAINS_KEY);
                 salesAtPair = response.getInt(PAIRS_KEY);

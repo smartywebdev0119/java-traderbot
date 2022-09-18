@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.traderbot.Records.Account.BotDetails.*;
-import static com.tecknobit.traderbot.Records.Account.Trader.TraderManager.*;
+import static com.tecknobit.traderbot.Records.Account.TecknobitBot.TraderManager.*;
 import static com.tecknobit.traderbot.Records.Account.TraderAccount.TOTAL_INCOME_KEY;
 import static com.tecknobit.traderbot.Records.Android.Routine.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.CRYPTOCURRENCY_KEY;
@@ -131,29 +131,40 @@ public class AndroidWorkflow implements RoutineMessages {
                     printOperationStatus("[" + CHANGE_PASSWORD_OPE + "] Password successfully changed", true);
                     break;
                 case CHANGE_REFRESH_TIME_OPE:
-                    trader.setRefreshTime(parseInt(routine.getExtraValue()));
-                    printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh prices time successfully changed",
-                            true);
+                    int refreshTime = parseInt(routine.getExtraValue());
+                    if (trader.getRefreshTime() / 1000 != refreshTime) {
+                        trader.setRefreshTime(refreshTime);
+                        printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh prices time successfully changed",
+                                true);
+                    }
                     break;
                 case CHANGE_BOT_STATUS_OPE:
-                    printOperationStatus("[" + CHANGE_BOT_STATUS_OPE + "] Bot status successfully changed",
-                            true);
-                    if (routine.getExtraValue().equals(STOPPED_BOT_STATUS)) {
-                        if (trader instanceof AndroidCoreRoutines) {
-                            ((AndroidCoreRoutines) trader).disableTrader();
-                            printOperationStatus("Bot status: [" + STOPPED_BOT_STATUS + "]", false);
-                        }
-                    } else {
-                        if (trader instanceof AndroidCoreRoutines) {
-                            ((AndroidCoreRoutines) trader).enableTrader();
+                    String status = routine.getExtraValue();
+                    if (trader instanceof AndroidCoreRoutines) {
+                        if (RUNNING_BOT_STATUS.equals(status)) {
+                            if (!((AndroidCoreRoutines) trader).isBotRunning()) {
+                                printOperationStatus("[" + CHANGE_BOT_STATUS_OPE + "] Bot status successfully changed",
+                                        true);
+                                ((AndroidCoreRoutines) trader).enableBot();
+                            }
                             printOperationStatus("Bot status: [" + RUNNING_BOT_STATUS + "]", true);
+                        } else {
+                            if (((AndroidCoreRoutines) trader).isBotRunning()) {
+                                printOperationStatus("[" + CHANGE_BOT_STATUS_OPE + "] Bot status successfully changed",
+                                        true);
+                                ((AndroidCoreRoutines) trader).disableBot();
+                            }
+                            printOperationStatus("Bot status: [" + STOPPED_BOT_STATUS + "]", false);
                         }
                     }
                     break;
                 case CHANGE_CURRENCY_OPE:
                     if (trader instanceof AndroidCoreRoutines) {
-                        ((AndroidCoreRoutines) trader).setBaseCurrency(routine.getExtraValue());
-                        printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Base currency successfully changed", true);
+                        String currency = routine.getExtraValue();
+                        if (!((AndroidCoreRoutines) trader).getBaseCurrency().equals(currency)) {
+                            ((AndroidCoreRoutines) trader).setBaseCurrency(currency);
+                            printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Base currency successfully changed", true);
+                        }
                     }
                     break;
                 case INSERT_QUOTE_OPE:
@@ -178,19 +189,17 @@ public class AndroidWorkflow implements RoutineMessages {
     protected ArrayList<Routine> getRoutines() {
         ArrayList<Routine> routines = new ArrayList<>();
         try {
-            serverRequest.sendTokenRequest(new JSONObject(), GET_ROUTINES_OPE);
+            serverRequest.sendServerRequest(new JSONObject(), GET_ROUTINES_OPE);
             response = serverRequest.readResponse();
-            if (response != null) {
-                if (response.getInt(STATUS_CODE) != -1) {
-                    JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY, new JSONArray());
-                    for (int j = 0; j < jsonRoutines.length(); j++) {
-                        JSONObject routine = jsonRoutines.getJSONObject(j);
-                        routines.add(new Routine(routine.getString(ROUTINE_KEY), routine.getString(ROUTINE_EXTRA_VALUE_KEY)));
-                    }
-                }else{
-                    printRed("[ACCOUNT DELETED] You deleted account for the bot, we hope to see you again soon!");
-                    exit(0);
+            if (response.getInt(STATUS_CODE) != -1) {
+                JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY, new JSONArray());
+                for (int j = 0; j < jsonRoutines.length(); j++) {
+                    JSONObject routine = jsonRoutines.getJSONObject(j);
+                    routines.add(new Routine(routine.getString(ROUTINE_KEY), routine.getString(ROUTINE_EXTRA_VALUE_KEY)));
                 }
+            } else {
+                printRed("[ACCOUNT DELETED] You deleted account for the bot, we hope to see you again soon!");
+                exit(0);
             }
         } catch (Exception e) {
             printOperationFailed(GET_ROUTINES_OPE);
@@ -199,14 +208,105 @@ public class AndroidWorkflow implements RoutineMessages {
     }
 
     /**
+     * This method is used to change refresh time
+     *
+     * @param refreshTime: is time in seconds to set to refresh data
+     **/
+    public void changeRefreshTime(int refreshTime) {
+        try {
+            serverRequest.sendServerRequest(new JSONObject().put(REFRESH_TIME_KEY, refreshTime), CHANGE_REFRESH_TIME_OPE);
+            response = serverRequest.readResponse();
+            switch (response.getInt(STATUS_CODE)) {
+                case SUCCESSFUL_RESPONSE:
+                    if (printRoutineMessages)
+                        printOperationSuccess(CHANGE_REFRESH_TIME_OPE);
+                    break;
+                case GENERIC_ERROR_RESPONSE:
+                    printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh time must be more than 5 (5s) and less than 3600 (1h)",
+                            false);
+                    break;
+                default:
+                    printOperationFailed(CHANGE_REFRESH_TIME_OPE);
+            }
+        } catch (Exception e) {
+            printOperationFailed(CHANGE_REFRESH_TIME_OPE);
+        }
+    }
+
+    /**
+     * This method is used to disable running mode of a bot
+     **/
+    public void disableBot() {
+        changeBotStatus(STOPPED_BOT_STATUS);
+    }
+
+    /**
+     * This method is used to enable running mode of a bot
+     **/
+    public void enableBot() {
+        changeBotStatus(RUNNING_BOT_STATUS);
+    }
+
+    /**
+     * This method is used to change status of a bot
+     *
+     * @param status: {@link BotDetails#RUNNING_BOT_STATUS} or {@link BotDetails#STOPPED_BOT_STATUS}
+     **/
+    private void changeBotStatus(String status) {
+        try {
+            serverRequest.sendTokenRequest(new JSONObject().put(BOT_STATUS_KEY, status), CHANGE_BOT_STATUS_OPE);
+            response = serverRequest.readResponse();
+            switch (response.getInt(STATUS_CODE)) {
+                case SUCCESSFUL_RESPONSE:
+                    if (printRoutineMessages)
+                        printOperationSuccess(CHANGE_BOT_STATUS_OPE);
+                    break;
+                case GENERIC_ERROR_RESPONSE:
+                    printOperationStatus("[" + CHANGE_BOT_STATUS_OPE + "] Not a valid status has been inserted", false);
+                    break;
+                default:
+                    printOperationFailed(CHANGE_BOT_STATUS_OPE);
+            }
+        } catch (Exception e) {
+            printOperationFailed(CHANGE_BOT_STATUS_OPE);
+        }
+    }
+
+    /**
+     * This method is used to set base currency for change amount value
+     *
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
+     **/
+    public void changeBaseCurrency(String baseCurrency) {
+        try {
+            serverRequest.sendServerRequest(new JSONObject().put(CURRENCY_KEY, baseCurrency), CHANGE_CURRENCY_OPE);
+            response = serverRequest.readResponse();
+            switch (response.getInt(STATUS_CODE)) {
+                case SUCCESSFUL_RESPONSE:
+                    if (printRoutineMessages)
+                        printOperationSuccess(CHANGE_CURRENCY_OPE);
+                    break;
+                case GENERIC_ERROR_RESPONSE:
+                    printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Insert a valid currency first", false);
+                    break;
+                default:
+                    printOperationFailed(CHANGE_CURRENCY_OPE);
+            }
+        } catch (Exception e) {
+            printOperationFailed(CHANGE_CURRENCY_OPE);
+        }
+    }
+
+    /**
      * This method is used to insert wallet balance <br>
+     *
      * @param balance: value of balance to insert
-     * **/
+     **/
     public void insertWalletBalance(double balance) {
         try {
             serverRequest.sendTokenRequest(new JSONObject().put(BALANCE_KEY, balance), INSERT_WALLET_BALANCE_OPE);
             response = serverRequest.readResponse();
-            if(response != null){
+            if (response != null) {
                 switch (response.getInt(STATUS_CODE)){
                     case SUCCESSFUL_RESPONSE:
                         if(printRoutineMessages)
@@ -534,7 +634,7 @@ public class AndroidWorkflow implements RoutineMessages {
 
         /**
          * {@code secretKey} is instance secret key used in server requests
-         * **/
+         **/
         private final String secretKey;
 
         /**
@@ -542,11 +642,18 @@ public class AndroidWorkflow implements RoutineMessages {
          **/
         private BotDetails botDetails;
 
-        /** Constructor to init {@link Credentials}
-         * @param email: is instance that memorizes email of user
+        /**
+         * {@code verified} is flag to verified credentials
+         **/
+        private boolean verified;
+
+        /**
+         * Constructor to init {@link Credentials}
+         *
+         * @param email:    is instance that memorizes email of user
          * @param password: is instance that memorizes password of user
          * @implNote this constructor must call to register a new account
-         * **/
+         **/
         public Credentials(String email, String password) {
             if (!alreadyInstantiated)
                 alreadyInstantiated = true;
@@ -588,6 +695,7 @@ public class AndroidWorkflow implements RoutineMessages {
             this.token = token;
             this.ivSpec = ivSpec;
             this.secretKey = secretKey;
+            verified = false;
         }
 
         /**
@@ -597,7 +705,6 @@ public class AndroidWorkflow implements RoutineMessages {
         public void sendRegistrationRequest(String host, int port) throws Exception {
             if (botDetails != null && token == null) {
                 serverRequest = getPublicRequest(host, port);
-                assert serverRequest != null;
                 serverRequest.sendRequest(new JSONObject().put(EMAIL_KEY, email).put(PASSWORD_KEY, password)
                         .put(BOT_STATUS_KEY, botDetails.getBotStatus())
                         .put(REFRESH_TIME_KEY, botDetails.getRefreshTime())
@@ -631,7 +738,6 @@ public class AndroidWorkflow implements RoutineMessages {
          **/
         public void sendLoginRequest(String baseCurrency, String host, int port, ArrayList<String> quoteCurrencies) throws Exception {
             serverRequest = getPublicRequest(host, port);
-            assert serverRequest != null;
             serverRequest.sendRequest(new JSONObject().put(EMAIL_KEY, email).put(PASSWORD_KEY, password)
                     .put(AUTH_TOKEN_KEY, authToken)
                     .put(BOT_STATUS_KEY, botDetails.getBotStatus())
@@ -646,10 +752,11 @@ public class AndroidWorkflow implements RoutineMessages {
             if(response != null) {
                 switch (response.getInt(STATUS_CODE)){
                     case SUCCESSFUL_RESPONSE:
-                        if(!token.equals(response.getString(TOKEN_KEY)) || !ivSpec.equals(response.getString(IV_SPEC_KEY))
+                        if (!token.equals(response.getString(TOKEN_KEY)) || !ivSpec.equals(response.getString(IV_SPEC_KEY))
                                 || !secretKey.equals(response.getString(SECRET_KEY))) {
                             throw new IllegalAccessException("Wrong credentials inserted");
-                        }
+                        } else
+                            verified = true;
                         break;
                     case GENERIC_ERROR_RESPONSE: throw new IllegalAccessException("Wrong credentials inserted");
                     default: throw new IllegalAccessException("Operation failed");
@@ -724,6 +831,10 @@ public class AndroidWorkflow implements RoutineMessages {
             this.botDetails = botDetails;
         }
 
+        public boolean isVerified() {
+            return verified;
+        }
+
         @Override
         public String toString() {
             return "Credentials{" +
@@ -735,6 +846,7 @@ public class AndroidWorkflow implements RoutineMessages {
                     ", ivSpec='" + ivSpec + '\'' +
                     ", secretKey='" + secretKey + '\'' +
                     ", botDetails=" + botDetails +
+                    ", verified=" + verified +
                     '}';
         }
 
