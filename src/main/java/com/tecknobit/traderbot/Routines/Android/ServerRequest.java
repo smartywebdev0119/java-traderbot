@@ -285,8 +285,7 @@ public class ServerRequest {
     /**
      * {@code HOST} host value
      **/
-    // TODO: 17/09/2022 CHANGE HOST
-    public static final String HOST = "localhost";
+    public static final String HOST = "194.50.19.168";
 
     /**
      * {@code PORT} port value
