@@ -2,6 +2,7 @@ package com.tecknobit.traderbot.Routines.Interfaces;
 
 import com.tecknobit.traderbot.Records.Portfolio.Asset;
 import com.tecknobit.traderbot.Records.Portfolio.Coin;
+import com.tecknobit.traderbot.Records.Portfolio.MarketCoin;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -359,7 +360,7 @@ public abstract class TraderCoreRoutines {
      * Any params required
      *
      * @return true only if current timestamp when this method is called minus last timestamp when this method is called,
-     * it is memorizesd in {@link #lastPricesRefresh}, is bigger or equal than {@link #refreshTime}
+     * it is memorized in {@link #lastPricesRefresh}, is bigger or equal than {@link #refreshTime}
      **/
     public boolean isRefreshTime() {
         return (System.currentTimeMillis() - lastPricesRefresh) >= refreshTime;
@@ -397,36 +398,36 @@ public abstract class TraderCoreRoutines {
      * This method is to get list of the latest prices <br>
      * Any params required
      *
-     * @return last prices as {@link ArrayList} of {@link Double}
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      **/
-    public abstract ArrayList<Double> getLatestPrices();
+    public abstract ArrayList<MarketCoin> getLatestPrices();
 
     /**
      * This method is to get list of the latest prices
      *
      * @param decimals: number of digits to round final value
-     * @return last prices as {@link ArrayList} of {@link Double}
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      * @throws IllegalArgumentException if decimal digits are negative
      **/
-    public abstract ArrayList<Double> getLatestPrices(int decimals);
+    public abstract ArrayList<MarketCoin> getLatestPrices(int decimals);
 
     /**
      * This method is to get last price of a symbol <br>
      *
      * @param symbol: symbol from fetch last price
-     * @return last price as double
+     * @return last price as {@link MarketCoin} custom object
      **/
-    public abstract double getLastPrice(String symbol);
+    public abstract MarketCoin getLastPrice(String symbol);
 
     /**
      * This method is to get last price of a symbol
      *
      * @param symbol:   symbol from fetch last price
      * @param decimals: number of digits to round final value
-     * @return last price as double
+     * @return last price as {@link MarketCoin} custom object
      * @throws IllegalArgumentException if decimal digits are negative
      **/
-    public abstract double getLastPrice(String symbol, int decimals);
+    public abstract MarketCoin getLastPrice(String symbol, int decimals);
 
     /**
      * This method is used to print disclaimer alert to warn user of responsibility of storage and manage

@@ -12,6 +12,7 @@ import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Ticke
 import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.TradingPair;
 import com.tecknobit.traderbot.Records.Portfolio.Asset;
 import com.tecknobit.traderbot.Records.Portfolio.Coin;
+import com.tecknobit.traderbot.Records.Portfolio.MarketCoin;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
 import org.json.JSONArray;
@@ -683,13 +684,13 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * This method is to get list of the latest prices <br>
      * Any params required
      *
-     * @return last prices as {@link ArrayList} of {@link Double}
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      **/
     @Override
-    public ArrayList<Double> getLatestPrices() {
-        ArrayList<Double> lastPrices = new ArrayList<>();
+    public ArrayList<MarketCoin> getLatestPrices() {
+        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
         for (Ticker ticker : this.lastPrices.values())
-            lastPrices.add(ticker.getPrice());
+            lastPrices.add(new MarketCoin(ticker.getPrice(), ticker.getPriceChangePercent()));
         return lastPrices;
     }
 
@@ -697,14 +698,14 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * This method is to get list of the latest prices
      *
      * @param decimals: number of digits to round final value
-     * @return last prices as {@link ArrayList} of {@link Double}
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      * @throws IllegalArgumentException if decimal digits are negative
      **/
     @Override
-    public ArrayList<Double> getLatestPrices(int decimals) {
-        ArrayList<Double> lastPrices = new ArrayList<>();
+    public ArrayList<MarketCoin> getLatestPrices(int decimals) {
+        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
         for (Ticker ticker : this.lastPrices.values())
-            lastPrices.add(ticker.getPrice(decimals));
+            lastPrices.add(new MarketCoin(ticker.getPrice(decimals), ticker.getPriceChangePercent(decimals)));
         return lastPrices;
     }
 
@@ -712,11 +713,17 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * This method is to get last price of a symbol <br>
      *
      * @param symbol: symbol from fetch last price
-     * @return last price as double
+     * @return last price as {@link MarketCoin} custom object
+     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
      **/
     @Override
-    public double getLastPrice(String symbol) {
-        return lastPrices.get(symbol).getPrice();
+    public MarketCoin getLastPrice(String symbol) {
+        Ticker ticker = lastPrices.get(symbol);
+        if (ticker == null)
+            return new MarketCoin(0, 0);
+        return new MarketCoin(ticker.getPrice(),
+                ticker.getPriceChangePercent()
+        );
     }
 
     /**
@@ -724,12 +731,18 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      *
      * @param symbol:   symbol from fetch last price
      * @param decimals: number of digits to round final value
-     * @return last price as double
+     * @return last price as {@link MarketCoin} custom object
      * @throws IllegalArgumentException if decimal digits are negative
+     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
      **/
     @Override
-    public double getLastPrice(String symbol, int decimals) {
-        return lastPrices.get(symbol).getPrice(decimals);
+    public MarketCoin getLastPrice(String symbol, int decimals) {
+        Ticker ticker = lastPrices.get(symbol);
+        if (ticker == null)
+            return new MarketCoin(0, 0);
+        return new MarketCoin(ticker.getPrice(decimals),
+                ticker.getPriceChangePercent(decimals)
+        );
     }
 
     /**

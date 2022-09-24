@@ -433,9 +433,10 @@ public class ServerRequest {
     }
 
     /**
-     * This method is used fetch public keys for public requests operation<br>
-     * Any params required
+     * This method is used fetch public keys for public requests operation
      *
+     * @param host: host value
+     * @param port: port value
      * @return new request object as {@link ServerRequest}
      **/
     public static ServerRequest getPublicRequest(String host, int port) {
@@ -447,6 +448,17 @@ public class ServerRequest {
         } catch (Exception e) {
             throw new IllegalStateException(SERVICE_UNAVAILABLE);
         }
+    }
+
+    /**
+     * This method is used to send request with tokens
+     *
+     * @param message:   message for the request
+     * @param operation: operation for the server
+     **/
+    public void sendServerRequest(JSONObject message, String operation) throws Exception {
+        message.put(SERVER_REQUEST_KEY, true);
+        sendTokenRequest(message, operation);
     }
 
     /**
@@ -484,17 +496,6 @@ public class ServerRequest {
             printWriter = new PrintWriter(socket.getOutputStream(), true);
         }catch (ConnectException ignored) {
         }
-    }
-
-    /**
-     * This method is used to send request with tokens
-     *
-     * @param message:   message for the request
-     * @param operation: operation for the server
-     **/
-    public void sendServerRequest(JSONObject message, String operation) throws Exception {
-        message.put(SERVER_REQUEST_KEY, true);
-        sendTokenRequest(message, operation);
     }
 
 }

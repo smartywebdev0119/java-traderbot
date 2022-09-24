@@ -21,15 +21,17 @@ public class BotDetails extends TecknobitBot {
 
     /**
      * {@code CUSTOM_RED_COLOR} is instance that memorizes red color to use for example when asset is at loss
+     *
      * @implSpec not available for console color
-     * **/
-    public static final String CUSTOM_RED_COLOR = "#C3100C";
+     **/
+    public static final String CUSTOM_RED_COLOR = "#A80202";
 
     /**
      * {@code CUSTOM_GREEN_COLOR} is instance that memorizes green color to use for example when asset is at gain
+     *
      * @implSpec not available for console color
-     * **/
-    public static final String CUSTOM_GREEN_COLOR = "#24B82B";
+     **/
+    public static final String CUSTOM_GREEN_COLOR = "#079A44";
 
     /**
      * {@code BINANCE_COLOR} is instance that memorizes Binance official color
@@ -263,7 +265,7 @@ public class BotDetails extends TecknobitBot {
         }
     }
 
-    public long getRefreshTime() {
+    public int getRefreshTime() {
         return refreshTime;
     }
 

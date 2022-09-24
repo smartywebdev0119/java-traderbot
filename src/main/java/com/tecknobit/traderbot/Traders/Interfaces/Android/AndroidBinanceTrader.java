@@ -508,6 +508,8 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
      **/
     @Override
     public void setRefreshTime(int refreshTime) {
+        if (refreshTime > 3600)
+            refreshTime /= 1000;
         if (this.refreshTime / 1000 != refreshTime) {
             if (refreshTime >= 5 && refreshTime <= 3600) {
                 if (androidWorkflow != null) {

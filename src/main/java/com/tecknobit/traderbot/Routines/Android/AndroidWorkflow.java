@@ -61,23 +61,35 @@ public class AndroidWorkflow implements RoutineMessages {
 
     /**
      * {@code printRoutineMessages} flag to insert to print or not routine messages
-     * **/
+     **/
     protected boolean printRoutineMessages;
 
     /**
      * {@code workflowStarted} flag to indicate if Android's workflow has been started
-     * **/
+     **/
     protected boolean workflowStarted;
 
-    /** Constructor to init {@link AndroidWorkflow}
-     * @param serverRequest: instance to make server request for Android's traders
-     * @param trader: instance of Android's traders used
-     * @param credentials : instance that contains your Tecknobit's account credentials, not your private exchange keys
+    /**
+     * {@code routines} list of {@link Routine} custom object to perform an Android's workflow
+     **/
+    protected final ArrayList<Routine> routines;
+
+    /**
+     * {@code performedRoutines} list of {@link Routine} custom object performed
+     **/
+    private final ArrayList<Routine> performedRoutines;
+
+    /**
+     * Constructor to init {@link AndroidWorkflow}
+     *
+     * @param serverRequest:        instance to make server request for Android's traders
+     * @param trader:               instance of Android's traders used
+     * @param credentials           : instance that contains your Tecknobit's account credentials, not your private exchange keys
      * @param printRoutineMessages: flag to insert to print or not routine messages
-     * **/
+     **/
     public AndroidWorkflow(ServerRequest serverRequest, TraderCoreRoutines trader, Credentials credentials,
                            boolean printRoutineMessages) {
-        if(!alreadyInstantiated)
+        if (!alreadyInstantiated)
             alreadyInstantiated = true;
         else {
             out.println(ANSI_RED + "AndroidWorkflow object is already instantiated you cannot have multiple AndroidWorkflow " +
@@ -89,6 +101,8 @@ public class AndroidWorkflow implements RoutineMessages {
         this.credentials = credentials;
         this.trader = trader;
         workflowStarted = false;
+        routines = new ArrayList<>();
+        performedRoutines = new ArrayList<>();
     }
 
     /**
@@ -120,15 +134,18 @@ public class AndroidWorkflow implements RoutineMessages {
      * Any params required
      * **/
     protected void performRoutines() {
-        for (Routine routine : getRoutines()) {
+        getRoutines();
+        for (Routine routine : routines) {
             switch (routine.getRoutine()) {
                 case CHANGE_EMAIL_OPE:
                     credentials.setEmail(routine.getExtraValue());
                     printOperationStatus("[" + CHANGE_EMAIL_OPE + "] Email successfully changed", true);
+                    performedRoutines.add(routine);
                     break;
                 case CHANGE_PASSWORD_OPE:
                     credentials.setPassword(routine.getExtraValue());
                     printOperationStatus("[" + CHANGE_PASSWORD_OPE + "] Password successfully changed", true);
+                    performedRoutines.add(routine);
                     break;
                 case CHANGE_REFRESH_TIME_OPE:
                     int refreshTime = parseInt(routine.getExtraValue());
@@ -137,6 +154,7 @@ public class AndroidWorkflow implements RoutineMessages {
                         printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh prices time successfully changed",
                                 true);
                     }
+                    performedRoutines.add(routine);
                     break;
                 case CHANGE_BOT_STATUS_OPE:
                     String status = routine.getExtraValue();
@@ -157,6 +175,7 @@ public class AndroidWorkflow implements RoutineMessages {
                             printOperationStatus("Bot status: [" + STOPPED_BOT_STATUS + "]", false);
                         }
                     }
+                    performedRoutines.add(routine);
                     break;
                 case CHANGE_CURRENCY_OPE:
                     if (trader instanceof AndroidCoreRoutines) {
@@ -166,6 +185,7 @@ public class AndroidWorkflow implements RoutineMessages {
                             printOperationStatus("[" + CHANGE_CURRENCY_OPE + "] Base currency successfully changed", true);
                         }
                     }
+                    performedRoutines.add(routine);
                     break;
                 case INSERT_QUOTE_OPE:
                     String addQuote = routine.getExtraValue();
@@ -174,22 +194,25 @@ public class AndroidWorkflow implements RoutineMessages {
                         printOperationStatus("[" + INSERT_QUOTE_OPE + "] Quote currency [" + addQuote + "] successfully inserted",
                                 true);
                     }
+                    performedRoutines.add(routine);
                     break;
                 case REMOVE_QUOTE_OPE:
                     String quoteRemove = routine.getExtraValue();
                     trader.removeQuoteCurrency(quoteRemove);
                     printOperationStatus("[" + REMOVE_QUOTE_OPE + "] Quote currency [" + quoteRemove + "] successfully removed",
                             true);
+                    performedRoutines.add(routine);
             }
         }
+        routines.removeAll(performedRoutines);
     }
 
     /**
      * This method is used to fetch routines of Android's workflow <br>
      * Any params required
-     * **/
-    protected ArrayList<Routine> getRoutines() {
-        ArrayList<Routine> routines = new ArrayList<>();
+     **/
+    protected void getRoutines() {
+        performedRoutines.clear();
         try {
             serverRequest.sendServerRequest(new JSONObject(), GET_ROUTINES_OPE);
             response = serverRequest.readResponse();
@@ -206,7 +229,6 @@ public class AndroidWorkflow implements RoutineMessages {
         } catch (Exception e) {
             printOperationFailed(GET_ROUTINES_OPE);
         }
-        return routines;
     }
 
     /**
@@ -343,7 +365,7 @@ public class AndroidWorkflow implements RoutineMessages {
      **/
     private boolean changeBotStatus(String status) {
         try {
-            serverRequest.sendTokenRequest(new JSONObject().put(BOT_STATUS_KEY, status), CHANGE_BOT_STATUS_OPE);
+            serverRequest.sendServerRequest(new JSONObject().put(BOT_STATUS_KEY, status), CHANGE_BOT_STATUS_OPE);
             response = serverRequest.readResponse();
             switch (response.getInt(STATUS_CODE)) {
                 case SUCCESSFUL_RESPONSE:
@@ -672,13 +694,31 @@ public class AndroidWorkflow implements RoutineMessages {
     }
 
     /**
+     * The {@code CustomAndroidWorkflow} interface is useful to customize an Android's workflow
+     * Is useful for Android's type traders
+     *
+     * @author Tecknobit N7ghtm4r3
+     **/
+
+    public interface CustomAndroidWorkflow {
+
+        /**
+         * This method is used to perform customs routines<br>
+         * Any params required
+         **/
+        <T> T performExtraRoutines();
+
+    }
+
+    /**
      * The {@code Credentials} class is object for Tecknobit's account credentials
+     *
+     * @author Tecknobit N7ghtm4r3
      * @implNote it not saves your exchange keys
      * Is useful for Android's type traders.
-     * @author Tecknobit N7ghtm4r3
-     * **/
+     **/
 
-    public static final class Credentials{
+    public static final class Credentials {
 
         /**
          * {@code alreadyInstantiated} flag to lock multiple instantiations of {@link Credentials} object
@@ -736,9 +776,28 @@ public class AndroidWorkflow implements RoutineMessages {
         private BotDetails botDetails;
 
         /**
-         * {@code verified} is flag to verified credentials
+         * Constructor to init {@link Credentials}
+         *
+         * @param authToken: is instance that memorizes identifier of server trader to log in and requests operations
+         * @param email:     is instance that memorizes email of user
+         * @param password:  is instance that memorizes password of user
+         * @param token:     instance that memorizes identifier of user to log in and requests operations
+         * @param ivSpec:    instance initialization vector used in server requests
+         * @param secretKey: is instance secret key used in server requests
+         * @implNote this constructor must call to log in
          **/
-        private boolean verified;
+        public Credentials(String authToken, String email, String password, String token, String ivSpec, String secretKey) {
+            if (!alreadyInstantiated)
+                alreadyInstantiated = true;
+            else
+                exitWithError();
+            this.authToken = authToken;
+            this.email = email.toLowerCase();
+            this.password = password;
+            this.token = token;
+            this.ivSpec = ivSpec;
+            this.secretKey = secretKey;
+        }
 
         /**
          * Constructor to init {@link Credentials}
@@ -752,6 +811,7 @@ public class AndroidWorkflow implements RoutineMessages {
                 alreadyInstantiated = true;
             else
                 exitWithError();
+            email = email.toLowerCase();
             if (!getInstance().isValid(email))
                 throw new IllegalArgumentException("Email must be a valid email");
             else
@@ -769,31 +829,41 @@ public class AndroidWorkflow implements RoutineMessages {
         /**
          * Constructor to init {@link Credentials}
          *
-         * @param authToken: is instance that memorizes identifier of server trader to log in and requests operations
-         * @param email:     is instance that memorizes email of user
-         * @param password:  is instance that memorizes password of user
-         * @param token:     instance that memorizes identifier of user to log in and requests operations
-         * @param ivSpec:    instance initialization vector used in server requests
-         * @param secretKey: is instance secret key used in server requests
-         * @implNote this constructor must call to log in
+         * @param credentials : instance that contains your Tecknobit's account credentials, not your private exchange keys in {@link JSONObject}
+         *                    format
+         * @implNote this constructor is to create dynamically a {@link Credentials} object
+         * @apiNote to work correctly it needs specific keys for credentials -> available on {@link ServerRequest}
+         * @see ServerRequest
          **/
-        public Credentials(String authToken, String email, String password, String token, String ivSpec, String secretKey) {
-            if (!alreadyInstantiated)
-                alreadyInstantiated = true;
-            else
-                exitWithError();
-            this.authToken = authToken;
-            this.email = email;
-            this.password = password;
-            this.token = token;
-            this.ivSpec = ivSpec;
-            this.secretKey = secretKey;
-            verified = false;
+        public Credentials(JSONObject credentials) {
+            if (credentials != null) {
+                if (!alreadyInstantiated)
+                    alreadyInstantiated = true;
+                else
+                    exitWithError();
+                JsonHelper hCredentials = new JsonHelper(credentials);
+                String email = hCredentials.getString(EMAIL_KEY, "").toLowerCase();
+                if (!getInstance().isValid(email))
+                    throw new IllegalArgumentException("Email must be a valid email");
+                else
+                    this.email = email;
+                String password = hCredentials.getString(PASSWORD_KEY, "");
+                if (wrongPasswordValidity(password))
+                    throw new IllegalArgumentException("Password must be 8 - 32 characters length");
+                else
+                    this.password = password;
+                authToken = hCredentials.getString(AUTH_TOKEN_KEY);
+                token = hCredentials.getString(TOKEN_KEY);
+                ivSpec = hCredentials.getString(IV_SPEC_KEY);
+                secretKey = hCredentials.getString(SECRET_KEY);
+            } else
+                throw new IllegalArgumentException("Credentials cannot be null");
         }
 
         /**
-         * This method is used to register a new Tecknobit's account <br>
-         * Any params required
+         * This method is used to register a new Tecknobit's account
+         * @param host:       host value
+         * @param port:       port value
          **/
         public void sendRegistrationRequest(String host, int port) throws Exception {
             if (botDetails != null && token == null) {
@@ -820,14 +890,17 @@ public class AndroidWorkflow implements RoutineMessages {
                         default:
                             throw new IllegalAccessException("Operation failed");
                     }
-                }else
-                    throw new IllegalStateException(ANSI_RED + "Service is not available for serve your request, wait" + ANSI_RESET);
+                } else
+                    throw new IllegalStateException(SERVICE_UNAVAILABLE);
             }
         }
 
         /**
-         * This method is used to log in a Tecknobit's account <br>
-         * Any params required
+         * This method is used to log in a Tecknobit's account
+         * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+         * @param host:       host value
+         * @param port:       port value
+         * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
          **/
         public void sendLoginRequest(String baseCurrency, String host, int port, ArrayList<String> quoteCurrencies) throws Exception {
             serverRequest = getPublicRequest(host, port);
@@ -848,8 +921,7 @@ public class AndroidWorkflow implements RoutineMessages {
                         if (!token.equals(response.getString(TOKEN_KEY)) || !ivSpec.equals(response.getString(IV_SPEC_KEY))
                                 || !secretKey.equals(response.getString(SECRET_KEY))) {
                             throw new IllegalAccessException("Wrong credentials inserted");
-                        } else
-                            verified = true;
+                        }
                         break;
                     case GENERIC_ERROR_RESPONSE: throw new IllegalAccessException("Wrong credentials inserted");
                     default: throw new IllegalAccessException("Operation failed");
@@ -893,6 +965,7 @@ public class AndroidWorkflow implements RoutineMessages {
         }
 
         public void setEmail(String email) {
+            email = email.toLowerCase();
             if (!getInstance().isValid(email))
                 throw new IllegalArgumentException("Email must be a valid email");
             this.email = email;
@@ -924,10 +997,6 @@ public class AndroidWorkflow implements RoutineMessages {
             this.botDetails = botDetails;
         }
 
-        public boolean isVerified() {
-            return verified;
-        }
-
         @Override
         public String toString() {
             return "Credentials{" +
@@ -939,7 +1008,6 @@ public class AndroidWorkflow implements RoutineMessages {
                     ", ivSpec='" + ivSpec + '\'' +
                     ", secretKey='" + secretKey + '\'' +
                     ", botDetails=" + botDetails +
-                    ", verified=" + verified +
                     '}';
         }
 

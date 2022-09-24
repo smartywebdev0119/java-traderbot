@@ -10,6 +10,7 @@ import com.tecknobit.binancemanager.Managers.SignedManagers.Wallet.BinanceWallet
 import com.tecknobit.binancemanager.Managers.SignedManagers.Wallet.Records.Asset.CoinInformation;
 import com.tecknobit.traderbot.Records.Portfolio.Asset;
 import com.tecknobit.traderbot.Records.Portfolio.Coin;
+import com.tecknobit.traderbot.Records.Portfolio.MarketCoin;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
 import org.json.JSONException;
@@ -557,13 +558,13 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * This method is to get list of the latest prices <br>
      * Any params required
      *
-     * @return last prices as {@link ArrayList} of {@link Double}
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      **/
     @Override
-    public ArrayList<Double> getLatestPrices() {
-        ArrayList<Double> lastPrices = new ArrayList<>();
+    public ArrayList<MarketCoin> getLatestPrices() {
+        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
         for (TickerPriceChange tickerPriceChange : this.lastPrices.values())
-            lastPrices.add(tickerPriceChange.getLastPrice());
+            lastPrices.add(new MarketCoin(tickerPriceChange.getLastPrice(), tickerPriceChange.getPriceChangePercent()));
         return lastPrices;
     }
 
@@ -571,14 +572,16 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * This method is to get list of the latest prices
      *
      * @param decimals: number of digits to round final value
-     * @return last prices as {@link ArrayList} of {@link Double}
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      * @throws IllegalArgumentException if decimal digits are negative
      **/
     @Override
-    public ArrayList<Double> getLatestPrices(int decimals) {
-        ArrayList<Double> lastPrices = new ArrayList<>();
-        for (TickerPriceChange tickerPriceChange : this.lastPrices.values())
-            lastPrices.add(tickerPriceChange.getLastPrice(decimals));
+    public ArrayList<MarketCoin> getLatestPrices(int decimals) {
+        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
+        for (TickerPriceChange tickerPriceChange : this.lastPrices.values()) {
+            lastPrices.add(new MarketCoin(tickerPriceChange.getLastPrice(decimals),
+                    tickerPriceChange.getPriceChangePercent(decimals)));
+        }
         return lastPrices;
     }
 
@@ -586,11 +589,17 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * This method is to get last price of a symbol <br>
      *
      * @param symbol: symbol from fetch last price
-     * @return last price as double
+     * @return last price as {@link MarketCoin} custom object
+     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
      **/
     @Override
-    public double getLastPrice(String symbol) {
-        return lastPrices.get(symbol).getLastPrice();
+    public MarketCoin getLastPrice(String symbol) {
+        TickerPriceChange tickerPriceChange = lastPrices.get(symbol);
+        if (tickerPriceChange == null)
+            return new MarketCoin(0, 0);
+        return new MarketCoin(tickerPriceChange.getLastPrice(),
+                tickerPriceChange.getPriceChangePercent()
+        );
     }
 
     /**
@@ -598,12 +607,18 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      *
      * @param symbol:   symbol from fetch last price
      * @param decimals: number of digits to round final value
-     * @return last price as double
+     * @return last price as {@link MarketCoin} custom object
      * @throws IllegalArgumentException if decimal digits are negative
+     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
      **/
     @Override
-    public double getLastPrice(String symbol, int decimals) {
-        return lastPrices.get(symbol).getLastPrice(decimals);
+    public MarketCoin getLastPrice(String symbol, int decimals) {
+        TickerPriceChange tickerPriceChange = lastPrices.get(symbol);
+        if (tickerPriceChange == null)
+            return new MarketCoin(0, 0);
+        return new MarketCoin(tickerPriceChange.getLastPrice(decimals),
+                tickerPriceChange.getPriceChangePercent(decimals)
+        );
     }
 
 }
