@@ -77,7 +77,7 @@ public class AndroidWorkflow implements RoutineMessages {
     /**
      * {@code performedRoutines} list of {@link Routine} custom object performed
      **/
-    private final ArrayList<Routine> performedRoutines;
+    protected final ArrayList<Routine> performedRoutines;
 
     /**
      * Constructor to init {@link AndroidWorkflow}
@@ -149,7 +149,7 @@ public class AndroidWorkflow implements RoutineMessages {
                     break;
                 case CHANGE_REFRESH_TIME_OPE:
                     int refreshTime = parseInt(routine.getExtraValue());
-                    if (trader.getRefreshTime() / 1000 != refreshTime) {
+                    if (trader.getRefreshTimeSeconds() != refreshTime) {
                         trader.setRefreshTime(refreshTime);
                         printOperationStatus("[" + CHANGE_REFRESH_TIME_OPE + "] Refresh prices time successfully changed",
                                 true);
@@ -214,7 +214,7 @@ public class AndroidWorkflow implements RoutineMessages {
     protected void getRoutines() {
         performedRoutines.clear();
         try {
-            serverRequest.sendServerRequest(new JSONObject(), GET_ROUTINES_OPE);
+            serverRequest.sendTokenRequest(new JSONObject(), GET_ROUTINES_OPE);
             response = serverRequest.readResponse();
             if (response.getInt(STATUS_CODE) != -1) {
                 JSONArray jsonRoutines = JsonHelper.getJSONArray(response, ROUTINES_KEY, new JSONArray());
@@ -340,7 +340,8 @@ public class AndroidWorkflow implements RoutineMessages {
     }
 
     /**
-     * This method is used to disable running mode of a bot
+     * This method is used to disable running mode of a bot <br>
+     * Any params required
      *
      * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
@@ -349,7 +350,8 @@ public class AndroidWorkflow implements RoutineMessages {
     }
 
     /**
-     * This method is used to enable running mode of a bot
+     * This method is used to enable running mode of a bot <br>
+     * Any params required
      *
      * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
@@ -389,6 +391,7 @@ public class AndroidWorkflow implements RoutineMessages {
      * This method is used to set base currency for change amount value
      *
      * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
+     * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
     public boolean changeBaseCurrency(String baseCurrency) {
         try {
@@ -413,7 +416,7 @@ public class AndroidWorkflow implements RoutineMessages {
     }
 
     /**
-     * This method is used to insert wallet balance <br>
+     * This method is used to insert wallet balance
      *
      * @param balance: value of balance to insert
      **/
@@ -706,7 +709,7 @@ public class AndroidWorkflow implements RoutineMessages {
          * This method is used to perform customs routines<br>
          * Any params required
          **/
-        <T> T performExtraRoutines();
+        void performExtraRoutines();
 
     }
 

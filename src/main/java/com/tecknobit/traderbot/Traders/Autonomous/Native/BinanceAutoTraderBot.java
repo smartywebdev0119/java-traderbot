@@ -703,7 +703,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     @Override
     public void setBaseCurrency(String baseCurrency) {
         if(baseCurrency == null || baseCurrency.isEmpty())
-            throw new IllegalArgumentException("Currency cannot be null or empty, but for example EUR or USDT");
+            throw new IllegalArgumentException("Currency cannot be null or empty, but for example EUR or USD");
         this.baseCurrency = baseCurrency;
     }
 

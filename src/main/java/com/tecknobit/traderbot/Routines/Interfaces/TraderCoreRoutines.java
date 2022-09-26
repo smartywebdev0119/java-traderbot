@@ -295,16 +295,6 @@ public abstract class TraderCoreRoutines {
     public abstract void refreshLatestPrice() throws Exception;
 
     /**
-     * This method is used to get {@link #refreshTime}<br>
-     * Any params required.
-     *
-     * @return {@link #refreshTime} as int
-     **/
-    public int getRefreshTime() {
-        return refreshTime;
-    }
-
-    /**
      * This method is used to check if any quote is inserted in {@link #quoteCurrencies} list
      *
      * @param compareQuote: quote to compare and check if is inserted
@@ -364,6 +354,26 @@ public abstract class TraderCoreRoutines {
      **/
     public boolean isRefreshTime() {
         return (System.currentTimeMillis() - lastPricesRefresh) >= refreshTime;
+    }
+
+    /**
+     * This method is used to get {@link #refreshTime}<br>
+     * Any params required.
+     *
+     * @return {@link #refreshTime} as int
+     **/
+    public int getRefreshTime() {
+        return refreshTime;
+    }
+
+    /**
+     * Method to get {@link #refreshTime} in seconds (s) format <br>
+     * Any params required
+     *
+     * @return {@link #refreshTime} in seconds (s) format as int
+     **/
+    public int getRefreshTimeSeconds() {
+        return refreshTime / 1000;
     }
 
     /**

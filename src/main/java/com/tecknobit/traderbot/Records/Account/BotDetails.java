@@ -270,6 +270,16 @@ public class BotDetails extends TecknobitBot {
     }
 
     /**
+     * Method to get {@link #refreshTime} in seconds (s) format <br>
+     * Any params required
+     *
+     * @return {@link #refreshTime} in seconds (s) format as int
+     **/
+    public int getRefreshTimeSeconds() {
+        return refreshTime / 1000;
+    }
+
+    /**
      * Method to set {@link #refreshTime}
      *
      * @param refreshTime: time to refresh last prices
@@ -277,7 +287,7 @@ public class BotDetails extends TecknobitBot {
      **/
     public void setRefreshTime(int refreshTime) {
         if (refreshTime >= 5 && refreshTime <= 3600)
-            this.refreshTime = refreshTime;
+            this.refreshTime = refreshTime * 1000;
         else
             throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
     }

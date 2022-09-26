@@ -295,42 +295,35 @@ public class ServerRequest {
     /**
      * {@code clientCipher} object to cipher requests
      **/
-    private final ClientCipher clientCipher;
-
+    protected final ClientCipher clientCipher;
+    /**
+     * {@code ciphered} flag to cipher or not requests
+     **/
+    protected final boolean ciphered;
+    /**
+     * {@code port} is instance that memorizes host value
+     **/
+    protected final String host;
+    /**
+     * {@code port} is instance that memorizes port value
+     **/
+    protected final int port;
     /**
      * {@code clientCipher} object to write requests
      **/
-    private PrintWriter printWriter;
-
-    /**
-     * {@code ciphered} flag to cipher or not requests
-     * **/
-    private final boolean ciphered;
-
+    protected PrintWriter printWriter;
     /**
      * {@code socket} object to transport request
-     * **/
-    private volatile Socket socket;
-
+     **/
+    protected volatile Socket socket;
     /**
      * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
-     * **/
-    private String authToken;
-
+     **/
+    protected String authToken;
     /**
      * {@code token} is instance that memorizes identifier of user to log in and requests operations
-     * **/
-    private String token;
-
-    /**
-     * {@code port} is instance that memorizes host value
-     * **/
-    private final String host;
-
-    /**
-     * {@code port} is instance that memorizes port value
-     * **/
-    private final int port;
+     **/
+    protected String token;
 
     /**
      * Constructor to init {@link ServerRequest}
@@ -433,6 +426,17 @@ public class ServerRequest {
     }
 
     /**
+     * This method is used to send request with tokens
+     *
+     * @param message:   message for the request
+     * @param operation: operation for the server
+     **/
+    public void sendServerRequest(JSONObject message, String operation) throws Exception {
+        message.put(SERVER_REQUEST_KEY, true);
+        sendTokenRequest(message, operation);
+    }
+
+    /**
      * This method is used fetch public keys for public requests operation
      *
      * @param host: host value
@@ -448,17 +452,6 @@ public class ServerRequest {
         } catch (Exception e) {
             throw new IllegalStateException(SERVICE_UNAVAILABLE);
         }
-    }
-
-    /**
-     * This method is used to send request with tokens
-     *
-     * @param message:   message for the request
-     * @param operation: operation for the server
-     **/
-    public void sendServerRequest(JSONObject message, String operation) throws Exception {
-        message.put(SERVER_REQUEST_KEY, true);
-        sendTokenRequest(message, operation);
     }
 
     /**

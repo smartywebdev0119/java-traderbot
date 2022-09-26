@@ -7,6 +7,7 @@ import com.tecknobit.traderbot.Records.Account.TraderAccount;
 import com.tecknobit.traderbot.Records.Portfolio.Asset;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
+import com.tecknobit.traderbot.Routines.Android.AndroidBotController;
 import com.tecknobit.traderbot.Routines.Android.AndroidCoreRoutines;
 import com.tecknobit.traderbot.Routines.Android.AndroidWorkflow;
 import com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
@@ -33,13 +34,14 @@ import static java.text.DateFormat.getDateTimeInstance;
  * The {@code AndroidBinanceAutoTrader} class is trader for {@link BinanceManager} library.<br>
  * This trader bot allow to manage user wallet, get transactions and make orders (BUY and SELL side) for a Binance's account autonomously.<br>
  * Is derived class of {@link BinanceAutoTraderBot} class from inherit all core routines methods and instances.
+ *
+ * @author Tecknobit N7ghtm4r3
  * @implNote for autonomous operations uses {@link AutoTraderCoreRoutines} and {@link MarketOrder} routines.
  * @implSpec {@link TraderAccount} and {@link #walletList} are objects that will automatically restore, but if
  * you change trader's platform all assets will be deleted from the managing of the trader.
- * @author Tecknobit N7ghtm4r3
- * **/
+ **/
 
-public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements AndroidCoreRoutines {
+public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements AndroidCoreRoutines, AndroidBotController {
 
     /**
      * {@code transactionDateFormat} is instance helpful to format transaction date
@@ -392,79 +394,14 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     /**
      * This method is used to set new list of {@link #quoteCurrencies} overwritten the past list
      *
-     * @param quoteCurrencies: list of quote currencies to insert.
+     * @param quoteCurrencies: list of quote currencies to insert
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
      **/
     @Override
     public void setQuoteCurrencies(ArrayList<String> quoteCurrencies) {
-        if (androidWorkflow != null) {
-            if (androidWorkflow.insertQuoteCurrencyList(quoteCurrencies))
-                this.quoteCurrencies = quoteCurrencies;
-        } else
+        if (androidWorkflow.insertQuoteCurrencyList(quoteCurrencies))
             this.quoteCurrencies = quoteCurrencies;
-    }
-
-    /**
-     * This method is used to insert a new quote currency in {@link #quoteCurrencies} list<br>
-     * If this value is already inserted in list will be not inserted to avoid duplicate values.
-     *
-     * @param newQuote: quote currency to insert es. SOL
-     **/
-    @Override
-    public void insertQuoteCurrency(String newQuote) {
-        if (!quoteCurrencies.contains(newQuote)) {
-            if (androidWorkflow != null) {
-                if (androidWorkflow.insertQuoteCurrency(newQuote))
-                    quoteCurrencies.add(newQuote);
-            } else
-                quoteCurrencies.add(newQuote);
-        }
-    }
-
-    /**
-     * This method is used to remove a quote currency from {@link #quoteCurrencies} list<br>
-     * If this value is not inserted in list will be not removed and will be returned false.
-     *
-     * @param quoteToRemove: quote currency to remove es. SOL
-     * @return status of deletion for {@code quoteToRemove}, will be true only if that value exists in list and can
-     * be removed
-     **/
-    @Override
-    public boolean removeQuoteCurrency(String quoteToRemove) {
-        if (quoteCurrencies.contains(quoteToRemove)) {
-            if (androidWorkflow != null) {
-                if (androidWorkflow.removeQuoteCurrency(quoteToRemove))
-                    return quoteCurrencies.remove(quoteToRemove);
-            } else
-                return quoteCurrencies.remove(quoteToRemove);
-        }
-        return false;
-    }
-
-    /**
-     * This method is used to set time to refresh data
-     *
-     * @param refreshTime: is time in seconds to set to refresh data.
-     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote in Android's interfaces this method updates also {@link #botDetails} instance
-     **/
-    @Override
-    public void setRefreshTime(int refreshTime) {
-        if (refreshTime > 3600)
-            refreshTime /= 1000;
-        if (this.refreshTime / 1000 != refreshTime) {
-            if (refreshTime >= 5 && refreshTime <= 3600) {
-                if (androidWorkflow != null) {
-                    if (androidWorkflow.changeRefreshTime(refreshTime)) {
-                        botDetails.setRefreshTime(refreshTime);
-                        this.refreshTime = refreshTime * 1000;
-                    }
-                } else {
-                    botDetails.setRefreshTime(refreshTime);
-                    this.refreshTime = refreshTime * 1000;
-                }
-            } else
-                throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
-        }
     }
 
     /**
@@ -476,15 +413,8 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     @Override
     public void disableBot() {
         if (runningTrader) {
-            if (androidWorkflow != null) {
-                if (androidWorkflow.disableBot()) {
-                    runningTrader = false;
-                    botDetails.setBotStatus(STOPPED_BOT_STATUS);
-                }
-            } else {
-                runningTrader = false;
-                botDetails.setBotStatus(STOPPED_BOT_STATUS);
-            }
+            runningTrader = false;
+            botDetails.setBotStatus(STOPPED_BOT_STATUS);
         }
     }
 
@@ -497,15 +427,8 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     @Override
     public void enableBot() {
         if (!runningTrader) {
-            if (androidWorkflow != null) {
-                if (androidWorkflow.enableBot()) {
-                    runningTrader = true;
-                    botDetails.setBotStatus(RUNNING_BOT_STATUS);
-                }
-            } else {
-                runningTrader = true;
-                botDetails.setBotStatus(RUNNING_BOT_STATUS);
-            }
+            runningTrader = true;
+            botDetails.setBotStatus(RUNNING_BOT_STATUS);
         }
     }
 
@@ -558,24 +481,6 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     }
 
     /**
-     * This method is used to set base currency for change amount value
-     *
-     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
-     **/
-    @Override
-    public void setBaseCurrency(String baseCurrency) {
-        if (baseCurrency == null || baseCurrency.isEmpty())
-            throw new IllegalArgumentException("Currency cannot be null or empty, but for example EUR or USDT");
-        if (!this.baseCurrency.equals(baseCurrency)) {
-            if (androidWorkflow != null) {
-                if (androidWorkflow.changeBaseCurrency(baseCurrency))
-                    this.baseCurrency = baseCurrency;
-            } else
-                this.baseCurrency = baseCurrency;
-        }
-    }
-
-    /**
      * This method is used to get base currency for change amount value <br>
      * Any params required
      *
@@ -599,12 +504,116 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
 
     /**
      * This method is used to set flag to print routine messages
+     *
      * @param printRoutineMessages: flag to insert to print or not routine messages
-     * **/
+     **/
     @Override
     public void setPrintRoutineMessages(boolean printRoutineMessages) {
         super.setPrintRoutineMessages(printRoutineMessages);
         androidWorkflow.setPrintRoutineMessages(printRoutineMessages);
+    }
+
+    /**
+     * This method is used to add a new quote currency in {@link #quoteCurrencies} list<br>
+     * If this value is already inserted in list will be not inserted to avoid duplicate values.
+     *
+     * @param newQuote: quote currency to insert es. SOL
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
+     **/
+    public void addQuoteCurrency(String newQuote) {
+        if (!quoteCurrencies.contains(newQuote) && androidWorkflow.insertQuoteCurrency(newQuote))
+            quoteCurrencies.add(newQuote);
+    }
+
+    /**
+     * This method is used to remove a quote currency from {@link #quoteCurrencies} list<br>
+     * If this value is not inserted in list will be not removed and will be returned false.
+     *
+     * @param quoteToRemove: quote currency to remove es. SOL
+     * @return status of deletion for {@code quoteToRemove}, will be true only if that value exists in list and can
+     * be removed
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
+     **/
+    public boolean deleteQuoteCurrency(String quoteToRemove) {
+        if (quoteCurrencies.contains(quoteToRemove) && androidWorkflow.removeQuoteCurrency(quoteToRemove))
+            return quoteCurrencies.remove(quoteToRemove);
+        return false;
+    }
+
+    /**
+     * This method is used to run the bot
+     *
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
+     **/
+    @Override
+    public void runBot() {
+        if (!runningTrader) {
+            if (androidWorkflow.enableBot()) {
+                enableBot();
+            }
+        }
+    }
+
+    /**
+     * This method is used to stop the bot
+     *
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
+     **/
+    @Override
+    public void stopBot() {
+        if (runningTrader) {
+            if (androidWorkflow.disableBot()) {
+                disableBot();
+            }
+        }
+    }
+
+    /**
+     * This method is used to set time change refresh data
+     *
+     * @param refreshTime: is time in seconds to set to refresh data.
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote in Android's interfaces this method updates also {@link #botDetails} instance
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
+     **/
+    @Override
+    public void changeRefreshTime(int refreshTime) {
+        if (refreshTime >= 5 && refreshTime <= 3600) {
+            if (getRefreshTimeSeconds() != refreshTime) {
+                if (androidWorkflow != null) {
+                    if (androidWorkflow.changeRefreshTime(refreshTime)) {
+                        botDetails.setRefreshTime(refreshTime);
+                        this.refreshTime = refreshTime * 1000;
+                    }
+                } else {
+                    botDetails.setRefreshTime(refreshTime);
+                    this.refreshTime = refreshTime * 1000;
+                }
+            }
+        } else
+            throw new IllegalArgumentException("Refresh time must be more than 5 (5s) and less than 3600 (1h)");
+    }
+
+    /**
+     * This method is used to set base currency for change amount value
+     *
+     * @param baseCurrency: base currency to get all amount value of traders routine es. EUR
+     * @apiNote this method is useful to interact with
+     * <a href="https://play.google.com/store/apps/details?id=com.tecknobit.traderbot">TraderBot</a>'s interface
+     **/
+    @Override
+    public void changeBaseCurrency(String baseCurrency) {
+        if (baseCurrency == null || baseCurrency.isEmpty())
+            throw new IllegalArgumentException("Currency cannot be null or empty, but for example EUR or USD");
+        if (!this.baseCurrency.equals(baseCurrency)) {
+            if (androidWorkflow.changeBaseCurrency(baseCurrency))
+                this.baseCurrency = baseCurrency;
+        }
     }
 
 }
