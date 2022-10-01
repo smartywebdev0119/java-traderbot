@@ -27,22 +27,36 @@ public abstract class TraderCoreRoutines {
 
     /**
      * {@code USD_CURRENCY} is the identifier of USD currency used by traders to get default prices
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String USD_CURRENCY = "USD";
 
     /**
      * {@code USDT_CURRENCY} is the identifier of USDT cryptocurrency used by traders to get default prices
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String USDT_CURRENCY = "USDT";
 
     /**
      * {@code BUY} is constant for buy side
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String BUY = BUY_SIDE.toUpperCase();
 
     /**
      * {@code SELL} is constant for buy side
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String SELL = SELL_SIDE.toUpperCase();
 
     /**
@@ -438,6 +452,14 @@ public abstract class TraderCoreRoutines {
      * @throws IllegalArgumentException if decimal digits are negative
      **/
     public abstract MarketCoin getLastPrice(String symbol, int decimals);
+
+    /**
+     * This method is used to get coin balance
+     *
+     * @param quote: string of quote currency to return amount value of balance
+     * @return balance of coin inserted
+     **/
+    public abstract double getCoinBalance(String quote);
 
     /**
      * This method is used to print disclaimer alert to warn user of responsibility of storage and manage

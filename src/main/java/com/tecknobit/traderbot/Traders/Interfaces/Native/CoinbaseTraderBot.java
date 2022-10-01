@@ -746,6 +746,18 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     }
 
     /**
+     * This method is used to get coin balance
+     *
+     * @param quote: string of quote currency to return amount value of balance
+     * @return balance of coin inserted
+     **/
+    public double getCoinBalance(String quote) {
+        Coin coin = coins.get(quote);
+        return coinbaseAccountManager.roundValue(coin.getQuantity() *
+                lastPrices.get(coin.getAssetIndex() + "-" + USD_CURRENCY).getPrice(), 8);
+    }
+
+    /**
      * This method is used to assemble right symbol with {@link #USDT_CURRENCY} combination.
      *
      * @param currency: currency for the request es. EUR

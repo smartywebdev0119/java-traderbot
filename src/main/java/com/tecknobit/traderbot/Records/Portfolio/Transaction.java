@@ -1,6 +1,7 @@
 package com.tecknobit.traderbot.Records.Portfolio;
 
 import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
+import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,32 +30,55 @@ public class Transaction implements RecordDetails {
 
     /**
      * {@code TRANSACTIONS_KEY} is instance that memorizes transactions key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String TRANSACTIONS_KEY = "transactions";
 
     /**
      * {@code TRANSACTION_KEY} is instance that memorizes transaction key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String TRANSACTION_KEY = "transaction";
 
     /**
      * {@code SIDE_KEY} is instance that memorizes side key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String SIDE_KEY = "side";
 
     /**
      * {@code TRANSACTION_DATE_KEY} is instance that memorizes transaction date key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String TRANSACTION_DATE_KEY = "transaction_date";
 
     /**
      * {@code VALUE_KEY} is instance that memorizes value key
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String VALUE_KEY = "value";
 
     /**
      * {@code TRANSACTION_TYPE_KEY} is instance that memorizes transaction type key
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String TRANSACTION_TYPE_KEY = "transaction_type";
 
     /**
@@ -474,15 +498,6 @@ public class Transaction implements RecordDetails {
         return transactionDate;
     }
 
-    /**
-     * This method is used to get from a timestamp a date formatted by Locale
-     * @param timestamp: timestamp of the date to get
-     * @return date value as {@link String}
-     * **/
-    public static String getDate(long timestamp) {
-        return dateFormatter.format(new Date(timestamp));
-    }
-
     public double getValue() {
         return value;
     }
@@ -519,21 +534,6 @@ public class Transaction implements RecordDetails {
 
     public double getIncomePercent() {
         return incomePercent;
-    }
-
-    /**
-     * This method is used to get from a date its timestamp value
-     *
-     * @param date: date to get timestamp
-     * @return date timestamp value as long
-     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
-     **/
-    public static long getDateTimestamp(String date) {
-        try {
-            return dateFormatter.parse(date).getTime();
-        } catch (ParseException e) {
-            return -1;
-        }
     }
 
     /**
@@ -653,6 +653,58 @@ public class Transaction implements RecordDetails {
         if (side.equals(BUY))
             return "## Side: " + ANSI_GREEN + side + ANSI_RESET + "\n";
         return "## Side: " + ANSI_RED + side + ANSI_RESET + "\n";
+    }
+
+    /**
+     * This method is used to get from a timestamp a date formatted by Locale
+     *
+     * @param timestamp: timestamp of the date to get
+     * @return date value as {@link String}
+     **/
+    public static String getDate(long timestamp) {
+        return dateFormatter.format(new Date(timestamp));
+    }
+
+    /**
+     * This method is used to get from a timestamp a date formatted by Locale
+     *
+     * @param timestamp: timestamp of the date to get
+     * @param pattern:   pattern to format return date es. dd/MM/yyyy hh:mm:ss
+     * @return date value as {@link String}
+     **/
+    public static String getDate(long timestamp, String pattern) {
+        return new SimpleDateFormat(pattern).format(new Date(timestamp));
+    }
+
+    /**
+     * This method is used to get from a date its timestamp value
+     *
+     * @param date: date to get timestamp
+     * @return date timestamp value as long
+     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
+     **/
+    public static long getDateTimestamp(String date) {
+        try {
+            return dateFormatter.parse(date).getTime();
+        } catch (ParseException e) {
+            return -1;
+        }
+    }
+
+    /**
+     * This method is used to get from a date its timestamp value
+     *
+     * @param date:    date to get timestamp
+     * @param pattern: pattern to format return date es. dd/MM/yyyy hh:mm:ss
+     * @return date timestamp value as long
+     * @implNote when {@link ParseException} has been thrown return value will be -1 as default
+     **/
+    public static long getDateTimestamp(String date, String pattern) {
+        try {
+            return new SimpleDateFormat(pattern).parse(date).getTime();
+        } catch (ParseException e) {
+            return -1;
+        }
     }
 
 }

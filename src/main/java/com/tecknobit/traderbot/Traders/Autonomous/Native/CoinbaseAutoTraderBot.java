@@ -838,18 +838,6 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     }
 
     /**
-     * This method is used to get coin balance
-     * @param quote: string of quote currency to return amount value of balance
-     * @return balance of coin inserted
-     * **/
-    @Override
-    public double getCoinBalance(String quote) {
-        Coin coin = coins.get(quote);
-        return coinbaseAccountManager.roundValue(coin.getQuantity() *
-                lastPrices.get(coin.getAssetIndex() + "-" + USD_CURRENCY).getPrice(), 8);
-    }
-
-    /**
      * This method is used to get sales at loss
      * @return sales at loss
      * **/

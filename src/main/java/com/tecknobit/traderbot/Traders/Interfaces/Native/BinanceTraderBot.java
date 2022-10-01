@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.binancemanager.Managers.BinanceManager.BASE_ENDPOINTS;
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
@@ -619,6 +620,28 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         return new MarketCoin(tickerPriceChange.getLastPrice(decimals),
                 tickerPriceChange.getPriceChangePercent(decimals)
         );
+    }
+
+    /**
+     * This method is used to get coin balance
+     *
+     * @param quote: string of quote currency to return amount value of balance
+     * @return balance of coin inserted
+     **/
+    @Override
+    public double getCoinBalance(String quote) {
+        Coin coin = coins.get(quote);
+        String assetIndex = coin.getAssetIndex();
+        double quantity = coin.getQuantity();
+        if (assetIndex.equals(USDT_CURRENCY)) {
+            try {
+                return roundValue(quantity * binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY
+                        + USDT_CURRENCY), 8);
+            } catch (IOException e) {
+                return -1;
+            }
+        }
+        return roundValue(quantity * lastPrices.get(assetIndex + USDT_CURRENCY).getLastPrice(), 8);
     }
 
 }

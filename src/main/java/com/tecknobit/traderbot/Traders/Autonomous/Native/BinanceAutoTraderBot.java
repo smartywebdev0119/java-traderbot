@@ -640,27 +640,6 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
     }
 
     /**
-     * This method is used to get coin balance
-     * @param quote: string of quote currency to return amount value of balance
-     * @return balance of coin inserted
-     * **/
-    @Override
-    public double getCoinBalance(String quote) {
-        Coin coin = coins.get(quote);
-        String assetIndex = coin.getAssetIndex();
-        double quantity = coin.getQuantity();
-        if(assetIndex.equals(USDT_CURRENCY)){
-            try {
-                return roundValue(quantity * binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY
-                        + USDT_CURRENCY), 8);
-            } catch (IOException e) {
-                return -1;
-            }
-        }
-        return roundValue(quantity * lastPrices.get(assetIndex + USDT_CURRENCY).getLastPrice(), 8);
-    }
-
-    /**
      * This method is used to get sales at loss
      * @return sales at loss
      * **/

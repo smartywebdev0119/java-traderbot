@@ -4,6 +4,7 @@ import com.tecknobit.apimanager.Tools.Formatters.JsonHelper;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.Routines.Android.ServerRequest;
 import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
+import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,32 +34,56 @@ public final class TraderAccount extends TecknobitBot implements RecordDetails {
 
     /**
      * {@code ACTIVATION_DATE_KEY} is instance that memorizes activation date key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String ACTIVATION_DATE_KEY = "activation_date";
 
     /**
      * {@code GAINS_KEY} is instance that memorizes sales at gain key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String GAINS_KEY = "sales_at_gain";
 
     /**
      * {@code LOSSES_KEY} is instance that memorizes sales at loss key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String LOSSES_KEY = "sales_at_loss";
 
     /**
      * {@code PAIRS_KEY} is instance that memorizes sales at pair key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String PAIRS_KEY = "sales_at_pair";
 
     /**
      * {@code TOTAL_INCOME_KEY} is instance that memorizes total income key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String TOTAL_INCOME_KEY = "total_income";
 
     /**
      * {@code INCOMES_KEY} is instance that memorizes incomes key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String INCOMES_KEY = "incomes";
 
     /**

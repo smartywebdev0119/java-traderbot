@@ -42,7 +42,7 @@ public class AndroidWorkflow implements RoutineMessages {
     /**
      * {@code alreadyInstantiated} flag to lock multiple instantiations of {@link AndroidWorkflow} object
      **/
-    protected static boolean alreadyInstantiated = false;
+    private static boolean alreadyInstantiated = false;
 
     /**
      * {@code serverRequest} instance to make server request for Android's bots

@@ -190,13 +190,6 @@ public interface AutoTraderCoreRoutines extends TecknobitBot.TraderManager, Rout
     }
 
     /**
-     * This method is used to get coin balance
-     * @param quote: string of quote currency to return amount value of balance
-     * @return balance of coin inserted
-     * **/
-    double getCoinBalance(String quote);
-
-    /**
      * This method is used to send stats report of trading using {@link TradingConfig} fetched.
      * This is very helpful to make A.I. for automatic trader better and more efficiently.
      * @implNote any personal data will be sent in this method and any personal data will be saved in our systems anywhere. Data that will be passed are

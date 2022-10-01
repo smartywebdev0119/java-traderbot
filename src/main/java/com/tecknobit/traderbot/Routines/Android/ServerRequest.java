@@ -2,6 +2,7 @@ package com.tecknobit.traderbot.Routines.Android;
 
 import com.tecknobit.aesHelper.ClientCipher;
 import com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
+import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 import org.json.JSONObject;
 
 import javax.crypto.BadPaddingException;
@@ -27,123 +28,211 @@ public class ServerRequest {
 
     /**
      * {@code SERVICE_UNAVAILABLE} is instance to indicate that service is not available to perform requests
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String SERVICE_UNAVAILABLE = ANSI_RED + "Service is not available for serve your request, wait"
             + ANSI_RESET;
 
     /**
      * {@code GET_KEYS_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String GET_KEYS_OPE = "get_keys_ope";
 
     /**
      * {@code REGISTRATION_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String REGISTRATION_OPE = "registration_ope";
 
     /**
      * {@code LOGIN_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String LOGIN_OPE = "login_ope";
 
     /**
      * {@code GET_ACCOUNT_OPE} request
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String GET_ACCOUNT_OPE = "get_account_ope";
 
     /**
      * {@code GET_ROUTINES_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String GET_ROUTINES_OPE = "get_routines_ope";
 
     /**
      * {@code CHANGE_EMAIL_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String CHANGE_EMAIL_OPE = "change_email_ope";
 
     /**
      * {@code CHANGE_PASSWORD_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String CHANGE_PASSWORD_OPE = "change_password_ope";
 
     /**
      * {@code CHANGE_REFRESH_TIME_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String CHANGE_REFRESH_TIME_OPE = "change_refresh_time_ope";
 
     /**
      * {@code CHANGE_BOT_STATUS_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String CHANGE_BOT_STATUS_OPE = "change_bot_status_ope";
 
     /**
      * {@code CHANGE_LANGUAGE_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String CHANGE_LANGUAGE_OPE = "change_language_ope";
 
     /**
      * {@code CHANGE_CURRENCY_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String CHANGE_CURRENCY_OPE = "change_currency_ope";
 
     /**
      * {@code CHANGE_DELETION_ACCOUNT_TIME_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String CHANGE_DELETION_ACCOUNT_TIME_OPE = "change_deletion_account_time_ope";
 
     /**
      * {@code INSERT_WALLET_BALANCE_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String INSERT_WALLET_BALANCE_OPE = "insert_wallet_balance_ope";
 
     /**
      * {@code INSERT_CRYPTOCURRENCY_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String INSERT_CRYPTOCURRENCY_OPE = "insert_cryptocurrency_ope";
 
     /**
      * {@code DELETE_CRYPTOCURRENCY_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String DELETE_CRYPTOCURRENCY_OPE = "delete_cryptocurrency_ope";
 
     /**
      * {@code INSERT_REFRESHED_PRICES} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String INSERT_REFRESHED_PRICES = "insert_refreshed_prices_ope";
 
     /**
      * {@code INSERT_QUOTE_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String INSERT_QUOTE_OPE = "insert_quote_ope";
 
     /**
      * {@code INSERT_QUOTES_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String INSERT_QUOTES_OPE = "insert_quotes_ope";
 
     /**
      * {@code REMOVE_QUOTE_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String REMOVE_QUOTE_OPE = "remove_quote_ope";
 
     /**
      * {@code INSERT_CHECKING_LIST_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String INSERT_CHECKING_LIST_OPE = "insert_checking_list_ope";
 
     /**
      * {@code INSERT_WALLET_LIST_OPE} request
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String INSERT_WALLET_LIST_OPE = "insert_wallet_list_ope";
 
     /**
      * {@code GET_TRADING_CONFIGS_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String GET_TRADING_CONFIGS_OPE = "get_trading_configs_request";
 
     /**
      * {@code SEND_STATS_REPORT_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String SEND_STATS_REPORT_OPE = "send_stats_report_ope";
 
     /**
@@ -154,133 +243,215 @@ public class ServerRequest {
      * but not to delete transaction in server side use. For that use you can see <a href="https://github.com/N7ghtm4r3/TxNotes">TxNotes</a>'s
      * library that allows to delete also in server side use and not only from <a href="https://play.google.com/store/apps/details?id=com.tecknobit.txnotes">TxNotes</a>'s
      * application
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String DELETE_TRANSACTION_OPE = "delete_transaction_ope";
 
     /**
      * {@code LOGOUT_ACCOUNT_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String LOGOUT_ACCOUNT_OPE = "logout_account_ope";
 
     /**
      * {@code DELETE_ACCOUNT_OPE} request
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String DELETE_ACCOUNT_OPE = "delete_account_ope";
 
     /**
      * {@code CREDENTIALS_ERROR_RESPONSE} response
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final int CREDENTIALS_ERROR_RESPONSE = 400;
 
     /**
      * {@code GENERIC_ERROR_RESPONSE} response
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final int GENERIC_ERROR_RESPONSE = 300;
 
     /**
      * {@code SUCCESSFUL_RESPONSE} response
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final int SUCCESSFUL_RESPONSE = 200;
 
     /**
      * {@code ERROR_RESPONSE} response
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final int ERROR_RESPONSE = 500;
 
     /**
      * {@code STATUS_CODE} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String STATUS_CODE = "status_code";
 
     /**
      * {@code TOKEN_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String TOKEN_KEY = "token";
 
     /**
      * {@code EMAIL_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String EMAIL_KEY = "email";
 
     /**
      * {@code NEW_EMAIL_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String NEW_EMAIL_KEY = "new_email";
 
     /**
      * {@code PASSWORD_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String PASSWORD_KEY = "password";
 
     /**
      * {@code NEW_PASSWORD_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String NEW_PASSWORD_KEY = "new_password";
 
     /**
      * {@code IV_SPEC_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String IV_SPEC_KEY = "iv_spec";
 
     /**
      * {@code SECRET_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String SECRET_KEY = "secret_key";
 
     /**
      * {@code DEVICE_TOKEN_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String DEVICE_TOKEN_KEY = "device_token";
 
     /**
      * {@code AUTH_TOKEN_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String AUTH_TOKEN_KEY = "auth_token";
 
     /**
      * {@code LANGUAGE_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String LANGUAGE_KEY = "language";
 
     /**
      * {@code CURRENCY_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String CURRENCY_KEY = "currency";
 
     /**
      * {@code DELETION_TIME_KEY} key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String DELETION_TIME_KEY = "deletion_time";
 
     /**
      * {@code QUOTE_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String QUOTE_KEY = "quote";
 
     /**
      * {@code BASE_CURRENCY_KEY} key
-     * **/
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
+     **/
+    @Deprecated
     public static final String BASE_CURRENCY_KEY = "base_currency";
 
     /**
      * {@code QUOTES_KEY} key
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String QUOTES_KEY = "quotes";
 
     /**
      * {@code BALANCE_KEY} key
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String BALANCE_KEY = "balance";
 
     /**
      * {@code SERVER_REQUEST_KEY} key
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String SERVER_REQUEST_KEY = "server_request";
-
-    /**
-     * {@code response} object for requests response
-     **/
-    public static JSONObject response;
 
     /**
      * {@code HOST} host value
@@ -291,6 +462,11 @@ public class ServerRequest {
      * {@code PORT} port value
      **/
     public static final int PORT = 7898;
+
+    /**
+     * {@code response} object for requests response
+     **/
+    public static JSONObject response;
 
     /**
      * {@code clientCipher} object to cipher requests

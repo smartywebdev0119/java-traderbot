@@ -1,5 +1,7 @@
 package com.tecknobit.traderbot.Records.Account;
 
+import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -16,114 +18,184 @@ public class BotDetails extends TecknobitBot {
      * {@code CUSTOM_DEF_COLOR} is instance that memorizes default color to use for example when asset is at pair
      *
      * @implSpec not available for console color
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String CUSTOM_DEF_COLOR = "#A8A8A8";
 
     /**
      * {@code CUSTOM_RED_COLOR} is instance that memorizes red color to use for example when asset is at loss
      *
      * @implSpec not available for console color
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String CUSTOM_RED_COLOR = "#A80202";
 
     /**
      * {@code CUSTOM_GREEN_COLOR} is instance that memorizes green color to use for example when asset is at gain
      *
      * @implSpec not available for console color
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String CUSTOM_GREEN_COLOR = "#079A44";
 
     /**
      * {@code BINANCE_COLOR} is instance that memorizes Binance official color
+     *
      * @implSpec not available for console color
-     * **/
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String BINANCE_COLOR = "#F3BA2F";
 
     /**
      * {@code COINBASE_COLOR} is instance that memorizes Coinbase official color
+     *
      * @implSpec not available for console color
-     * **/
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String COINBASE_COLOR = "#1652f0";
 
     /**
      * {@code BOT_TYPE_AUTONOMOUS} is instance that memorizes AUTONOMOUS bot type in use
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
      **/
+    @Deprecated
     public static final String BOT_TYPE_AUTONOMOUS = "AUTONOMOUS";
 
     /**
      * {@code BOT_TYPE_MANUAL} is instance that memorizes MANUAL bot type in use
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String BOT_TYPE_MANUAL = "MANUAL";
 
     /**
      * {@code BINANCE_PLATFORM} is instance that memorizes BINANCE bot platform in use
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String BINANCE_PLATFORM = "BINANCE";
 
     /**
      * {@code COINBASE_PLATFORM} is instance that memorizes COINBASE bot platform in use
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String COINBASE_PLATFORM = "COINBASE";
 
     /**
      * {@code RUNNING_BOT_STATUS} is instance that memorizes RUNNING bot current status
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String RUNNING_BOT_STATUS = "RUNNING";
 
     /**
      * {@code STOPPED_BOT_STATUS} is instance that memorizes STOPPED bot current status
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String STOPPED_BOT_STATUS = "STOPPED";
 
     /**
      * {@code BOT_STATUS_KEY} is instance that memorizes bot status key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String BOT_STATUS_KEY = "bot_status";
 
     /**
      * {@code BOT_PLATFORM_KEY} is instance that memorizes bot platform key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String BOT_PLATFORM_KEY = "bot_platform";
 
     /**
      * {@code BOT_TYPE_KEY} is instance that memorizes bot type key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String BOT_TYPE_KEY = "bot_type";
 
     /**
      * {@code REFRESH_TIME_KEY} is instance that memorizes refresh time key
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     * @see TraderBotConstants
      **/
+    @Deprecated
     public static final String REFRESH_TIME_KEY = "refresh_time";
 
     /**
      * {@code LAST_BOT_ACTIVITY_KEY} is instance that memorizes last bot activity key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String LAST_BOT_ACTIVITY_KEY = "last_bot_activity";
 
     /**
      * {@code RUNNING_FROM_DATE_KEY} is instance that memorizes running from date key
-     * **/
+     *
+     * @see TraderBotConstants
+     * @deprecated use {@link TraderBotConstants} instead to use constants
+     **/
+    @Deprecated
     public static final String RUNNING_FROM_DATE_KEY = "running_from_date";
+
     /**
      * {@code botType} is instance that memorizes type of bot in use {@link #BOT_TYPE_AUTONOMOUS} or {@link #BOT_TYPE_MANUAL}
      **/
     private final String botType;
+
     /**
      * {@code botPlatform} is instance that memorizes platform of bot in use {@link #BINANCE_PLATFORM} or {@link #COINBASE_PLATFORM}
      **/
     private final String botPlatform;
+
     /**
      * {@code lastBotActivity} is instance that memorizes last time when bot contact server
      **/
     private String lastBotActivity;
+
     /**
      * {@code lastBotActivityTimestamp} is instance that memorizes last time when bot contact server in timestamp format
      **/
     private long lastBotActivityTimestamp;
+
     /**
      * {@code botStatus} is instance that memorizes current status of bot {@link #RUNNING_BOT_STATUS} or {@link #STOPPED_BOT_STATUS}
      **/
     private String botStatus;
+
     /**
      * {@code refreshTime} is instance that memorizes time to refresh last prices
      *
@@ -261,7 +333,7 @@ public class BotDetails extends TecknobitBot {
             case COINBASE_PLATFORM:
                 return COINBASE_COLOR;
             default:
-                return CUSTOM_DEF_COLOR;
+                return TraderBotConstants.CUSTOM_DEF_COLOR;
         }
     }
 
