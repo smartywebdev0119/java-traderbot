@@ -9,6 +9,7 @@ import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
 import com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages;
+import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,14 +19,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.tecknobit.traderbot.Records.Account.BotDetails.*;
 import static com.tecknobit.traderbot.Records.Account.TecknobitBot.TraderManager.*;
-import static com.tecknobit.traderbot.Records.Account.TraderAccount.TOTAL_INCOME_KEY;
-import static com.tecknobit.traderbot.Records.Android.Routine.*;
-import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.CRYPTOCURRENCY_KEY;
-import static com.tecknobit.traderbot.Records.Portfolio.Transaction.TRANSACTION_KEY;
 import static com.tecknobit.traderbot.Records.Portfolio.Transaction.getDate;
-import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.getPublicRequest;
+import static com.tecknobit.traderbot.Routines.Android.ServerRequest.response;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.System.*;
 import static org.apache.commons.validator.routines.EmailValidator.getInstance;
@@ -285,7 +283,7 @@ public class AndroidWorkflow implements RoutineMessages {
      * This method is used to manage quote currencies list
      *
      * @param quote: quote to remove or to add
-     * @param ope:   {@link ServerRequest#INSERT_QUOTE_OPE} or {@link ServerRequest#REMOVE_QUOTE_OPE}
+     * @param ope:   {@link TraderBotConstants#INSERT_QUOTE_OPE} or {@link TraderBotConstants#REMOVE_QUOTE_OPE}
      * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
     private boolean manageQuoteCurrency(String quote, String ope) {
@@ -362,7 +360,7 @@ public class AndroidWorkflow implements RoutineMessages {
     /**
      * This method is used to change status of a bot
      *
-     * @param status: {@link BotDetails#RUNNING_BOT_STATUS} or {@link BotDetails#STOPPED_BOT_STATUS}
+     * @param status: {@link TraderBotConstants#RUNNING_BOT_STATUS} or {@link TraderBotConstants#RUNNING_BOT_STATUS}
      * @return result of the operation as boolean, if true operation has been correctly completed wherever false not
      **/
     private boolean changeBotStatus(String status) {

@@ -1,7 +1,6 @@
 package com.tecknobit.traderbot.Records.Portfolio;
 
 import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
-import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,10 +11,8 @@ import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.apimanager.Tools.Trading.TradingTools.textualizeAssetPercent;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.BUY;
 import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.TradeConstants.SELL;
-import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
-import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
-import static com.tecknobit.traderbot.Records.Portfolio.Token.QUANTITY_KEY;
 import static com.tecknobit.traderbot.Routines.Autonomous.AutoTraderCoreRoutines.*;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.*;
 import static java.lang.System.out;
 import static java.util.Locale.getDefault;
 
@@ -27,59 +24,6 @@ import static java.util.Locale.getDefault;
  **/
 
 public class Transaction implements RecordDetails {
-
-    /**
-     * {@code TRANSACTIONS_KEY} is instance that memorizes transactions key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String TRANSACTIONS_KEY = "transactions";
-
-    /**
-     * {@code TRANSACTION_KEY} is instance that memorizes transaction key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String TRANSACTION_KEY = "transaction";
-
-    /**
-     * {@code SIDE_KEY} is instance that memorizes side key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String SIDE_KEY = "side";
-
-    /**
-     * {@code TRANSACTION_DATE_KEY} is instance that memorizes transaction date key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String TRANSACTION_DATE_KEY = "transaction_date";
-
-    /**
-     * {@code VALUE_KEY} is instance that memorizes value key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String VALUE_KEY = "value";
-
-    /**
-     * {@code TRANSACTION_TYPE_KEY} is instance that memorizes transaction type key
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     * @see TraderBotConstants
-     **/
-    @Deprecated
-    public static final String TRANSACTION_TYPE_KEY = "transaction_type";
 
     /**
      * {@code dateFormatter} is instance that help to format date

@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.*;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.*;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.*;
 
 /**
  * The {@code AutoTraderCoreRoutines} interface defines base routines methods for auto traders bot.<br>

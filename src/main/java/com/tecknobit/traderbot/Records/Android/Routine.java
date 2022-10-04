@@ -1,7 +1,5 @@
 package com.tecknobit.traderbot.Records.Android;
 
-import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
-
 /**
  * The {@code Routine} class is useful for Android's traders <br>
  * {@code Routine} defines what trader have to change or do when user from
@@ -12,33 +10,6 @@ import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
  **/
 
 public final class Routine {
-
-    /**
-     * {@code ROUTINES_KEY} is instance that memorizes routines key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String ROUTINES_KEY = "routines";
-
-    /**
-     * {@code ROUTINE_KEY} is instance that memorizes routine key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String ROUTINE_KEY = "routine";
-
-    /**
-     * {@code ROUTINE_EXTRA_VALUE_KEY} is instance that memorizes extra value of routine key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String ROUTINE_EXTRA_VALUE_KEY = "extra_value";
 
     /**
      * {@code routine} is instance that memorizes routine that trader has to do

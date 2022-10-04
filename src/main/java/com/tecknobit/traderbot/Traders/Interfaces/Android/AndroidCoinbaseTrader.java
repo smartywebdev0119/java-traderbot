@@ -23,12 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool.getCryptocurrencyName;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
-import static com.tecknobit.traderbot.Records.Account.BotDetails.*;
-import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.*;
-import static com.tecknobit.traderbot.Records.Portfolio.Token.BASE_ASSET_KEY;
 import static com.tecknobit.traderbot.Routines.Android.AndroidWorkflow.Credentials;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.HOST;
 import static com.tecknobit.traderbot.Routines.Android.ServerRequest.PORT;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.*;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 

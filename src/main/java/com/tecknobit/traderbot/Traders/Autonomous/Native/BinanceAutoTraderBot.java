@@ -468,7 +468,7 @@ public class BinanceAutoTraderBot extends BinanceTraderBot implements AutoTrader
                                     for (Cryptocurrency cryptocurrency : walletList.values()) {
                                         String symbol = cryptocurrency.getSymbol();
                                         if(symbol == null)
-                                            symbol = cryptocurrency.getAssetIndex() + USDT_CURRENCY;
+                                            symbol = cryptocurrency.getAssetIndex() + BUSD_CURRENCY;
                                         TradingConfig tradingConfig = cryptocurrency.getTradingConfig();
                                         TickerPriceChange tickerPriceChange = lastPrices.get(symbol);
                                         double lastPrice = tickerPriceChange.getLastPrice();

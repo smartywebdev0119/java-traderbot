@@ -27,6 +27,7 @@ import static com.tecknobit.binancemanager.Managers.BinanceManager.BASE_ENDPOINT
 import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.USD_CURRENCY;
 import static java.lang.Math.ceil;
 
 /**
@@ -258,19 +259,19 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                 if(coin.isTradingEnabled()) {
                     String assetIndex = coin.getAssetIndex();
                     double lastPrice;
-                    if(assetIndex.equals(USDT_CURRENCY)){
+                    if (assetIndex.equals(BUSD_CURRENCY)) {
                         try {
-                            lastPrice = binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY + USDT_CURRENCY);
+                            lastPrice = binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY + BUSD_CURRENCY);
                         } catch (IOException e) {
                             return 0;
                         }
-                    }else
-                        lastPrice = lastPrices.get(assetIndex + USDT_CURRENCY).getLastPrice();
+                    } else
+                        lastPrice = lastPrices.get(assetIndex + BUSD_CURRENCY).getLastPrice();
                     balance += coin.getQuantity() * lastPrice;
                 }
             if(!currency.contains(USD_CURRENCY)){
                 try {
-                    balance /= binanceMarketManager.getCurrentAveragePriceValue(currency + USDT_CURRENCY);
+                    balance /= binanceMarketManager.getCurrentAveragePriceValue(currency + BUSD_CURRENCY);
                 }catch (Exception ignored){}
             }
         }
@@ -305,12 +306,12 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                 if(coin.isTradingEnabled()){
                     double free = coin.getQuantity();
                     String asset = coin.getAssetIndex();
-                    if(asset.equals(USDT_CURRENCY))
+                    if (asset.equals(BUSD_CURRENCY))
                         asset = BUSD_CURRENCY;
-                    double value = free * lastPrices.get(asset + USDT_CURRENCY).getLastPrice();
+                    double value = free * lastPrices.get(asset + BUSD_CURRENCY).getLastPrice();
                     if(!currency.contains(USD_CURRENCY)){
                         try {
-                            value /= binanceMarketManager.getCurrentAveragePriceValue(currency + USDT_CURRENCY);
+                            value /= binanceMarketManager.getCurrentAveragePriceValue(currency + BUSD_CURRENCY);
                         }catch (Exception ignored){}
                     }
                     assets.add(new Asset(asset,
@@ -491,7 +492,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         for (TickerPriceChange tickerPriceChange : binanceMarketManager.getTickerPriceChangeList()) {
             String symbol = tickerPriceChange.getSymbol();
             try {
-                if (coins.get(tradingPairsList.get(symbol).getBaseAsset()).isTradingEnabled() || symbol.endsWith(USDT_CURRENCY))
+                if (coins.get(tradingPairsList.get(symbol).getBaseAsset()).isTradingEnabled() || symbol.endsWith(BUSD_CURRENCY))
                     lastPrices.put(symbol, tickerPriceChange);
             }catch (NullPointerException ignored){
             }
@@ -633,15 +634,15 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         Coin coin = coins.get(quote);
         String assetIndex = coin.getAssetIndex();
         double quantity = coin.getQuantity();
-        if (assetIndex.equals(USDT_CURRENCY)) {
+        if (assetIndex.equals(BUSD_CURRENCY)) {
             try {
                 return roundValue(quantity * binanceMarketManager.getCurrentAveragePriceValue(BUSD_CURRENCY
-                        + USDT_CURRENCY), 8);
+                        + BUSD_CURRENCY), 8);
             } catch (IOException e) {
                 return -1;
             }
         }
-        return roundValue(quantity * lastPrices.get(assetIndex + USDT_CURRENCY).getLastPrice(), 8);
+        return roundValue(quantity * lastPrices.get(assetIndex + BUSD_CURRENCY).getLastPrice(), 8);
     }
 
 }

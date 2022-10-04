@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Candle.GRANULARITY_1d;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.USD_CURRENCY;
 import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;
 

@@ -14,6 +14,7 @@ import com.tecknobit.traderbot.Records.Portfolio.Asset;
 import com.tecknobit.traderbot.Records.Portfolio.Coin;
 import com.tecknobit.traderbot.Records.Portfolio.MarketCoin;
 import com.tecknobit.traderbot.Records.Portfolio.Transaction;
+import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 import com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,6 +26,8 @@ import java.util.HashMap;
 
 import static com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool.getCryptocurrencyName;
 import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.*;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.USDT_CURRENCY;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.USD_CURRENCY;
 import static java.lang.Math.ceil;
 
 /**
@@ -758,10 +761,10 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is used to assemble right symbol with {@link #USDT_CURRENCY} combination.
+     * This method is used to assemble right symbol with {@link TraderBotConstants#USDT_CURRENCY} combination.
      *
      * @param currency: currency for the request es. EUR
-     * @return USDT-currency inserted es. USDT-EUR.
+     * @return currency inserted es. USDT-EUR.
      **/
     private String getUSDTSymbol(String currency) {
         return USDT_CURRENCY + "-" + currency;

@@ -12,8 +12,6 @@ import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
 import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.FormatResponseType.String;
 import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.FormatResponseType.*;
 
@@ -24,40 +22,6 @@ import static com.tecknobit.traderbot.Routines.Interfaces.TraderCoreRoutines.For
  * **/
 
 public abstract class TraderCoreRoutines {
-
-    /**
-     * {@code USD_CURRENCY} is the identifier of USD currency used by traders to get default prices
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String USD_CURRENCY = "USD";
-
-    /**
-     * {@code USDT_CURRENCY} is the identifier of USDT cryptocurrency used by traders to get default prices
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String USDT_CURRENCY = "USDT";
-
-    /**
-     * {@code BUY} is constant for buy side
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     * @see TraderBotConstants
-     **/
-    @Deprecated
-    public static final String BUY = BUY_SIDE.toUpperCase();
-
-    /**
-     * {@code SELL} is constant for buy side
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     * @see TraderBotConstants
-     **/
-    @Deprecated
-    public static final String SELL = SELL_SIDE.toUpperCase();
 
     /**
      * {@code transactions} is a list of transactions made by user account plus transactions made by a

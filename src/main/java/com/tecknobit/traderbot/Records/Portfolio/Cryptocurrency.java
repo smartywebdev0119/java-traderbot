@@ -1,7 +1,6 @@
 package com.tecknobit.traderbot.Records.Portfolio;
 
 import com.tecknobit.traderbot.Routines.Interfaces.RecordDetails;
-import com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +8,7 @@ import java.util.HashMap;
 import static com.tecknobit.apimanager.Tools.Trading.TradingTools.*;
 import static com.tecknobit.traderbot.Records.Portfolio.Cryptocurrency.TradingConfig.MODEL_ID_KEY;
 import static com.tecknobit.traderbot.Routines.Interfaces.RoutineMessages.*;
+import static com.tecknobit.traderbot.Routines.Interfaces.TraderBotConstants.*;
 import static java.lang.System.out;
 
 /**
@@ -19,114 +19,6 @@ import static java.lang.System.out;
  * **/
 
 public class Cryptocurrency extends Token implements RecordDetails {
-
-    /**
-     * {@code CRYPTOCURRENCY_KEY} is instance that memorizes cryptocurrency key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String CRYPTOCURRENCY_KEY = "cryptocurrency";
-
-    /**
-     * {@code SYMBOL_KEY} is instance that memorizes symbol key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String SYMBOL_KEY = "symbol";
-
-    /**
-     * {@code LAST_PRICE_KEY} is instance that memorizes last price key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String LAST_PRICE_KEY = "last_price";
-
-    /**
-     * {@code FIRST_PRICE_KEY} is instance that memorizes last price key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String FIRST_PRICE_KEY = "first_price";
-
-    /**
-     * {@code TPTOP_INDEX_KEY} is instance that memorizes tptop index key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String TPTOP_INDEX_KEY = "tptop_index";
-
-    /**
-     * {@code CANDLE_GAP_KEY} is instance that memorizes candle gap key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String CANDLE_GAP_KEY = "candle_gap";
-
-    /**
-     * {@code PRICE_CHANGE_PERCENT_KEY} is instance that memorizes price change percent key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String PRICE_CHANGE_PERCENT_KEY = "price_change_percent";
-
-    /**
-     * {@code QUOTE_ASSET_KEY} is instance that memorizes quote asset key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String QUOTE_ASSET_KEY = "quote_asset";
-
-    /**
-     * {@code INCOME_PERCENT_KEY} is instance that memorizes income percent key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String INCOME_PERCENT_KEY = "income_percent";
-
-    /**
-     * {@code TRADING_CONFIG_KEY} is instance that memorizes trading config key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String TRADING_CONFIG_KEY = "trading_config";
-
-    /**
-     * {@code FIRST_PRICES_SUM_KEY} is instance that memorizes first prices size key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String FIRST_PRICES_SUM_KEY = "first_prices_sum";
-
-    /**
-     * {@code FIRST_PRICES_SIZE_KEY} is instance that memorizes first prices size key
-     *
-     * @see TraderBotConstants
-     * @deprecated use {@link TraderBotConstants} instead to use constants
-     **/
-    @Deprecated
-    public static final String FIRST_PRICES_SIZE_KEY = "first_prices_size";
 
     /**
      * {@code symbol} is instance that memorizes symbol of cryptocurrency es. BTCBUSD or BTC-USD
