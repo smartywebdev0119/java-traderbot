@@ -221,6 +221,7 @@ public class ServerRequest {
             socket = null;
             return new JSONObject(response);
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }
