@@ -1,0 +1,900 @@
+package com.tecknobit.traderbot.records.portfolio;
+
+import com.tecknobit.traderbot.routines.interfaces.RecordDetails;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static com.tecknobit.apimanager.Tools.Trading.TradingTools.*;
+import static com.tecknobit.traderbot.records.portfolio.Cryptocurrency.TradingConfig.MODEL_ID_KEY;
+import static com.tecknobit.traderbot.routines.interfaces.RoutineMessages.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
+import static java.lang.System.out;
+
+/**
+ * The {@code Cryptocurrency} class defines Cryptocurrency object. <br>
+ * This object is useful for auto trader bot routines and useful also for Android's interfaces, <br>
+ * because allow to interact with specific asset, and it's trading details like trend percent and last price.
+ * @author Tecknobit N7ghtm4r3
+ * **/
+public class Cryptocurrency extends Token implements RecordDetails {
+
+    /**
+     * {@code symbol} is instance that memorizes symbol of cryptocurrency es. BTCBUSD or BTC-USD
+     * **/
+    private final String symbol;
+
+    /**
+     * {@code firstPrice} is instance that memorizes first inserted price of cryptocurrency and not more changeable
+     * **/
+    private final ArrayList<Double> firstPrices;
+
+    /**
+     * {@code lastPrice} is instance that memorizes last inserted price of cryptocurrency and is constantly refreshed
+     * **/
+    private double lastPrice;
+
+    /**
+     * {@code tptopIndex} is instance that memorizes forecast trend of cryptocurrency
+     * **/
+    private final double tptopIndex;
+
+    /**
+     * {@code candleGap} is instance that memorizes day gap for forecast trend of cryptocurrency
+     * **/
+    private final Object candleGap;
+
+    /**
+     * {@code priceChangePercent} is instance that memorizes previous day percent gap of trend of cryptocurrency
+     * **/
+    private double priceChangePercent;
+
+    /**
+     * {@code quoteAsset} is instance that memorizes quote asset to buy this cryptocurrency es. USD
+     * **/
+    private final String quoteAsset;
+
+    /**
+     * {@code incomePercent} is instance that memorizes income percent of cryptocurrency and is constantly refreshed
+     * **/
+    private double incomePercent;
+
+    /**
+     * {@code tradingConfig} is instance that memorizes model of trading to use for this cryptocurrency
+     * **/
+    private final TradingConfig tradingConfig;
+
+    /**
+     * {@code firstPricesSum} is instance that memorizes sum of first prices of order for cryptocurrency
+     * **/
+    private final double firstPricesSum;
+
+    /**
+     * {@code previousFirstPricesSize} is instance that memorizes size of first prices of order for cryptocurrency <br>
+     * passed by previous first prices list
+     * **/
+    private final int previousFirstPricesSize;
+
+    /**
+     * {@code firstPricesSize} is instance that memorizes size of first prices of order for cryptocurrency
+     * **/
+    private int firstPricesSize;
+
+    /** Constructor to init {@link Cryptocurrency}
+     * @param assetIndex: index of cryptocurrency es. BTC
+     * @param assetName: full name of cryptocurrency es Bitcoin
+     * @param quantity: value of quantity bought for this cryptocurrency es 1
+     * @param symbol: symbol of cryptocurrency es. BTCBUSD or BTC-USD
+     * @param lastPrice: last inserted price of cryptocurrency
+     * @param tptopIndex: forecast trend of cryptocurrency
+     * @param candleGap: previous day percent gap of trend of cryptocurrency
+     * @param priceChangePercent: previous day percent gap of trend of cryptocurrency
+     * @param quoteAsset: quote asset to buy this cryptocurrency es. USD
+     * @param tradingConfig: model of trading to use for this cryptocurrency
+     * **/
+    public Cryptocurrency(String assetIndex, String assetName, double quantity, String symbol, double lastPrice,
+                          double tptopIndex, Object candleGap, double priceChangePercent, String quoteAsset,
+                          TradingConfig tradingConfig) {
+        super(assetIndex, assetName, quantity);
+        this.symbol = symbol;
+        this.lastPrice = lastPrice;
+        this.tptopIndex = tptopIndex;
+        this.candleGap = candleGap;
+        this.priceChangePercent = priceChangePercent;
+        this.quoteAsset = quoteAsset;
+        this.tradingConfig = tradingConfig;
+        firstPrices = new ArrayList<>();
+        firstPricesSum = 0;
+        previousFirstPricesSize = 0;
+    }
+
+    /** Constructor to init {@link Cryptocurrency}
+     * @implNote is useful for Android's client interfaces
+     * @param assetIndex: index of cryptocurrency es. BTC
+     * @param assetName: full name of cryptocurrency es Bitcoin
+     * @param quantity: value of quantity bought for this cryptocurrency es 1
+     * @param symbol: symbol of cryptocurrency es. BTCBUSD or BTC-USD
+     * @param lastPrice: last inserted price of cryptocurrency
+     * @param tptopIndex: forecast trend of cryptocurrency
+     * @param candleGap: previous day percent gap of trend of cryptocurrency
+     * @param priceChangePercent: previous day percent gap of trend of cryptocurrency
+     * @param quoteAsset: quote asset to buy this cryptocurrency es. USD
+     * @param incomePercent: trend that this asset is having compare to {@link #firstPrices} and {@link #lastPrice}
+     * @param tradingConfig: model of trading to use for this cryptocurrency
+     * **/
+    public Cryptocurrency(String assetIndex, String assetName, double quantity, String symbol, double lastPrice,
+                          double tptopIndex, Object candleGap, double priceChangePercent, String quoteAsset,
+                          double incomePercent, TradingConfig tradingConfig) {
+        super(assetIndex, assetName, quantity);
+        this.symbol = symbol;
+        this.lastPrice = lastPrice;
+        this.tptopIndex = tptopIndex;
+        this.candleGap = candleGap;
+        this.priceChangePercent = priceChangePercent;
+        this.quoteAsset = quoteAsset;
+        this.incomePercent = incomePercent;
+        this.tradingConfig = tradingConfig;
+        firstPrices = null;
+        firstPricesSum = 0;
+        previousFirstPricesSize = 0;
+    }
+
+    /** Constructor to init {@link Cryptocurrency}
+     * @param assetIndex: index of cryptocurrency es. BTC
+     * @param assetName: full name of cryptocurrency es Bitcoin
+     * @param quantity: value of quantity bought for this cryptocurrency es 1
+     * @param symbol: symbol of cryptocurrency es. BTCBUSD or BTC-USD
+     * @param lastPrice: last inserted price of cryptocurrency
+     * @param tptopIndex: forecast trend of cryptocurrency
+     * @param candleGap: previous day percent gap of trend of cryptocurrency
+     * @param priceChangePercent: previous day percent gap of trend of cryptocurrency
+     * @param quoteAsset: quote asset to buy this cryptocurrency es. USD
+     * @param tradingConfig: model of trading to use for this cryptocurrency
+     * @param firstPrices: list of first prices inserted in past orders
+     * **/
+    public Cryptocurrency(String assetIndex, String assetName, double quantity, String symbol, double lastPrice,
+                          double tptopIndex, Object candleGap, double priceChangePercent, String quoteAsset,
+                          TradingConfig tradingConfig, ArrayList<Double> firstPrices) {
+        super(assetIndex, assetName, quantity);
+        this.symbol = symbol;
+        this.lastPrice = lastPrice;
+        this.tptopIndex = tptopIndex;
+        this.candleGap = candleGap;
+        this.priceChangePercent = priceChangePercent;
+        this.quoteAsset = quoteAsset;
+        this.tradingConfig = tradingConfig;
+        this.firstPrices = firstPrices;
+        firstPricesSum = 0;
+        previousFirstPricesSize = 0;
+    }
+
+    /** Constructor to init {@link Cryptocurrency}
+     * @implNote is useful for Android's interfaces not for a normal workflow
+     * @param assetIndex: index of cryptocurrency es. BTC
+     * @param assetName: full name of cryptocurrency es Bitcoin
+     * @param quantity: value of quantity bought for this cryptocurrency es 1
+     * @param tptopIndex: forecast trend of cryptocurrency
+     * @param candleGap: previous day percent gap of trend of cryptocurrency
+     * @param tradingConfig: model of trading to use for this cryptocurrency
+     * **/
+    public Cryptocurrency(String assetIndex, String assetName, double quantity, TradingConfig tradingConfig,
+                          double tptopIndex, Object candleGap, String quoteAsset, double firstPricesSum,
+                          int previousFirstPricesSize) {
+        super(assetIndex, assetName, quantity);
+        this.symbol = null;
+        this.tptopIndex = tptopIndex;
+        this.candleGap = candleGap;
+        this.quoteAsset = quoteAsset;
+        this.tradingConfig = tradingConfig;
+        firstPrices = new ArrayList<>();
+        this.firstPricesSum = firstPricesSum;
+        this.previousFirstPricesSize = previousFirstPricesSize;
+    }
+
+    /**
+     * Method to get {@link #symbol} instance <br>
+     * Any params required
+     *
+     * @return {@link #symbol} instance as {@link String}
+     **/
+    public String getSymbol() {
+        return symbol;
+    }
+
+    /**
+     * Method to get first price value <br>
+     * Any params required
+     *
+     * @return first price value as double
+     **/
+    public double getFirstPrice() {
+        if (firstPrices != null) {
+            firstPricesSize = firstPrices.size() + previousFirstPricesSize;
+            if (firstPricesSize > 0) {
+                double firstPrice = 0;
+                for (double price : firstPrices)
+                    firstPrice += price;
+                if (firstPrice > 0)
+                    return ((firstPrice + firstPricesSum) / firstPricesSize);
+            }
+        }
+        return lastPrice;
+    }
+
+    /**
+     * This method is used to get first price
+     * @param decimals: number of decimal digits es. 2
+     * @return first price formatted as 1.65 or -1.65
+     * **/
+    public double getFirstPrice(int decimals){
+        return roundValue(getFirstPrice(), decimals);
+    }
+
+    /**
+     * This method is used to add new first price
+     * @param firstPrice: first price to add at {@link #firstPrices} list <br>
+     * **/
+    public void addFirstPrice(double firstPrice) {
+        if (firstPrice < 0)
+            throw new IllegalArgumentException("First price cannot be less than 0");
+        if (firstPrices != null)
+            firstPrices.add(firstPrice);
+    }
+
+    /**
+     * Method to get {@link #lastPrice} instance <br>
+     * Any params required
+     *
+     * @return {@link #lastPrice} instance as double
+     **/
+    public double getLastPrice() {
+        return lastPrice;
+    }
+
+    /**
+     * This method is used to get {@link #lastPrice} instance
+     *
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #lastPrice} formatted as 1.65 or -1.65
+     **/
+    public double getLastPrice(int decimals) {
+        return roundValue(lastPrice, decimals);
+    }
+
+    /**
+     * Method to set {@link #lastPrice}
+     *
+     * @param lastPrice: last price value
+     * @throws IllegalArgumentException when last price value is less than 0
+     **/
+    public void setLastPrice(double lastPrice) {
+        if (lastPrice < 0)
+            throw new IllegalArgumentException("Last price cannot be less than 0");
+        this.lastPrice = lastPrice;
+    }
+
+    /**
+     * Method to get {@link #tptopIndex} instance <br>
+     * Any params required
+     *
+     * @return {@link #tptopIndex} instance as double
+     **/
+    public double getTptopIndex() {
+        return tptopIndex;
+    }
+
+    /**
+     * This method is used to get {@link #tptopIndex} instance
+     *
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #tptopIndex} formatted as 1.65 or -1.65
+     **/
+    public double getTptopIndex(int decimals) {
+        return roundValue(tptopIndex, decimals);
+    }
+
+    /**
+     * Method to get {@link #candleGap} instance <br>
+     * Any params required
+     *
+     * @return {@link #candleGap} instance as {@link T}
+     **/
+    public <T> T getCandleGap() {
+        return (T) candleGap;
+    }
+
+    /**
+     * Method to get {@link #priceChangePercent} instance <br>
+     * Any params required
+     *
+     * @return {@link #priceChangePercent} instance as double
+     **/
+    public double getPriceChangePercent() {
+        return priceChangePercent;
+    }
+
+    /**
+     * This method is used to get {@link #priceChangePercent} instance
+     *
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #priceChangePercent} formatted as 1.65 or -1.65
+     **/
+    public double getPriceChangePercent(int decimals){
+        return roundValue(priceChangePercent, decimals);
+    }
+
+    /**
+     * This method is used to format like a {@link String} object {@link #priceChangePercent}.<br>
+     * Any params required
+     * @return {@link #priceChangePercent} formatted as +1.653% or -1.6563% as {@link String}
+     * **/
+    public String getTextPriceChangePercent(){
+        return textualizeAssetPercent(priceChangePercent);
+    }
+
+    /**
+     * This method is used to format like a {@link String} object {@link #priceChangePercent}.<br>
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #priceChangePercent} formatted as +1.65% or -1.65% as {@link String}
+     * **/
+    public String getTextPriceChangePercent(int decimals){
+        return textualizeAssetPercent(roundValue(priceChangePercent, decimals));
+    }
+
+    /**
+     * Method to set {@link #priceChangePercent}
+     *
+     * @param priceChangePercent: previous day percent gap of trend of cryptocurrency
+     * @throws IllegalArgumentException when price change percent value is less than 0
+     **/
+    public void setPriceChangePercent(double priceChangePercent) {
+        if (priceChangePercent < -100)
+            throw new IllegalArgumentException("Price change percent cannot be less than -100");
+        this.priceChangePercent = priceChangePercent;
+    }
+
+    /**
+     * Method to get {@link #quoteAsset} instance <br>
+     * Any params required
+     *
+     * @return {@link #quoteAsset} instance as {@link String}
+     **/
+    public String getQuoteAsset() {
+        return quoteAsset;
+    }
+
+    /**
+     * Method to get {@link #incomePercent} instance <br>
+     * Any params required
+     *
+     * @return {@link #incomePercent} instance as double
+     **/
+    public double getIncomePercent() {
+        if (firstPrices != null)
+            return incomePercent = computeAssetPercent(getFirstPrice(), lastPrice);
+        return incomePercent;
+    }
+
+    /**
+     * This method is used get {@link #incomePercent} instance
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #incomePercent} formatted as 1.65 or -1.65
+     * **/
+    public double getIncomePercent(int decimals){
+        return roundValue(getIncomePercent(), decimals);
+    }
+
+    /**
+     * This method is used to format like a {@link String} object {@link #incomePercent}.<br>
+     * Any params required
+     * @return {@link #incomePercent} formatted as +1.653% or -1.6563% as {@link String}
+     * **/
+    public String getTextIncomePercent(){
+        return textualizeAssetPercent(getIncomePercent());
+    }
+
+    /**
+     * This method is used to format like a {@link String} object {@link #incomePercent}.<br>
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #incomePercent} formatted as +1.65% or -1.65% as {@link String}
+     * **/
+    public String getTextIncomePercent(int decimals){
+        return textualizeAssetPercent(roundValue(getIncomePercent(), decimals));
+    }
+
+    /** Method to set {@link #incomePercent}
+     * @param incomePercent: income percent of cryptocurrency
+     * @throws IllegalArgumentException when income percent value is less than 0
+     * **/
+    public void setIncomePercent(double incomePercent) {
+        if(incomePercent < -100)
+            throw new IllegalArgumentException("Income percent cannot be less than -100");
+        this.incomePercent = incomePercent;
+    }
+
+    /**
+     * This method is used to format like a {@link String} object {@link #tptopIndex}.<br>
+     * Any params required
+     * @return {@link #tptopIndex} formatted as +1.653% or -1.6563% as {@link String}
+     * **/
+    public String getTextTptopIndex(){
+        return textualizeAssetPercent(tptopIndex);
+    }
+
+    /**
+     * This method is used to format like a {@link String} object {@link #tptopIndex}.<br>
+     *
+     * @param decimals: number of decimal digits es. 2
+     * @return {@link #tptopIndex} formatted as +1.65% or -1.65%
+     **/
+    public String getTextTptopIndex(int decimals) {
+        return textualizeAssetPercent(tptopIndex, decimals);
+    }
+
+    /**
+     * Method to get {@link #tradingConfig} instance <br>
+     * Any params required
+     *
+     * @return {@link #tradingConfig} instance as {@link TradingConfig}
+     **/
+    public TradingConfig getTradingConfig() {
+        return tradingConfig;
+    }
+
+    /**
+     * This method is used to get balance for this cryptocurrency
+     * Any params required
+     *
+     * @return balance for this cryptocurrency es 2221
+     **/
+    public double getCryptocurrencyBalance(){
+        return lastPrice * quantity;
+    }
+
+    /**
+     * This method is used to get balance for this cryptocurrency
+     * @param decimals: number of decimal digits es. 2221.08
+     * @return balance for this cryptocurrency
+     * **/
+    public double getCryptocurrencyBalance(int decimals){
+        return roundValue(getCryptocurrencyBalance(), decimals);
+    }
+
+    /**
+     * This method is used to get cryptocurrency details <br>
+     * Any params required
+     *
+     * @return cryptocurrency details as {@link HashMap} of {@link Object}
+     * @deprecated will be removed in the next version, use {@link #getCryptocurrencyJSON()} instead
+     **/
+    @Deprecated
+    public HashMap<String, Object> getCryptocurrency() {
+        HashMap<String, Object> crypto = new HashMap<>();
+        crypto.put(BASE_ASSET_KEY, assetIndex);
+        crypto.put(ASSET_NAME_KEY, assetName);
+        crypto.put(QUANTITY_KEY, quantity);
+        crypto.put(SYMBOL_KEY, symbol);
+        crypto.put(LAST_PRICE_KEY, lastPrice);
+        crypto.put(FIRST_PRICE_KEY, getFirstPrice(2));
+        crypto.put(TPTOP_INDEX_KEY, tptopIndex);
+        crypto.put(CANDLE_GAP_KEY, candleGap);
+        crypto.put(PRICE_CHANGE_PERCENT_KEY, priceChangePercent);
+        crypto.put(QUOTE_ASSET_KEY, quoteAsset);
+        crypto.put(INCOME_PERCENT_KEY, getIncomePercent());
+        if (tradingConfig != null)
+            crypto.put(MODEL_ID_KEY, tradingConfig.getModelId());
+        crypto.put(FIRST_PRICES_SUM_KEY, getFirstPrice());
+        crypto.put(FIRST_PRICES_SIZE_KEY, firstPricesSize);
+        return crypto;
+    }
+
+    /**
+     * This method is used to get cryptocurrency details <br>
+     * Any params required
+     *
+     * @return cryptocurrency details as {@link String}
+     * @apiNote this method will be called simply {@code "getCryptocurrency"} when {@link #getCryptocurrency()} will be removed
+     **/
+    public String getCryptocurrencyJSON() {
+        return new JSONObject(this).toString();
+    }
+
+    /**
+     * This method is used to print details of {@link Cryptocurrency} object <br>
+     * Any params required
+     **/
+    @Override
+    public void printDetails() {
+        out.println(this);
+    }
+
+    /**
+     * Returns a string representation of the object <br>
+     * Any params required
+     *
+     * @return a string representation of the object as {@link String}
+     */
+    @Override
+    public String toString() {
+        return "## [" + symbol + "]\n" +
+                getANSIText("## Income: ", getTextIncomePercent(2)) +
+                "## Last price: " + lastPrice + "\n" +
+                "## Quantity: " + quantity + "\n" +
+                getANSIText("## Asset trend: ", getTextPriceChangePercent(2)) +
+                "## Portfolio balance: " + getCryptocurrencyBalance(2) + "\n" +
+                getANSIText("## Estimated asset trend: ", getTextTptopIndex(2)) +
+                "######################";
+    }
+
+    /**
+     * This method is used to format colored string for percent detail line.<br>
+     *
+     * @param tail:    text to indicate the info es. Trend:
+     * @param percent: value of percent to color es +8%
+     * @return percent string colored and formatted as {@link String}
+     **/
+    private String getANSIText(String tail, String percent) {
+        if (percent.contains("+"))
+            return tail + ANSI_GREEN + percent + ANSI_RESET + "\n";
+        else if (percent.contains("-"))
+            return tail + ANSI_RED + percent + ANSI_RESET + "\n";
+        else
+            return tail + percent + "\n";
+    }
+
+    /**
+     * The {@code TradingConfig} class is useful for trading operation.<br>
+     * Represent model to use for a {@link Cryptocurrency} in trading phases. (BUY and SELL)
+     *
+     * @author Tecknobit N7ghtm4r3
+     **/
+
+    public static final class TradingConfig {
+
+        /**
+         * {@code MAX_FAILS_NUMBER} is instance that memorizes max fails number key
+         * **/
+        public static final int MAX_FAILS_NUMBER = 30;
+
+        /**
+         * {@code MODEL_ID_KEY} is instance that memorizes model id key
+         * **/
+        public static final String MODEL_ID_KEY = "model_id";
+
+        /**
+         * {@code MARKET_PHASE_KEY} is instance that memorizes market phase key
+         * **/
+        public static final String MARKET_PHASE_KEY = "market_phase";
+
+        /**
+         * {@code WASTE_RANGE_KEY} is instance that memorizes waste range key
+         * **/
+        public static final String WASTE_RANGE_KEY = "waste_range";
+
+        /**
+         * {@code DAIS_GAP_KEY} is instance that memorizes days gap key
+         * **/
+        public static final String DAIS_GAP_KEY = "days_gap";
+
+        /**
+         * {@code MIN_GAIN_FOR_ORDER_KEY} is instance that memorizes min gain for order key
+         * **/
+        public static final String MIN_GAIN_FOR_ORDER_KEY = "min_gain_for_order";
+
+        /**
+         * {@code MAX_LOSS_KEY} is instance that memorizes max loss key
+         * **/
+        public static final String MAX_LOSS_KEY = "max_loss";
+
+        /**
+         * {@code MAX_GAIN_KEY} is instance that memorizes max gain key
+         * **/
+        public static final String MAX_GAIN_KEY = "max_gain";
+
+        /**
+         * {@code MODEL_FAILED_KEY} is instance that memorizes model failed key
+         * **/
+        public static final String MODEL_FAILED_KEY = "model_failed";
+
+        /**
+         * {@code modelId} is instance that memorizes identifier of model of {@link TradingConfig}
+         * **/
+        private final long modelId;
+
+        /**
+         * {@code marketPhase} is instance that memorizes market phase when buy a {@link Cryptocurrency}
+         * **/
+        private final double marketPhase;
+
+        /**
+         * {@code wasteRange} is instance that memorizes waste range gap to buy and to make forecast for {@link Cryptocurrency}
+         * **/
+        private final double wasteRange;
+
+        /**
+         * {@code daysGap} is instance that memorizes days gap to make forecast for {@link Cryptocurrency}
+         * **/
+        private final int daysGap;
+
+        /**
+         * {@code minGainForOrder} is instance that memorizes minimum gain to obtain by an order. This is used in sell phase.
+         * **/
+        private final double minGainForOrder;
+
+        /**
+         * {@code maxLoss} is instance that memorizes maximum loss for a {@link Cryptocurrency} and is used in buy phase to check <br>
+         * if a cryptocurrency is in correct range to be bought, and is used in sell phase to sell when cryptocurrency is dropping.
+         * **/
+        private final double maxLoss;
+
+        /**
+         * {@code maxGain} is instance that memorizes maximum gain for a {@link Cryptocurrency} and is used in buy phase to check
+         * if a cryptocurrency is in correct range to be bought.
+         * **/
+        private final double maxGain;
+
+        /**
+         * Constructor to init {@link TradingConfig}
+         * @param modelId: identifier of model of {@link TradingConfig}
+         * @param marketPhase: market phase when buy a {@link Cryptocurrency}
+         * @param wasteRange: waste range gap to buy and to make forecast for {@link Cryptocurrency}
+         * @param daysGap: days gap to make forecast for {@link Cryptocurrency}
+         * @param minGainForOrder: minimum gain to obtain by an order. This is used in sell phase.
+         * @param maxLoss: maximum loss for a {@link Cryptocurrency}
+         * @param maxGain: maximum gain for a {@link Cryptocurrency} in checking phase
+         **/
+        public TradingConfig(long modelId, double marketPhase, double wasteRange, int daysGap, double minGainForOrder,
+                             double maxLoss, double maxGain) {
+            this.modelId = modelId;
+            this.marketPhase = marketPhase;
+            this.wasteRange = wasteRange;
+            this.daysGap = daysGap;
+            this.minGainForOrder = minGainForOrder;
+            this.maxLoss = maxLoss;
+            this.maxGain = maxGain;
+        }
+
+        /**
+         * Method to get {@link #modelId} instance <br>
+         * Any params required
+         *
+         * @return {@link #modelId} instance as long
+         **/
+        public long getModelId() {
+            return modelId;
+        }
+
+        /**
+         * Method to get {@link #marketPhase} instance <br>
+         * Any params required
+         *
+         * @return {@link #marketPhase} instance as double
+         **/
+        public double getMarketPhase() {
+            return marketPhase;
+        }
+
+        /**
+         * This method is used get {@link #marketPhase} instance
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #marketPhase} formatted as 1.65 or -1.65
+         * **/
+        public double getMarketPhase(int decimals) {
+            return roundValue(marketPhase, decimals);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #marketPhase}.<br>
+         * Any params required
+         * @return {@link #marketPhase} formatted as +1.653% or -1.6563% as {@link String}
+         * **/
+        public String getTextMarketPhase(){
+            return textualizeAssetPercent(marketPhase);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #marketPhase}.<br>
+         *
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #marketPhase} formatted as +1.65% or -1.65%
+         **/
+        public String getTextMarketPhase(int decimals) {
+            return textualizeAssetPercent(marketPhase, decimals);
+        }
+
+        /**
+         * Method to get {@link #wasteRange} instance <br>
+         * Any params required
+         *
+         * @return {@link #wasteRange} instance as double
+         **/
+        public double getWasteRange() {
+            return wasteRange;
+        }
+
+        /**
+         * This method is used get {@link #wasteRange} instance
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #wasteRange} formatted as 1.65 or -1.65
+         * **/
+        public double getWasteRange(int decimals) {
+            return roundValue(wasteRange, decimals);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #wasteRange}.<br>
+         * Any params required
+         * @return {@link #wasteRange} formatted as +1.653% or -1.6563% as {@link String}
+         * **/
+        public String getTextWasteRange(){
+            return textualizeAssetPercent(wasteRange);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #wasteRange}.<br>
+         *
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #wasteRange} formatted as +1.65% or -1.65%
+         **/
+        public String getTextWasteRange(int decimals) {
+            return textualizeAssetPercent(wasteRange, decimals);
+        }
+
+        /**
+         * Method to get {@link #daysGap} instance <br>
+         * Any params required
+         *
+         * @return {@link #daysGap} instance as int
+         **/
+        public int getDaysGap() {
+            return daysGap;
+        }
+
+        /**
+         * Method to get {@link #minGainForOrder} instance <br>
+         * Any params required
+         *
+         * @return {@link #minGainForOrder} instance as double
+         **/
+        public double getMinGainForOrder() {
+            return minGainForOrder;
+        }
+
+        /**
+         * This method is used get {@link #minGainForOrder} instance
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #minGainForOrder} formatted as 1.65 or -1.65
+         * **/
+        public double getMinGainForOrder(int decimals) {
+            return roundValue(minGainForOrder, decimals);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #minGainForOrder}.<br>
+         * Any params required
+         * @return {@link #minGainForOrder} formatted as +1.653% or -1.6563% as {@link String}
+         * **/
+        public String getTextMinGainForOrder() {
+            return textualizeAssetPercent(minGainForOrder);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #minGainForOrder}.<br>
+         *
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #minGainForOrder} formatted as +1.65% or -1.65%
+         **/
+        public String getTextMinGainForOrder(int decimals) {
+            return textualizeAssetPercent(minGainForOrder, decimals);
+        }
+
+        /**
+         * Method to get {@link #maxLoss} instance <br>
+         * Any params required
+         *
+         * @return {@link #maxLoss} instance as double
+         **/
+        public double getMaxLoss() {
+            return maxLoss;
+        }
+
+        /**
+         * This method is used get {@link #maxLoss} instance
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #maxLoss} formatted as 1.65 or -1.65
+         * **/
+        public double getMaxLoss(int decimals) {
+            return roundValue(maxLoss, decimals);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #maxLoss}.<br>
+         * Any params required
+         * @return {@link #maxLoss} formatted as +1.653% or -1.6563% as {@link String}
+         * **/
+        public String getTextMaxLoss() {
+            return textualizeAssetPercent(maxLoss);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #maxLoss}.<br>
+         *
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #maxLoss} formatted as +1.65% or -1.65%
+         **/
+        public String getTextMaxLoss(int decimals) {
+            return textualizeAssetPercent(maxLoss, decimals);
+        }
+
+        /**
+         * Method to get {@link #maxGain} instance <br>
+         * Any params required
+         *
+         * @return {@link #maxGain} instance as double
+         **/
+        public double getMaxGain() {
+            return maxGain;
+        }
+
+        /**
+         * This method is used get {@link #maxGain} instance
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #maxGain} formatted as 1.65 or -1.65
+         * **/
+        public double getMaxGain(int decimals) {
+            return roundValue(maxGain, decimals);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #maxGain}.<br>
+         * Any params required
+         * @return {@link #maxGain} formatted as +1.653% or -1.6563% as {@link String}
+         * **/
+        public String getTextMaxGain(){
+            return textualizeAssetPercent(maxGain);
+        }
+
+        /**
+         * This method is used to format like a {@link String} object {@link #maxGain}.<br>
+         * @param decimals: number of decimal digits es. 2
+         * @return {@link #maxGain} formatted as +1.65% or -1.65%
+         * **/
+        public String getTextMaxGain(int decimals) {
+            return textualizeAssetPercent(maxGain, decimals);
+        }
+
+        /**
+         * This method is used to get trading config details <br>
+         * Any params required
+         *
+         * @return trading config details as {@link HashMap} of {@link Object}
+         * @deprecated will be removed in the next version, use {@link #toString()} instead
+         **/
+        @Deprecated
+        public HashMap<String, Object> getTradingConfig() {
+            HashMap<String, Object> config = new HashMap<>();
+            config.put(MODEL_ID_KEY, modelId);
+            config.put(MARKET_PHASE_KEY, marketPhase);
+            config.put(WASTE_RANGE_KEY, wasteRange);
+            config.put(DAIS_GAP_KEY, daysGap);
+            config.put(MIN_GAIN_FOR_ORDER_KEY, minGainForOrder);
+            config.put(MAX_LOSS_KEY, maxLoss);
+            config.put(MAX_GAIN_KEY, maxGain);
+            return config;
+        }
+
+        /**
+         * Returns a string representation of the object <br>
+         * Any params required
+         *
+         * @return a string representation of the object as {@link String}
+         */
+        @Override
+        public String toString() {
+            return new JSONObject(this).toString();
+        }
+
+    }
+
+}
