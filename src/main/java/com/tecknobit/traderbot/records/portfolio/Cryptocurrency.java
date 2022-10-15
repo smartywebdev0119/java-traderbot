@@ -466,9 +466,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
      * Any params required
      *
      * @return cryptocurrency details as {@link HashMap} of {@link Object}
-     * @deprecated will be removed in the next version, use {@link #getCryptocurrencyJSON()} instead
      **/
-    @Deprecated
     public HashMap<String, Object> getCryptocurrency() {
         HashMap<String, Object> crypto = new HashMap<>();
         crypto.put(BASE_ASSET_KEY, assetIndex);
@@ -490,13 +488,12 @@ public class Cryptocurrency extends Token implements RecordDetails {
     }
 
     /**
-     * This method is used to get cryptocurrency details <br>
+     * Returns a string pretty printed of the representation of the object <br>
      * Any params required
      *
-     * @return cryptocurrency details as {@link String}
-     * @apiNote this method will be called simply {@code "getCryptocurrency"} when {@link #getCryptocurrency()} will be removed
-     **/
-    public String getCryptocurrencyJSON() {
+     * @return a string representation of the object as {@link String}
+     */
+    public String prettyPrint() {
         return new JSONObject(this).toString();
     }
 
@@ -869,9 +866,7 @@ public class Cryptocurrency extends Token implements RecordDetails {
          * Any params required
          *
          * @return trading config details as {@link HashMap} of {@link Object}
-         * @deprecated will be removed in the next version, use {@link #toString()} instead
          **/
-        @Deprecated
         public HashMap<String, Object> getTradingConfig() {
             HashMap<String, Object> config = new HashMap<>();
             config.put(MODEL_ID_KEY, modelId);

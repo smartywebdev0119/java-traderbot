@@ -230,9 +230,9 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
         JSONArray wallet = new JSONArray();
         for (Cryptocurrency cryptocurrency : walletList.values()){
             if(mCheckingList.containsKey(cryptocurrency.getAssetIndex())){
-                wallet.put(new JSONObject(cryptocurrency.getCryptocurrencyJSON())
+                wallet.put(new JSONObject(cryptocurrency.getCryptocurrency())
                         .put(TRANSACTION_KEY, androidWorkflow.assembleTransaction(cryptocurrency, BUY,
-                                transactionDateFormat).getTransactionJSON()));
+                                transactionDateFormat).getTransaction()));
             }
         }
         androidWorkflow.insertWalletList(wallet);

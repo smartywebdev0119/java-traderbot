@@ -347,9 +347,7 @@ public final class TraderAccount extends TecknobitBot implements RecordDetails {
      * Any params required
      *
      * @return account details as {@link HashMap} of {@link Object}
-     * @deprecated will be removed in the next version, use {@link #getAccountJSON()} instead
      **/
-    @Deprecated
     public HashMap<String, Object> getAccount() {
         HashMap<String, Object> trader = new HashMap<>();
         trader.put(ACTIVATION_DATE_KEY, activationDate);
@@ -361,13 +359,12 @@ public final class TraderAccount extends TecknobitBot implements RecordDetails {
     }
 
     /**
-     * This method is used to get account details <br>
+     * Returns a string pretty printed of the representation of the object <br>
      * Any params required
      *
-     * @return account details as {@link String}
-     * @apiNote this method will be called simply {@code "getAccount"} when {@link #getAccount()} will be removed
-     **/
-    public String getAccountJSON() {
+     * @return a string representation of the object as {@link String}
+     */
+    public String prettyPrint() {
         return new JSONObject(this).toString();
     }
 

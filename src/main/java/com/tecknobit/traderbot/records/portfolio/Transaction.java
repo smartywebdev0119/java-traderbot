@@ -600,9 +600,7 @@ public class Transaction implements RecordDetails {
      * Any params required
      *
      * @return transaction details as {@link HashMap} of {@link Object}
-     * @deprecated will be removed in the next version, use {@link #getTransactionJSON()} instead
      **/
-    @Deprecated
     public HashMap<String, Object> getTransaction() {
         HashMap<String, Object> transaction = new HashMap<>();
         transaction.put(SYMBOL_KEY, symbol);
@@ -620,13 +618,12 @@ public class Transaction implements RecordDetails {
     }
 
     /**
-     * This method is used to get transaction details <br>
+     * Returns a string pretty printed of the representation of the object <br>
      * Any params required
      *
-     * @return transaction details as {@link String}
-     * @apiNote this method will be called simply {@code "getTransaction"} when {@link #getTransaction()} will be removed
-     **/
-    public String getTransactionJSON() {
+     * @return a string representation of the object as {@link String}
+     */
+    public String prettyPrint() {
         return new JSONObject(this).toString();
     }
 

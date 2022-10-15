@@ -502,8 +502,8 @@ public class AndroidWorkflow implements RoutineMessages {
      * **/
     public void insertCryptocurrency(Cryptocurrency cryptocurrency, Transaction transaction, int sales, double totalIncome) {
         try {
-            JSONObject request = new JSONObject().put(CRYPTOCURRENCY_KEY, cryptocurrency.getCryptocurrencyJSON())
-                    .put(TRANSACTION_KEY, transaction.getTransactionJSON());
+            JSONObject request = new JSONObject().put(CRYPTOCURRENCY_KEY, cryptocurrency.getCryptocurrency())
+                    .put(TRANSACTION_KEY, transaction.getTransaction());
             if (sales > 0) {
                 request.put(SELL_KEY, sales);
                 request.put(TOTAL_INCOME_KEY, totalIncome);
@@ -537,7 +537,7 @@ public class AndroidWorkflow implements RoutineMessages {
     public void removeCryptocurrency(String assetIndex, Transaction transaction){
         try {
             serverRequest.sendTokenRequest(new JSONObject().put(CRYPTOCURRENCY_KEY, assetIndex)
-                    .put(TRANSACTION_KEY, transaction.getTransactionJSON()), DELETE_CRYPTOCURRENCY_OPE);
+                    .put(TRANSACTION_KEY, transaction.getTransaction()), DELETE_CRYPTOCURRENCY_OPE);
             response = serverRequest.readResponse();
             if(response != null){
                 switch (response.getInt(STATUS_CODE)){

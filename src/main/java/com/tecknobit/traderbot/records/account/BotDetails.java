@@ -279,9 +279,7 @@ public class BotDetails extends TecknobitBot {
      * Any params required
      *
      * @return bot details as {@link HashMap} of {@link Object}
-     * @deprecated will be removed in the next version, use {@link #toString()} instead
      **/
-    @Deprecated
     public HashMap<String, Object> getBot() {
         HashMap<String, Object> bot = new HashMap<>();
         bot.put(RUNNING_FROM_DATE_KEY, runningFromDate);
