@@ -225,20 +225,6 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         lastPrices = new HashMap<>();
         assets = new ArrayList<>();
         coins = new HashMap<>();
-        for (CoinInformation coin : binanceWalletManager.getAllCoinsList()){
-            double free = coin.getFree();
-            boolean isTradingEnable = true;
-            String index = coin.getCoin();
-            if(free == 0 || !coin.isTrading())
-                isTradingEnable = false;
-            coins.put(index, new Coin(index,
-                    coin.getName(),
-                    free,
-                    isTradingEnable
-            ));
-        }
-        for (Symbol symbol : binanceMarketManager.getObjectExchangeInformation().getSymbols())
-            tradingPairsList.put(symbol.getSymbol(), symbol);
         refreshLatestPrice();
     }
 
@@ -482,12 +468,26 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     @Override
     public synchronized void refreshLatestPrice() throws Exception {
         lastPricesRefresh = System.currentTimeMillis();
+        for (CoinInformation coin : binanceWalletManager.getAllCoinsList()) {
+            double free = coin.getFree();
+            boolean isTradingEnable = true;
+            String index = coin.getCoin();
+            if (free == 0 || !coin.isTrading())
+                isTradingEnable = false;
+            coins.put(index, new Coin(index,
+                    coin.getName(),
+                    free,
+                    isTradingEnable
+            ));
+        }
+        for (Symbol symbol : binanceMarketManager.getObjectExchangeInformation().getSymbols())
+            tradingPairsList.put(symbol.getSymbol(), symbol);
         for (TickerPriceChange tickerPriceChange : binanceMarketManager.getTickerPriceChangeList()) {
             String symbol = tickerPriceChange.getSymbol();
             try {
                 if (coins.get(tradingPairsList.get(symbol).getBaseAsset()).isTradingEnabled() || symbol.endsWith(BUSD_CURRENCY))
                     lastPrices.put(symbol, tickerPriceChange);
-            }catch (NullPointerException ignored){
+            } catch (NullPointerException ignored) {
             }
         }
     }
@@ -546,7 +546,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
             }
             return quantity;
         }
-        throw new Exception("Symbol does not exits");
+        throw new Exception("Symbol does not exist");
     }
 
     /**

@@ -365,17 +365,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
         lastPrices = new HashMap<>();
         assets = new ArrayList<>();
         coins = new HashMap<>();
-        for (CoinbaseAccount coin : coinbaseAccountManager.getCoinbaseWalletsList()){
-            double balance = coin.getBalance();
-            String index = coin.getCurrency();
-            coins.put(index, new Coin(index,
-                    getCryptocurrencyName(index),
-                    balance,
-                    balance != 0
-            ));
-        }
-        for (TradingPair tradingPair : coinbaseProductsManager.getAllTradingPairsList())
-            tradingPairsList.put(tradingPair.getId(), tradingPair);
         refreshLatestPrice();
     }
 
@@ -636,12 +625,27 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     @Override
     public synchronized void refreshLatestPrice() {
         lastPricesRefresh = System.currentTimeMillis();
-        for (String productId : tradingPairsList.keySet()) {
-            try {
-                if(coins.get(productId.split("-")[0]).isTradingEnabled() || productId.endsWith(USD_CURRENCY))
-                    lastPrices.put(productId, coinbaseProductsManager.getProductTickerObject(productId));
-            }catch (Exception ignored){
+        try {
+            for (CoinbaseAccount coin : coinbaseAccountManager.getCoinbaseWalletsList()) {
+                double balance = coin.getBalance();
+                String index = coin.getCurrency();
+                coins.put(index, new Coin(index,
+                        getCryptocurrencyName(index),
+                        balance,
+                        balance != 0
+                ));
             }
+            for (TradingPair tradingPair : coinbaseProductsManager.getAllTradingPairsList())
+                tradingPairsList.put(tradingPair.getId(), tradingPair);
+            for (String productId : tradingPairsList.keySet()) {
+                try {
+                    if (coins.get(productId.split("-")[0]).isTradingEnabled() || productId.endsWith(USD_CURRENCY))
+                        lastPrices.put(productId, coinbaseProductsManager.getProductTickerObject(productId));
+                } catch (Exception ignored) {
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

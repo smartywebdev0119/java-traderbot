@@ -1,5 +1,5 @@
 # TraderBot
-**v1.1.1**
+**v1.1.2**
 
 This is a Java Based library useful to make trading with the biggest cryptocurrencies exchanges platforms
 
@@ -23,7 +23,7 @@ allprojects {
 
 ```gradle
 dependencies {
-	implementation 'com.github.N7ghtm4r3:TraderBot:1.1.1'
+	implementation 'com.github.N7ghtm4r3:TraderBot:1.1.2'
 }
 ```
 
@@ -45,7 +45,7 @@ dependencies {
 <dependency>
     <groupId>com.github.N7ghtm4r3</groupId>
   <artifactId>TraderBot</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
 </dependency>
 ```
 
@@ -136,7 +136,6 @@ Credentials credentials = new Credentials(
 //Then you have to insert credentials object in Android's trader constructor and trader will start with your Tecknobit's account.
 
 AndroidPlatformTraderBot trader = new AndroidPlatformTraderBot(/*your keys and constructor params*/, credentials);
-
 ```
 #### Interface
 
