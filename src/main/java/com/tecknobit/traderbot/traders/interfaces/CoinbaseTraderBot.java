@@ -1,15 +1,16 @@
 package com.tecknobit.traderbot.traders.interfaces;
 
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Account.CoinbaseAccountManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Account.Records.CoinbaseAccount;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.CoinbaseManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Currencies.CoinbaseCurrenciesManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Currencies.Records.Currency;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.CoinbaseOrdersManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.CoinbaseProductsManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Ticker;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.TradingPair;
+import com.tecknobit.apimanager.annotations.Wrapper;
+import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.account.CoinbaseAccountManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.account.records.CoinbaseAccount;
+import com.tecknobit.coinbasemanager.managers.exchangepro.currencies.CoinbaseCurrenciesManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.currencies.records.Currency;
+import com.tecknobit.coinbasemanager.managers.exchangepro.orders.CoinbaseOrdersManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.orders.records.Order;
+import com.tecknobit.coinbasemanager.managers.exchangepro.products.CoinbaseProductsManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Ticker;
+import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.TradingPair;
 import com.tecknobit.traderbot.records.portfolio.Asset;
 import com.tecknobit.traderbot.records.portfolio.Coin;
 import com.tecknobit.traderbot.records.portfolio.MarketCoin;
@@ -22,12 +23,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool.getCryptocurrencyName;
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.*;
+import static com.tecknobit.apimanager.trading.CryptocurrencyTool.getCryptocurrencyName;
+import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager.ReturnFormat.STRING;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.orders.records.Order.Sorter.created_at;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.orders.records.Order.SortingOrder.asc;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.orders.records.Order.Status.done;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.orders.records.OrderDetails.Side.valueOf;
 import static com.tecknobit.traderbot.records.portfolio.Transaction.getDate;
 import static com.tecknobit.traderbot.records.portfolio.Transaction.getDateTimestamp;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.BUY;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
 import static java.lang.Math.ceil;
 
 /**
@@ -85,9 +92,9 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                              int timeout) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout);
+        coinbaseProductsManager = new CoinbaseProductsManager();
+        coinbaseOrdersManager = new CoinbaseOrdersManager();
+        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager();
         initTrader();
     }
 
@@ -100,9 +107,9 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, int timeout) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, timeout);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, timeout);
+        coinbaseProductsManager = new CoinbaseProductsManager();
+        coinbaseOrdersManager = new CoinbaseOrdersManager();
+        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager();
         initTrader();
     }
 
@@ -115,9 +122,9 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase, defaultErrorMessage);
+        coinbaseProductsManager = new CoinbaseProductsManager();
+        coinbaseOrdersManager = new CoinbaseOrdersManager();
+        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager();
         initTrader();
     }
 
@@ -129,9 +136,9 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * **/
     public CoinbaseTraderBot(String apiKey, String apiSecret, String passphrase) throws Exception {
         coinbaseAccountManager = new CoinbaseAccountManager(apiKey, apiSecret, passphrase);
-        coinbaseProductsManager = new CoinbaseProductsManager(apiKey, apiSecret, passphrase);
-        coinbaseOrdersManager = new CoinbaseOrdersManager(apiKey, apiSecret, passphrase);
-        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager(apiKey, apiSecret, passphrase);
+        coinbaseProductsManager = new CoinbaseProductsManager();
+        coinbaseOrdersManager = new CoinbaseOrdersManager();
+        coinbaseCurrenciesManager = new CoinbaseCurrenciesManager();
         initTrader();
     }
 
@@ -434,13 +441,26 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     *
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
+    @Override
+    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
+        return getAllTransactions(null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
+     *
+     * @param dateFormat:   this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     **/
     @Override
     public ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception {
-        if(isRefreshTime() || forceRefresh){
+        if (isRefreshTime() || forceRefresh) {
             allTransactions.clear();
             for (String quoteCurrency : quoteCurrencies)
                 allTransactions.addAll(getTransactionsList(quoteCurrency, dateFormat, forceRefresh));
@@ -450,44 +470,49 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * This method is used to get all transactions for a Coinbase's account from a single symbol<br>
+     *
+     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
     @Override
-    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
-        return getAllTransactions(null, forceRefresh);
+    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
+        return getTransactionsList(quoteCurrency, null, forceRefresh);
     }
 
     /**
      * This method is used to get all transactions for a Binance's account from a single symbol<br>
+     *
      * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @param dateFormat:    this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
     @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh) throws Exception {
-        if(isRefreshTime() || !lastTransactionCurrency.equals(quoteCurrency) || forceRefresh){
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                      boolean forceRefresh) throws Exception {
+        if (isRefreshTime() || !lastTransactionCurrency.equals(quoteCurrency) || forceRefresh) {
             transactions.clear();
             lastTransactionCurrency = quoteCurrency;
-            ArrayList<Order> orders = coinbaseOrdersManager.getAllOrdersList(1000, CREATED_AT_SORTER, ASC_SORTING_ORDER,
-                    STATUS_DONE);
+            ArrayList<Order> orders = coinbaseOrdersManager.getAllOrders(1000, created_at, asc, done);
             String date;
-            for (Coin coin : coins.values()){
-                if(coin.isTradingEnabled()){
+            for (Coin coin : coins.values()) {
+                if (coin.isTradingEnabled()) {
                     String baseAsset = coin.getAssetIndex();
                     String symbol = baseAsset + "-" + lastTransactionCurrency;
                     for (Order order : orders){
                         if(order.getProductId().equals(symbol)) {
                             String createdAt = order.getCreatedAt();
                             if (dateFormat != null)
-                                date = getDate(getDateTimestamp(createdAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"), dateFormat);
+                                date = getDate(getDateTimestamp(createdAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+                                        dateFormat);
                             else
                                 date = createdAt;
                             double size = order.getSize();
                             transactions.add(new Transaction(symbol,
-                                    order.getSide(),
+                                    Side.valueOf(order.getSide().name().toUpperCase()),
                                     date,
                                     size * order.getPrice(),
                                     size,
@@ -503,17 +528,6 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is used to get all transactions for a Coinbase's account from a single symbol<br>
-     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
-        return getTransactionsList(quoteCurrency, null, forceRefresh);
-    }
-
-    /**
      * This method is used to send a buy market order<br>
      * @param symbol: this indicates the symbol for the order es. BTC-USDT
      * @param quantity: this indicates quantity of that symbol is wanted to buy es. 10
@@ -522,7 +536,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     public void buyMarket(String symbol, double quantity) throws Exception {
         if(!symbol.contains("-"))
             symbol = getOrderSymbol(symbol);
-        placeAnOrder(symbol, quantity, BUY_SIDE);
+        placeAnOrder(symbol, quantity, BUY);
         int statusCode = coinbaseOrdersManager.getStatusResponse();
         if(statusCode == 200){
             String[] index = symbol.split("-");
@@ -546,8 +560,8 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
             symbol = getOrderSymbol(symbol);
         String[] index = symbol.split("-");
         Coin coin = coins.get(index[0]);
-        if(coin != null){
-            placeAnOrder(symbol, quantity, SELL_SIDE);
+        if(coin != null) {
+            placeAnOrder(symbol, quantity, SELL);
             int statusCode = coinbaseOrdersManager.getStatusResponse();
             if(statusCode == 200)
                 insertCoin(index[0], coin.getAssetName(), coin.getQuantity() - quantity);
@@ -576,13 +590,15 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is used to place an order
-     * @param symbol: this indicates the symbol for the order es. BTC-BUSD
+     *
+     * @param symbol:   this indicates the symbol for the order es. BTC-BUSD
      * @param quantity: this indicates quantity of that symbol is wanted to trade es. 10
-     * @param side: this indicates the side of the order (BUY or SELL)
-     * **/
+     * @param side:     this indicates the side of the order (BUY or SELL)
+     **/
     @Override
-    protected void placeAnOrder(String symbol, double quantity, String side) throws Exception {
-        orderStatus = coinbaseOrdersManager.createMarketOrderSize(side, symbol, quantity);
+    protected void placeAnOrder(String symbol, double quantity, Side side) throws Exception {
+        orderStatus = coinbaseOrdersManager.createMarketOrderSize(valueOf(side.name().toLowerCase()), symbol, quantity,
+                STRING);
     }
 
     /**
@@ -596,7 +612,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      * if {@code formatResponseType} is equal to {@code CustomObject} order status will be returned as custom object given by libraries<br>
      **/
     @Override
-    public <T> T getOrderStatus(FormatResponseType formatResponseType) {
+    public <T> T getOrderStatus(FormatResponse formatResponseType) {
         return super.getOrderStatus(formatResponseType);
     }
 
@@ -626,7 +642,7 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     public synchronized void refreshLatestPrice() {
         lastPricesRefresh = System.currentTimeMillis();
         try {
-            for (CoinbaseAccount coin : coinbaseAccountManager.getCoinbaseWalletsList()) {
+            for (CoinbaseAccount coin : coinbaseAccountManager.getCoinbaseWallets()) {
                 double balance = coin.getBalance();
                 String index = coin.getCurrency();
                 coins.put(index, new Coin(index,
@@ -635,12 +651,12 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
                         balance != 0
                 ));
             }
-            for (TradingPair tradingPair : coinbaseProductsManager.getAllTradingPairsList())
+            for (TradingPair tradingPair : coinbaseProductsManager.getAllTradingPairs())
                 tradingPairsList.put(tradingPair.getId(), tradingPair);
             for (String productId : tradingPairsList.keySet()) {
                 try {
                     if (coins.get(productId.split("-")[0]).isTradingEnabled() || productId.endsWith(USD_CURRENCY))
-                        lastPrices.put(productId, coinbaseProductsManager.getProductTickerObject(productId));
+                        lastPrices.put(productId, coinbaseProductsManager.getProductTicker(productId));
                 } catch (Exception ignored) {
                 }
             }
@@ -670,25 +686,11 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
      **/
     @Override
     public double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception {
-        Currency currency = coinbaseCurrenciesManager.getCurrencyObject(symbol);
+        Currency currency = coinbaseCurrenciesManager.getCurrency(symbol);
         if (testQuantity >= currency.getMinSize())
             if (testQuantity % currency.getMaxPrecision() != 0)
                 return ceil(testQuantity);
         return -1;
-    }
-
-    /**
-     * This method is to get list of the latest prices <br>
-     * Any params required
-     *
-     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
-     **/
-    @Override
-    public ArrayList<MarketCoin> getLatestPrices() {
-        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
-        for (Ticker ticker : this.lastPrices.values())
-            lastPrices.add(new MarketCoin(ticker.getPrice(), ticker.getPriceChangePercent()));
-        return lastPrices;
     }
 
     /**
@@ -707,20 +709,17 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is to get last price of a symbol <br>
+     * This method is to get list of the latest prices <br>
+     * Any params required
      *
-     * @param symbol: symbol from fetch last price
-     * @return last price as {@link MarketCoin} custom object
-     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      **/
     @Override
-    public MarketCoin getLastPrice(String symbol) {
-        Ticker ticker = lastPrices.get(symbol);
-        if (ticker == null)
-            return new MarketCoin(0, 0);
-        return new MarketCoin(ticker.getPrice(),
-                ticker.getPriceChangePercent()
-        );
+    public ArrayList<MarketCoin> getLatestPrices() {
+        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
+        for (Ticker ticker : this.lastPrices.values())
+            lastPrices.add(new MarketCoin(ticker.getPrice(), ticker.getPriceChangePercent()));
+        return lastPrices;
     }
 
     /**
@@ -739,6 +738,23 @@ public class CoinbaseTraderBot extends TraderCoreRoutines {
             return new MarketCoin(0, 0);
         return new MarketCoin(ticker.getPrice(decimals),
                 ticker.getPriceChangePercent(decimals)
+        );
+    }
+
+    /**
+     * This method is to get last price of a symbol <br>
+     *
+     * @param symbol: symbol from fetch last price
+     * @return last price as {@link MarketCoin} custom object
+     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
+     **/
+    @Override
+    public MarketCoin getLastPrice(String symbol) {
+        Ticker ticker = lastPrices.get(symbol);
+        if (ticker == null)
+            return new MarketCoin(0, 0);
+        return new MarketCoin(ticker.getPrice(),
+                ticker.getPriceChangePercent()
         );
     }
 

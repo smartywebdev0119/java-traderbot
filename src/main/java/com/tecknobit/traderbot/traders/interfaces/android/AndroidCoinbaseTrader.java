@@ -1,7 +1,8 @@
 package com.tecknobit.traderbot.traders.interfaces.android;
 
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.CoinbaseManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Ticker;
+import com.tecknobit.apimanager.annotations.Wrapper;
+import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Ticker;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;
 import com.tecknobit.traderbot.records.portfolio.Asset;
@@ -21,12 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool.getCryptocurrencyName;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
+import static com.tecknobit.apimanager.trading.CryptocurrencyTool.getCryptocurrencyName;
 import static com.tecknobit.traderbot.routines.android.AndroidWorkflow.Credentials;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.HOST;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.PORT;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 
@@ -78,8 +79,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
 
     /**
      * {@code side} is instance that memorizes side of order BUY or SELL
-     * **/
-    private String side;
+     **/
+    private Side side;
 
     /**
      * {@code walletList} is a map that contains wallet list assets and index (es. BTCBUSD) as key {@link String} and {@link Cryptocurrency}
@@ -345,7 +346,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
                                 Ticker ticker = lastPrices.get(symbol);
                                 double lastPrice = ticker.getPrice();
                                 double priceChangePercent = coinbaseAccountManager.getTrendPercent(coinbaseProductsManager.
-                                        getProductStatsObject(symbol).getLow(), lastPrice);
+                                        getProductStats(symbol).getLow(), lastPrice);
                                 cryptocurrency.setLastPrice(lastPrice);
                                 cryptocurrency.setPriceChangePercent(priceChangePercent);
                                 walletList.put(assetIndex, cryptocurrency);
@@ -369,6 +370,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
             }
         }.start();
     }
+
     /**
      * This method is used by traders to get user Coinbase's wallet balance. <br>
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
@@ -411,6 +413,18 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
 
     /**
      * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @implNote if {@link #runningTrader} is false will return null
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     * **/
+    @Override
+    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
+        return getAllTransactions(null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
      * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @implNote if {@link #runningTrader} is false will return null
@@ -418,36 +432,8 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * **/
     @Override
     public ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception {
-        if(runningTrader)
+        if (runningTrader)
             return super.getAllTransactions(dateFormat, forceRefresh);
-        return null;
-    }
-
-    /**
-     * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getAllTransactions(forceRefresh);
-        return null;
-    }
-
-    /**
-     * This method is used to get all transactions for a Binance's account from a single symbol<br>
-     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getTransactionsList(quoteCurrency, dateFormat, forceRefresh);
         return null;
     }
 
@@ -459,9 +445,24 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * **/
     @Override
+    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getTransactionsList(quoteCurrency, forceRefresh);
+        return getTransactionsList(quoteCurrency, null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Coinbase's account from a single symbol<br>
+     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
+     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @implNote if {@link #runningTrader} is false will return null
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     * **/
+    @Override
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                      boolean forceRefresh) throws Exception {
+        if (runningTrader)
+            return super.getTransactionsList(quoteCurrency, dateFormat, forceRefresh);
         return null;
     }
 
@@ -500,7 +501,7 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
      * @param side: this indicates the side of the order (BUY or SELL)
      * **/
     @Override
-    protected void placeAnOrder(String symbol, double quantity, String side) throws Exception {
+    protected void placeAnOrder(String symbol, double quantity, Side side) throws Exception {
         super.placeAnOrder(symbol, quantity, side);
         this.side = side;
     }
@@ -524,23 +525,23 @@ public class AndroidCoinbaseTrader extends CoinbaseTraderBot implements AndroidC
         double priceChangePercent;
         int sales = 0;
         try {
-            priceChangePercent = coinbaseAccountManager.getTrendPercent(coinbaseProductsManager.
-                    getProductStatsObject(symbol).getLow(), lastPrice);
-        }catch (Exception e){
+            priceChangePercent = coinbaseAccountManager.getTrendPercent(coinbaseProductsManager.getProductStats(symbol).getLow(),
+                    lastPrice);
+        } catch (Exception e){
             priceChangePercent = 0;
         }
         Transaction transaction = new Transaction(symbol, side, transactionDateFormat.format(new Date(currentTimeMillis())),
                 coinbaseAccountManager.roundValue(quantity * lastPrice, 2), quantity, quoteAsset, index);
-        if(side.equals(SELL_SIDE)){
+        if (side.equals(SELL)) {
             double income = cryptocurrency.getIncomePercent();
             sales = androidWorkflow.getSellSales(transaction, traderAccount, cryptocurrency, getTypeSellCode(income));
             traderAccount.addIncome(income);
         } else {
             if (cryptocurrency == null) {
                 cryptocurrency = new Cryptocurrency(index, getCryptocurrencyName(index), quantity,
-                        symbol, lastPrice, -1 , null, priceChangePercent, quoteAsset, null);
+                        symbol, lastPrice, -1, null, priceChangePercent, quoteAsset, null);
                 cryptocurrency.addFirstPrice(lastPrice);
-            }else {
+            } else {
                 cryptocurrency.setQuantity(coin.getQuantity());
                 cryptocurrency.addFirstPrice(lastPrice);
             }

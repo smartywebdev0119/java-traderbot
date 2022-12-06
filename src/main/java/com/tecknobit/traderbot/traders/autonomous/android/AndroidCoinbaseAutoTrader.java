@@ -1,6 +1,7 @@
 package com.tecknobit.traderbot.traders.autonomous.android;
 
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.CoinbaseManager;
+import com.tecknobit.apimanager.annotations.Wrapper;
+import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
 import com.tecknobit.traderbot.orders.MarketOrder;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;
@@ -21,14 +22,14 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
+import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
 import static com.tecknobit.traderbot.records.portfolio.Cryptocurrency.TradingConfig;
 import static com.tecknobit.traderbot.records.portfolio.Cryptocurrency.TradingConfig.MODEL_ID_KEY;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.HOST;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.PORT;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.BUY;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 
@@ -353,7 +354,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         for (Cryptocurrency cryptocurrency : walletList.values()){
             if(mCheckingList.containsKey(cryptocurrency.getAssetIndex())){
                 wallet.put(new JSONObject(cryptocurrency.getCryptocurrency())
-                        .put(TRANSACTION_KEY, androidWorkflow.assembleTransaction(cryptocurrency, BUY_SIDE,
+                        .put(TRANSACTION_KEY, androidWorkflow.assembleTransaction(cryptocurrency, BUY,
                                 transactionDateFormat).getTransaction()));
             }
         }
@@ -429,57 +430,60 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
 
     /**
      * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     *
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     * @implNote if {@link #runningTrader} is false will return null
+     **/
+    @Override
+    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
+        return getAllTransactions(null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
+     *
+     * @param dateFormat:   this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     * @implNote if {@link #runningTrader} is false will return null
+     **/
     @Override
     public ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception {
-        if(runningTrader)
+        if (runningTrader)
             return super.getAllTransactions(dateFormat, forceRefresh);
         return null;
     }
 
     /**
-     * This method is used to get all transactions for a Coinbase's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getAllTransactions(forceRefresh);
-        return null;
-    }
-
-    /**
      * This method is used to get all transactions for a Coinbase's account from a single symbol<br>
+     *
      * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getTransactionsList(quoteCurrency, dateFormat, forceRefresh);
-        return null;
-    }
-
-    /**
-     * This method is used to get all transactions for a Coinbase's account from a single symbol<br>
-     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @implNote if {@link #runningTrader} is false will return null
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
     @Override
+    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getTransactionsList(quoteCurrency, forceRefresh);
+        return getTransactionsList(quoteCurrency, null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Coinbase's account from a single symbol<br>
+     *
+     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
+     * @param dateFormat:    this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     * @implNote if {@link #runningTrader} is false will return null
+     **/
+    @Override
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                      boolean forceRefresh) throws Exception {
+        if (runningTrader)
+            return super.getTransactionsList(quoteCurrency, dateFormat, forceRefresh);
         return null;
     }
 
@@ -506,7 +510,7 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
         if (runningTrader) {
             super.sellMarket(symbol, quantity);
             androidWorkflow.removeCryptocurrency(cryptocurrencySold.getAssetIndex(),
-                    androidWorkflow.assembleTransaction(cryptocurrencySold, SELL_SIDE, transactionDateFormat));
+                    androidWorkflow.assembleTransaction(cryptocurrencySold, SELL, transactionDateFormat));
         }
     }
 

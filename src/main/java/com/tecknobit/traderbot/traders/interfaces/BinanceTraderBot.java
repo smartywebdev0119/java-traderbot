@@ -1,13 +1,18 @@
 package com.tecknobit.traderbot.traders.interfaces;
 
-import com.tecknobit.binancemanager.Managers.BinanceManager;
-import com.tecknobit.binancemanager.Managers.Market.BinanceMarketManager;
-import com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Filter;
-import com.tecknobit.binancemanager.Managers.Market.Records.Tickers.TickerPriceChange;
-import com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Spot.BinanceSpotManager;
-import com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Spot.Records.Orders.Response.SpotOrderStatus;
-import com.tecknobit.binancemanager.Managers.SignedManagers.Wallet.BinanceWalletManager;
-import com.tecknobit.binancemanager.Managers.SignedManagers.Wallet.Records.Asset.CoinInformation;
+import com.tecknobit.apimanager.annotations.Wrapper;
+import com.tecknobit.binancemanager.managers.BinanceManager;
+import com.tecknobit.binancemanager.managers.BinanceManager.BinanceEndpoint;
+import com.tecknobit.binancemanager.managers.market.BinanceMarketManager;
+import com.tecknobit.binancemanager.managers.market.records.stats.ExchangeInformation.Filter;
+import com.tecknobit.binancemanager.managers.market.records.stats.ExchangeInformation.Filter.FilterDetails;
+import com.tecknobit.binancemanager.managers.market.records.stats.ExchangeInformation.Symbol;
+import com.tecknobit.binancemanager.managers.market.records.tickers.TickerPriceChange;
+import com.tecknobit.binancemanager.managers.signedmanagers.trade.commons.Order;
+import com.tecknobit.binancemanager.managers.signedmanagers.trade.spot.BinanceSpotManager;
+import com.tecknobit.binancemanager.managers.signedmanagers.trade.spot.records.orders.response.SpotOrderStatus;
+import com.tecknobit.binancemanager.managers.signedmanagers.wallet.BinanceWalletManager;
+import com.tecknobit.binancemanager.managers.signedmanagers.wallet.records.asset.CoinInformation;
 import com.tecknobit.traderbot.records.portfolio.Asset;
 import com.tecknobit.traderbot.records.portfolio.Coin;
 import com.tecknobit.traderbot.records.portfolio.MarketCoin;
@@ -21,13 +26,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
-import static com.tecknobit.binancemanager.Managers.BinanceManager.BASE_ENDPOINTS;
-import static com.tecknobit.binancemanager.Managers.Market.Records.Stats.ExchangeInformation.Symbol;
-import static com.tecknobit.binancemanager.Managers.SignedManagers.Trade.Common.Order.STATUS_FILLED;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
+import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
+import static com.tecknobit.binancemanager.managers.BinanceManager.ReturnFormat.STRING;
+import static com.tecknobit.binancemanager.managers.market.records.stats.ExchangeInformation.Filter.FilterType.LOT_SIZE;
+import static com.tecknobit.binancemanager.managers.market.records.stats.ExchangeInformation.Filter.FilterType.MIN_NOTIONAL;
+import static com.tecknobit.binancemanager.managers.signedmanagers.trade.commons.Order.Status.FILLED;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.BUY;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
 import static java.lang.Math.ceil;
 
 /**
@@ -41,27 +47,24 @@ public class BinanceTraderBot extends TraderCoreRoutines {
 
     /**
      * {@code BINANCE_BASE_ENDPOINTS} is a list constant that contains list of Binance's main endpoints
-     * **/
-    public static final String[] BINANCE_BASE_ENDPOINTS = BASE_ENDPOINTS;
+     **/
+    public static final String[] BINANCE_BASE_ENDPOINTS;
 
-    /**
-     * {@code MIN_NOTIONAL_FILTER} is instance that contains key for {@code MIN_NOTIONAL} filter
-     * **/
-    public static final String MIN_NOTIONAL_FILTER = "MIN_NOTIONAL";
-
-    /**
-     * {@code LOT_SIZE_FILTER} is instance that contains key for {@code LOT_SIZE} filter
-     * **/
-    public static final String LOT_SIZE_FILTER = "LOT_SIZE";
+    static {
+        BinanceEndpoint[] binanceEndpoints = BinanceEndpoint.values();
+        BINANCE_BASE_ENDPOINTS = new String[binanceEndpoints.length];
+        for (int j = 0; j < binanceEndpoints.length; j++)
+            BINANCE_BASE_ENDPOINTS[j] = binanceEndpoints[j].toString();
+    }
 
     /**
      * {@code BUSD_CURRENCY} is the identifier of BUSD currency used by Binance's traders
-     * **/
+     **/
     public static final String BUSD_CURRENCY = "BUSD";
 
     /**
      * {@code binanceWalletManager} is instance of {@link BinanceWalletManager} helpful to wallet operations
-     * **/
+     **/
     protected final BinanceWalletManager binanceWalletManager;
 
     /**
@@ -95,11 +98,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey);
-        binanceMarketManager = new BinanceMarketManager();
-        refreshTime = 10000;
-        initTrader();
+        this(apiKey, secretKey, (String) null);
     }
 
     /** Constructor to init {@link BinanceTraderBot}
@@ -109,8 +108,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @implNote these keys will NOT store by library anywhere.
      * **/
     public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint) throws Exception {
-        binanceWalletManager = new BinanceWalletManager(apiKey, secretKey, baseEndpoint);
-        binanceSpotManager = new BinanceSpotManager(apiKey, secretKey, baseEndpoint);
+        binanceWalletManager = new BinanceWalletManager(baseEndpoint, apiKey, secretKey);
+        binanceSpotManager = new BinanceSpotManager();
         binanceMarketManager = new BinanceMarketManager();
         refreshTime = 10000;
         initTrader();
@@ -202,7 +201,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param quoteCurrencies: is a list of quote currencies used in past orders es (USD or EUR)
      * @implNote these keys will NOT store by library anywhere.
      * **/
-    public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies) throws Exception {
+    public BinanceTraderBot(String apiKey, String secretKey, String baseEndpoint,
+                            ArrayList<String> quoteCurrencies) throws Exception {
         this(apiKey, secretKey, baseEndpoint);
         this.quoteCurrencies = quoteCurrencies;
     }
@@ -230,13 +230,27 @@ public class BinanceTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is used by traders to get user Binance's wallet balance. <br>
-     * @param currency: currency of balance value es. EUR will return balance in EUR currency
+     *
+     * @param currency:     currency of balance value es. EUR will return balance in EUR currency
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it
+     * @param decimals:     this indicates number of decimal number after comma es. 3 -> xx,yyy.
+     * @return wallet balance in currency value
+     **/
+    @Override
+    public double getWalletBalance(String currency, boolean forceRefresh, int decimals) throws Exception {
+        return binanceMarketManager.roundValue(getWalletBalance(currency, forceRefresh), decimals);
+    }
+
+    /**
+     * This method is used by traders to get user Binance's wallet balance. <br>
+     *
+     * @param currency:     currency of balance value es. EUR will return balance in EUR currency
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it
      * @return wallet balance in currency value
-     * **/
+     **/
     @Override
     public double getWalletBalance(String currency, boolean forceRefresh) throws Exception {
-        if(isRefreshTime() || !lastBalanceCurrency.equals(currency) || forceRefresh){
+        if (isRefreshTime() || !lastBalanceCurrency.equals(currency) || forceRefresh) {
             refreshLatestPrice();
             lastBalanceCurrency = currency;
             balance = 0;
@@ -258,18 +272,6 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                 balance = convertFromUsd(currency, balance, 8);
         }
         return balance;
-    }
-
-    /**
-     * This method is used by traders to get user Binance's wallet balance. <br>
-     * @param currency: currency of balance value es. EUR will return balance in EUR currency
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it
-     * @param decimals: this indicates number of decimal number after comma es. 3 -> xx,yyy.
-     * @return wallet balance in currency value
-     * **/
-    @Override
-    public double getWalletBalance(String currency, boolean forceRefresh, int decimals) throws Exception {
-        return binanceMarketManager.roundValue(getWalletBalance(currency, forceRefresh), decimals);
     }
 
     /**
@@ -307,13 +309,26 @@ public class BinanceTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is used to get all transactions for a Binance's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     *
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
+    @Override
+    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
+        return getAllTransactions(null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Binance's account from all {@link #quoteCurrencies} inserted.<br>
+     *
+     * @param dateFormat:   this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     **/
     @Override
     public ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception {
-        if(isRefreshTime() || allTransactions.isEmpty() || forceRefresh) {
+        if (isRefreshTime() || allTransactions.isEmpty() || forceRefresh) {
             allTransactions.clear();
             for (String quoteCurrency : quoteCurrencies)
                 allTransactions.addAll(getTransactionsList(quoteCurrency, dateFormat, forceRefresh));
@@ -323,43 +338,48 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is used to get all transactions for a Binance's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * This method is used to get all transactions for a Binance's account from a single symbol<br>
+     *
+     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
     @Override
-    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
-        return getAllTransactions(null, forceRefresh);
+    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
+        return getTransactionsList(quoteCurrency, null, forceRefresh);
     }
 
     /**
      * This method is used to get all transactions for a Binance's account from a single symbol<br>
+     *
      * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @param dateFormat:    this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
     @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh) throws Exception {
-        if(isRefreshTime() || !lastTransactionCurrency.equals(quoteCurrency) || forceRefresh){
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                      boolean forceRefresh) throws Exception {
+        if (isRefreshTime() || !lastTransactionCurrency.equals(quoteCurrency) || forceRefresh) {
             refreshLatestPrice();
             lastTransactionCurrency = quoteCurrency;
             transactions.clear();
-            for (Coin coin : coins.values()){
-                if(coin.isTradingEnabled()){
+            for (Coin coin : coins.values()) {
+                if (coin.isTradingEnabled()) {
                     String baseAsset = coin.getAssetIndex();
                     String symbol = baseAsset + lastTransactionCurrency;
-                    if(!symbol.startsWith(lastTransactionCurrency)) {
+                    if (!symbol.startsWith(lastTransactionCurrency)) {
                         try {
-                            for (SpotOrderStatus order : binanceSpotManager.getObjectAllOrdersList(symbol)){
-                                if (order.getStatus().equals(STATUS_FILLED)) {
+                            for (SpotOrderStatus order : binanceSpotManager.getAllOrders(symbol)) {
+                                if (order.getStatus().equals(FILLED)) {
                                     String date;
                                     if (dateFormat != null)
                                         date = Transaction.getDate(order.getTime(), dateFormat);
                                     else
                                         date = new Date(order.getTime()).toString();
                                     transactions.add(new Transaction(symbol,
-                                            order.getSide(),
+                                            Side.valueOf(order.getSide().name()),
                                             date,
                                             order.getCummulativeQuoteQty(),
                                             order.getOrigQty(),
@@ -378,24 +398,13 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is used to get all transactions for a Binance's account from a single symbol<br>
-     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
-        return getTransactionsList(quoteCurrency, null, forceRefresh);
-    }
-
-    /**
      * This method is used to send a buy market order from a Binance SPOT account.<br>
      * @param symbol: this indicates the symbol for the order es. BTCBUSD
      * @param quantity: this indicates quantity of that symbol is wanted to buy es. 10
      * **/
     @Override
     public void buyMarket(String symbol, double quantity) throws Exception {
-        placeAnOrder(symbol, quantity, BUY_SIDE);
+        placeAnOrder(symbol, quantity, BUY);
         int statusCode = binanceSpotManager.getStatusResponse();
         if(statusCode == 200) {
             Symbol coinSymbol = tradingPairsList.get(symbol);
@@ -419,8 +428,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
         Symbol coinSymbol = tradingPairsList.get(symbol);
         String baseAsset = coinSymbol.getBaseAsset();
         Coin coin = coins.get(baseAsset);
-        if(coin != null && coin.isTradingEnabled()){
-            placeAnOrder(symbol, quantity, SELL_SIDE);
+        if(coin != null && coin.isTradingEnabled()) {
+            placeAnOrder(symbol, quantity, SELL);
             int statusCode = binanceSpotManager.getStatusResponse();
             if(statusCode == 200)
                 insertCoin(baseAsset, coin.getAssetName(), coin.getQuantity() - quantity);
@@ -434,13 +443,15 @@ public class BinanceTraderBot extends TraderCoreRoutines {
 
     /**
      * This method is used to place an order<br>
-     * @param symbol: this indicates the symbol for the order es. BTCBUSD
+     *
+     * @param symbol:   this indicates the symbol for the order es. BTCBUSD
      * @param quantity: this indicates quantity of that symbol is wanted to trade es. 10
-     * @param side: this indicates the side of the order (BUY or SELL)
-     * **/
+     * @param side:     this indicates the side of the order (BUY or SELL)
+     **/
     @Override
-    protected void placeAnOrder(String symbol, double quantity, String side) throws Exception {
-        orderStatus = binanceSpotManager.sendMarketOrderQty(symbol, side, quantity, null);
+    protected void placeAnOrder(String symbol, double quantity, Side side) throws Exception {
+        orderStatus = binanceSpotManager.sendMarketOrderQty(symbol, Order.Side.valueOf(side.name()), quantity, null,
+                STRING);
     }
 
     /**
@@ -468,11 +479,11 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     @Override
     public synchronized void refreshLatestPrice() throws Exception {
         lastPricesRefresh = System.currentTimeMillis();
-        for (CoinInformation coin : binanceWalletManager.getAllCoinsList()) {
+        for (CoinInformation coin : binanceWalletManager.getAllCoins()) {
             double free = coin.getFree();
             boolean isTradingEnable = true;
             String index = coin.getCoin();
-            if (free == 0 || !coin.isTrading())
+            if (free == 0 || !coin.canTrading())
                 isTradingEnable = false;
             coins.put(index, new Coin(index,
                     coin.getName(),
@@ -480,9 +491,9 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                     isTradingEnable
             ));
         }
-        for (Symbol symbol : binanceMarketManager.getObjectExchangeInformation().getSymbols())
+        for (Symbol symbol : binanceMarketManager.getExchangeInformation().getSymbols())
             tradingPairsList.put(symbol.getSymbol(), symbol);
-        for (TickerPriceChange tickerPriceChange : binanceMarketManager.getTickerPriceChangeList()) {
+        for (TickerPriceChange tickerPriceChange : binanceMarketManager.getTickersPriceChangeList()) {
             String symbol = tickerPriceChange.getSymbol();
             try {
                 if (coins.get(tradingPairsList.get(symbol).getBaseAsset()).isTradingEnabled() || symbol.endsWith(BUSD_CURRENCY))
@@ -518,14 +529,14 @@ public class BinanceTraderBot extends TraderCoreRoutines {
             double lastPrice = lastPrices.get(symbol).getLastPrice();
             double balance = lastPrice * testQuantity;
             for (Filter filter : exchangeInformation.getFiltersList()) {
-                if(filter.getFilterType().equals(LOT_SIZE_FILTER)){
-                    JSONObject lotSize = filter.getFilterDetails().getJSONObject(LOT_SIZE_FILTER);
+                ArrayList<FilterDetails> filters = filter.getFilterDetails();
+                if (filter.getFilterType().equals(LOT_SIZE)) {
+                    JSONObject lotSize = getFilter(filter.getFilterDetails(), LOT_SIZE);
                     stepSize = lotSize.getDouble("stepSize");
                     maxQty = lotSize.getDouble("maxQty");
                     minQty = lotSize.getDouble("minQty");
-                }else if(filter.getFilterType().equals(MIN_NOTIONAL_FILTER)) {
-                    minNotional = filter.getFilterDetails().getJSONObject(MIN_NOTIONAL_FILTER)
-                            .getDouble("minNotional");
+                } else if (filter.getFilterType().equals(MIN_NOTIONAL)) {
+                    minNotional = getFilter(filter.getFilterDetails(), MIN_NOTIONAL).getDouble("minNotional");
                     break;
                 }
             }
@@ -550,17 +561,18 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is to get list of the latest prices <br>
-     * Any params required
+     * Method to get a filter details
      *
-     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
+     * @param filters: filters list
+     * @param type:    type of the filter to fetch
+     * @return filter details as {@link JSONObject}
      **/
-    @Override
-    public ArrayList<MarketCoin> getLatestPrices() {
-        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
-        for (TickerPriceChange tickerPriceChange : this.lastPrices.values())
-            lastPrices.add(new MarketCoin(tickerPriceChange.getLastPrice(), tickerPriceChange.getPriceChangePercent()));
-        return lastPrices;
+    // TODO: 06/12/2022 TEST
+    private JSONObject getFilter(ArrayList<FilterDetails> filters, Filter.FilterType type) {
+        for (FilterDetails filter : filters)
+            if (filter.getKey().equals(type.name()))
+                return new JSONObject(filter.toString());
+        return new JSONObject();
     }
 
     /**
@@ -581,20 +593,17 @@ public class BinanceTraderBot extends TraderCoreRoutines {
     }
 
     /**
-     * This method is to get last price of a symbol <br>
+     * This method is to get list of the latest prices <br>
+     * Any params required
      *
-     * @param symbol: symbol from fetch last price
-     * @return last price as {@link MarketCoin} custom object
-     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      **/
     @Override
-    public MarketCoin getLastPrice(String symbol) {
-        TickerPriceChange tickerPriceChange = lastPrices.get(symbol);
-        if (tickerPriceChange == null)
-            return new MarketCoin(0, 0);
-        return new MarketCoin(tickerPriceChange.getLastPrice(),
-                tickerPriceChange.getPriceChangePercent()
-        );
+    public ArrayList<MarketCoin> getLatestPrices() {
+        ArrayList<MarketCoin> lastPrices = new ArrayList<>();
+        for (TickerPriceChange tickerPriceChange : this.lastPrices.values())
+            lastPrices.add(new MarketCoin(tickerPriceChange.getLastPrice(), tickerPriceChange.getPriceChangePercent()));
+        return lastPrices;
     }
 
     /**
@@ -613,6 +622,23 @@ public class BinanceTraderBot extends TraderCoreRoutines {
             return new MarketCoin(0, 0);
         return new MarketCoin(tickerPriceChange.getLastPrice(decimals),
                 tickerPriceChange.getPriceChangePercent(decimals)
+        );
+    }
+
+    /**
+     * This method is to get last price of a symbol <br>
+     *
+     * @param symbol: symbol from fetch last price
+     * @return last price as {@link MarketCoin} custom object
+     * @apiNote if symbol inserted does not exist will be returned a {@link MarketCoin} object with zeros as values
+     **/
+    @Override
+    public MarketCoin getLastPrice(String symbol) {
+        TickerPriceChange tickerPriceChange = lastPrices.get(symbol);
+        if (tickerPriceChange == null)
+            return new MarketCoin(0, 0);
+        return new MarketCoin(tickerPriceChange.getLastPrice(),
+                tickerPriceChange.getPriceChangePercent()
         );
     }
 

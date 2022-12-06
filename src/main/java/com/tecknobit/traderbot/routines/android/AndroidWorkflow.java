@@ -1,6 +1,6 @@
 package com.tecknobit.traderbot.routines.android;
 
-import com.tecknobit.apimanager.Tools.Formatters.JsonHelper;
+import com.tecknobit.apimanager.formatters.JsonHelper;
 import com.tecknobit.traderbot.exceptions.SaveData;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;
@@ -481,13 +481,14 @@ public class AndroidWorkflow implements RoutineMessages {
 
     /**
      * This method is used to assemble a {@link Transaction} object
+     *
      * @param cryptocurrency: cryptocurrency of order
-     * @param side: side of order
-     * @param dateFormat: date formatter for transaction
-     * @implSpec is useful for Android auto traders
+     * @param side:           side of order
+     * @param dateFormat:     date formatter for transaction
      * @return transaction as {@link Transaction} object
-     * **/
-    public Transaction assembleTransaction(Cryptocurrency cryptocurrency, String side, DateFormat dateFormat){
+     * @implSpec is useful for Android auto traders
+     **/
+    public Transaction assembleTransaction(Cryptocurrency cryptocurrency, Side side, DateFormat dateFormat) {
         return new Transaction(cryptocurrency.getSymbol(), side, dateFormat.format(new Date(currentTimeMillis())),
                 cryptocurrency.getCryptocurrencyBalance(2), cryptocurrency.getQuantity(),
                 cryptocurrency.getQuoteAsset(), cryptocurrency.getAssetIndex());
