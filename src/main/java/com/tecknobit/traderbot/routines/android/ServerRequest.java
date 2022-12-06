@@ -1,6 +1,6 @@
 package com.tecknobit.traderbot.routines.android;
 
-import com.tecknobit.aesHelper.ClientCipher;
+import com.tecknobit.apimanager.apis.encryption.aes.ClientCipher;
 import com.tecknobit.traderbot.routines.android.AndroidWorkflow.Credentials;
 import org.json.JSONObject;
 
@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 
-import static com.tecknobit.aesHelper.ClientCipher.CBC_ALGORITHM;
+import static com.tecknobit.apimanager.apis.encryption.aes.ClientCipher.Algorithm.CBC_ALGORITHM;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
 
 /**
@@ -42,30 +42,37 @@ public class ServerRequest {
      * {@code clientCipher} object to cipher requests
      **/
     protected final ClientCipher clientCipher;
+
     /**
      * {@code ciphered} flag to cipher or not requests
      **/
     protected final boolean ciphered;
+
     /**
      * {@code port} is instance that memorizes host value
      **/
     protected final String host;
+
     /**
      * {@code port} is instance that memorizes port value
      **/
     protected final int port;
+
     /**
      * {@code clientCipher} object to write requests
      **/
     protected PrintWriter printWriter;
+
     /**
      * {@code socket} object to transport request
      **/
     protected volatile Socket socket;
+
     /**
      * {@code authToken} is instance that memorizes identifier of server trader to log in and requests operations
      **/
     protected String authToken;
+
     /**
      * {@code token} is instance that memorizes identifier of user to log in and requests operations
      **/

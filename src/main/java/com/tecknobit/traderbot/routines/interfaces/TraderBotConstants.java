@@ -1,7 +1,5 @@
 package com.tecknobit.traderbot.routines.interfaces;
 
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.BUY_SIDE;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Orders.Records.Order.SELL_SIDE;
 import static com.tecknobit.traderbot.routines.interfaces.RoutineMessages.ANSI_RED;
 import static com.tecknobit.traderbot.routines.interfaces.RoutineMessages.ANSI_RESET;
 
@@ -22,16 +20,6 @@ public class TraderBotConstants {
      * {@code USDT_CURRENCY} is the identifier of USDT cryptocurrency used by traders to get default prices
      **/
     public static final String USDT_CURRENCY = "USDT";
-
-    /**
-     * {@code BUY} is constant for buy side
-     **/
-    public static final String BUY = BUY_SIDE.toUpperCase();
-
-    /**
-     * {@code SELL} is constant for buy side
-     **/
-    public static final String SELL = SELL_SIDE.toUpperCase();
 
     /**
      * {@code CUSTOM_DEF_COLOR} is instance that memorizes default color to use for example when asset is at pair
@@ -528,6 +516,23 @@ public class TraderBotConstants {
      * {@code SERVER_REQUEST_KEY} key
      **/
     public static final String SERVER_REQUEST_KEY = "server_request";
+
+    /**
+     * {@code Side} list of available sides
+     **/
+    public enum Side {
+
+        /**
+         * {@code "BUY"} side
+         **/
+        BUY,
+
+        /**
+         * {@code "SELL"} side
+         **/
+        SELL
+
+    }
 
     /**
      * Constructor to avoid instantiation

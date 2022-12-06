@@ -1,7 +1,8 @@
 package com.tecknobit.traderbot.traders.autonomous.interfaces;
 
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.CoinbaseManager;
-import com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Ticker;
+import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
+import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Candle.Granularity;
+import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Ticker;
 import com.tecknobit.traderbot.orders.MarketOrder;
 import com.tecknobit.traderbot.records.account.TraderAccount;
 import com.tecknobit.traderbot.records.portfolio.Coin;
@@ -15,8 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
-import static com.tecknobit.coinbasemanager.Managers.ExchangePro.Products.Records.Candle.GRANULARITY_1d;
+import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager.ReturnFormat.LIBRARY_OBJECT;
+import static com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Candle.Granularity._1d;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.USD_CURRENCY;
 import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;
@@ -534,34 +536,35 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     @Override
     public void checkCryptocurrencies() throws Exception {
         System.out.println("## CHECKING NEW CRYPTOCURRENCIES");
-        if(makeRoutine(previousTradingConfigFetching, BUYING_GAP_TIME * 2)) {
+        if (makeRoutine(previousTradingConfigFetching, BUYING_GAP_TIME * 2)) {
             previousTradingConfigFetching = currentTimeMillis();
             tradingConfig = fetchTradingConfig(tradingConfig);
         }
         int daysGap = tradingConfig.getDaysGap();
-        for (Ticker ticker : coinbaseProductsManager.getAllTickersList()){
+        ArrayList<Ticker> tickers = coinbaseProductsManager.getAllTickers(LIBRARY_OBJECT);
+        for (Ticker ticker : tickers) {
             String symbol = ticker.getProductId();
             String quoteAsset = ticker.getQuoteAsset();
-            if(quoteCurrencies.isEmpty() || quoteContained(quoteAsset)){
+            if (quoteCurrencies.isEmpty() || quoteContained(quoteAsset)) {
                 String baseAsset = ticker.getBaseAsset();
                 Coin coin = coins.get(baseAsset);
-                if(coin != null && !walletList.containsKey(baseAsset)){
+                if (coin != null && !walletList.containsKey(baseAsset)) {
                     double lastPrice = ticker.getPrice();
                     double priceChangePercent = 0;
                     Cryptocurrency cryptocurrency = checkingList.get(baseAsset);
-                    if(cryptocurrency != null) {
+                    if (cryptocurrency != null) {
                         priceChangePercent = coinbaseProductsManager.getTrendPercent(cryptocurrency.getLastPrice(),
                                 lastPrice, 8);
                     }
-                    double tptop = isTradable(symbol, tradingConfig, GRANULARITY_1d, priceChangePercent);
-                    if(tptop != ASSET_NOT_TRADABLE){
+                    double tptop = isTradable(symbol, tradingConfig, _1d, priceChangePercent);
+                    if (tptop != ASSET_NOT_TRADABLE) {
                         checkingList.put(baseAsset, new Cryptocurrency(baseAsset,
                                 coin.getAssetName(),
                                 0,
                                 symbol,
                                 lastPrice,
                                 tptop,
-                                GRANULARITY_1d,
+                                _1d,
                                 priceChangePercent,
                                 quoteAsset,
                                 tradingConfig
@@ -607,8 +610,8 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
     @Override
     public double computeTPTOPIndex(String symbol, TradingConfig tradingConfig, Object candleInterval,
                                     double wasteRange) throws Exception {
-        return coinbaseProductsManager.getSymbolForecast(symbol, tradingConfig.getDaysGap(), (Integer) candleInterval,
-                (int) tradingConfig.getWasteRange());
+        return coinbaseProductsManager.getSymbolForecast(symbol, tradingConfig.getDaysGap(), (Granularity) candleInterval,
+                tradingConfig.getWasteRange());
     }
 
     /**
@@ -833,8 +836,9 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
      * **/
     @Override
     public double getMarketOrderQuantity(Cryptocurrency cryptocurrency) throws Exception {
-        return getSuggestedOrderQuantity(cryptocurrency.getSymbol(), roundValue(getCoinBalance(cryptocurrency.getQuoteAsset()) *
-                        cryptocurrency.getTptopIndex() / 100, 6));
+        return getSuggestedOrderQuantity(cryptocurrency.getSymbol(),
+                roundValue(getCoinBalance(cryptocurrency.getQuoteAsset()) * cryptocurrency.getTptopIndex() / 100,
+                        6));
     }
 
     /**

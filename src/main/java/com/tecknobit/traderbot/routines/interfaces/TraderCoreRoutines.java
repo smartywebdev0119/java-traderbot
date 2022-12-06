@@ -1,9 +1,12 @@
 package com.tecknobit.traderbot.routines.interfaces;
 
+import com.tecknobit.apimanager.annotations.Returner;
+import com.tecknobit.apimanager.annotations.Wrapper;
 import com.tecknobit.traderbot.records.portfolio.Asset;
 import com.tecknobit.traderbot.records.portfolio.Coin;
 import com.tecknobit.traderbot.records.portfolio.MarketCoin;
 import com.tecknobit.traderbot.records.portfolio.Transaction;
+import com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.tecknobit.traderbot.routines.interfaces.TraderCoreRoutines.FormatResponseType.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderCoreRoutines.FormatResponse.*;
 
 /**
  * The {@code TraderCoreRoutines} class defines base routines methods for all traders. <br>
@@ -107,8 +110,9 @@ public abstract class TraderCoreRoutines {
 
     /**
      * {@code orderStatus} is instance that memorizes response and result of an order.
-     * @implNote it is obtained calling {@link #getOrderStatus(FormatResponseType)} method
-     * **/
+     *
+     * @implNote it is obtained calling {@link #getOrderStatus(FormatResponse)} method
+     **/
     protected String orderStatus;
 
     /**
@@ -121,7 +125,7 @@ public abstract class TraderCoreRoutines {
      * if {@code formatResponseType} is equal to {@code JSON} order status will be returned as {@link JSONObject} or {@link JSONArray} <br>
      * if {@code formatResponseType} is equal to {@code CustomObject} order status will be returned as custom object given by libraries<br>
      **/
-    public <T> T getOrderStatus(FormatResponseType formatResponseType) {
+    public <T> T getOrderStatus(FormatResponse formatResponseType) {
         if (formatResponseType.equals(STRING) || formatResponseType.equals(LIBRARY_OBJECT)) {
             return (T) orderStatus;
         } else if (formatResponseType.equals(JSON)) {
@@ -146,53 +150,49 @@ public abstract class TraderCoreRoutines {
 
     /**
      * This method is used by traders to get user wallet balance. <br>
-     * @param currency: currency of balance value es. EUR will return balance in EUR currency.
+     *
+     * @param currency:     currency of balance value es. EUR will return balance in EUR currency.
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @param decimals:     this indicates number of decimal number after comma es. 3 -> xx,yyy.
      * @return wallet balance in currency value
-     * **/
-    public abstract double getWalletBalance(String currency, boolean forceRefresh) throws Exception;
-
-    /**
-     * This method is used by traders to get user wallet balance. <br>
-     * @param currency: currency of balance value es. EUR will return balance in EUR currency.
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @param decimals: this indicates number of decimal number after comma es. 3 -> xx,yyy.
-     * @return wallet balance in currency value
-     * **/
+     **/
     public abstract double getWalletBalance(String currency, boolean forceRefresh, int decimals) throws Exception;
 
     /**
+     * This method is used by traders to get user wallet balance. <br>
+     *
+     * @param currency:     currency of balance value es. EUR will return balance in EUR currency.
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return wallet balance in currency value
+     **/
+    public abstract double getWalletBalance(String currency, boolean forceRefresh) throws Exception;
+
+    /**
      * This method is used to get asset list of user wallet.<br>
-     * @param currency: currency of asset balance value es. EUR will return asset balance in EUR currency.
+     *
+     * @param currency:     currency of asset balance value es. EUR will return asset balance in EUR currency.
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Asset} as {@link ArrayList}
-     * **/
+     **/
     public abstract ArrayList<Asset> getAssetsList(String currency, boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to get all transactions from all {@link #quoteCurrencies} inserted.<br>
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     *
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    public abstract ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception;
-
-    /**
-     * This method is used to get all transactions from all {@link #quoteCurrencies} inserted.<br>
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
+    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
     public abstract ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception;
 
     /**
-     * This method is used to get all transactions from a single symbol<br>
-     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * This method is used to get all transactions from all {@link #quoteCurrencies} inserted.<br>
+     *
+     * @param dateFormat:   this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    public abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
-                                                               boolean forceRefresh) throws Exception;
+     **/
+    public abstract ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to get all transactions from a single symbol<br>
@@ -201,7 +201,19 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      **/
+    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception;
+
+    /**
+     * This method is used to get all transactions from a single symbol<br>
+     *
+     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
+     * @param dateFormat:    this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     **/
+    public abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                               boolean forceRefresh) throws Exception;
 
     /**
      * This method is used to send a buy market order<br>
@@ -221,11 +233,12 @@ public abstract class TraderCoreRoutines {
 
     /**
      * This method is used to place an order<br>
-     * @param symbol: this indicates the symbol for the order es. (BTCBUSD or BTC-USDT)
+     *
+     * @param symbol:   this indicates the symbol for the order es. (BTCBUSD or BTC-USDT)
      * @param quantity: this indicates quantity of that symbol is wanted to sell es. 10
-     * @param side: this indicates the side of the order (BUY or SELL)
-     * **/
-    protected abstract void placeAnOrder(String symbol, double quantity, String side) throws Exception;
+     * @param side:     this indicates the side of the order (BUY or SELL)
+     **/
+    protected abstract void placeAnOrder(String symbol, double quantity, Side side) throws Exception;
 
     /**
      * This method is used to insert or update a coin in {@link #coins} list.
@@ -381,14 +394,6 @@ public abstract class TraderCoreRoutines {
     public abstract double getSuggestedOrderQuantity(String symbol, double testQuantity) throws Exception;
 
     /**
-     * This method is to get list of the latest prices <br>
-     * Any params required
-     *
-     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
-     **/
-    public abstract ArrayList<MarketCoin> getLatestPrices();
-
-    /**
      * This method is to get list of the latest prices
      *
      * @param decimals: number of digits to round final value
@@ -398,12 +403,12 @@ public abstract class TraderCoreRoutines {
     public abstract ArrayList<MarketCoin> getLatestPrices(int decimals);
 
     /**
-     * This method is to get last price of a symbol <br>
+     * This method is to get list of the latest prices <br>
+     * Any params required
      *
-     * @param symbol: symbol from fetch last price
-     * @return last price as {@link MarketCoin} custom object
+     * @return last prices as {@link ArrayList} of {@link MarketCoin} custom object
      **/
-    public abstract MarketCoin getLastPrice(String symbol);
+    public abstract ArrayList<MarketCoin> getLatestPrices();
 
     /**
      * This method is to get last price of a symbol
@@ -416,6 +421,14 @@ public abstract class TraderCoreRoutines {
     public abstract MarketCoin getLastPrice(String symbol, int decimals);
 
     /**
+     * This method is to get last price of a symbol <br>
+     *
+     * @param symbol: symbol from fetch last price
+     * @return last price as {@link MarketCoin} custom object
+     **/
+    public abstract MarketCoin getLastPrice(String symbol);
+
+    /**
      * This method is used to get coin balance
      *
      * @param quote: string of quote currency to return amount value of balance
@@ -424,14 +437,28 @@ public abstract class TraderCoreRoutines {
     public abstract double getCoinBalance(String quote);
 
     /**
-     * {@code FormatResponseType} is enum list to format order in different formats.
+     * {@code ReturnFormat} is the instance to pass in {@link Returner} methods to format as you want the response by
+     * {@code "Coinbase"}
      *
-     * @implSpec format type are {@link String}, JSON type {@link JSONArray} or {@link JSONObject}, CustomObject
+     * @apiNote you can choose between:
+     * <ul>
+     * <li>
+     * {@link Returner.ReturnFormat#STRING} -> returns the response formatted as {@link String}
+     * </li>
+     * <li>
+     * {@link Returner.ReturnFormat#JSON} -> returns the response formatted as {@code "JSON"}
+     * </li>
+     * <li>
+     * {@link Returner.ReturnFormat#LIBRARY_OBJECT} -> returns the response formatted as custom object offered by library that uses this list
+     * </li>
+     * </ul>
      **/
-    public enum FormatResponseType {
+    public enum FormatResponse {
+
         STRING,
         JSON,
         LIBRARY_OBJECT
+
     }
 
     /**

@@ -1,7 +1,8 @@
 package com.tecknobit.traderbot.traders.interfaces.android;
 
-import com.tecknobit.binancemanager.Managers.BinanceManager;
-import com.tecknobit.binancemanager.Managers.Market.Records.Tickers.TickerPriceChange;
+import com.tecknobit.apimanager.annotations.Wrapper;
+import com.tecknobit.binancemanager.managers.BinanceManager;
+import com.tecknobit.binancemanager.managers.market.records.tickers.TickerPriceChange;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;
 import com.tecknobit.traderbot.records.portfolio.Asset;
@@ -22,10 +23,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.CryptocurrencyTool.getCryptocurrencyName;
+import static com.tecknobit.apimanager.trading.CryptocurrencyTool.getCryptocurrencyName;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.HOST;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.PORT;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
+import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
 import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 
@@ -77,8 +79,8 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
 
     /**
      * {@code side} is instance that memorizes side of order BUY or SELL
-     * **/
-    private String side;
+     **/
+    private Side side;
 
     /**
      * {@code walletList} is a map that contains wallet list assets and index (es. BTCBUSD) as key {@link String} and {@link Cryptocurrency}
@@ -311,57 +313,60 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
 
     /**
      * This method is used to get all transactions for a Binance's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     *
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     * @implNote if {@link #runningTrader} is false will return null
+     **/
+    @Override
+    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
+    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
+        return getAllTransactions(null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Binance's account from all {@link #quoteCurrencies} inserted.<br>
+     *
+     * @param dateFormat:   this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     * @implNote if {@link #runningTrader} is false will return null
+     **/
     @Override
     public ArrayList<Transaction> getAllTransactions(String dateFormat, boolean forceRefresh) throws Exception {
-        if(runningTrader)
+        if (runningTrader)
             return super.getAllTransactions(dateFormat, forceRefresh);
         return null;
     }
 
     /**
-     * This method is used to get all transactions for a Binance's account from all {@link #quoteCurrencies} inserted.<br>
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getAllTransactions(forceRefresh);
-        return null;
-    }
-
-    /**
      * This method is used to get all transactions for a Binance's account from a single symbol<br>
+     *
      * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param dateFormat: this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
-     * @implNote if {@link #runningTrader} is false will return null
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
-    @Override
-    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getTransactionsList(quoteCurrency, dateFormat, forceRefresh);
-        return null;
-    }
-
-    /**
-     * This method is used to get all transactions for a Binance's account from a single symbol<br>
-     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
-     * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @implNote if {@link #runningTrader} is false will return null
-     * @return list of custom object {@link Transaction} as {@link ArrayList}
-     * **/
+     **/
     @Override
+    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
-        if(runningTrader)
-            return super.getTransactionsList(quoteCurrency, forceRefresh);
+        return getTransactionsList(quoteCurrency, null, forceRefresh);
+    }
+
+    /**
+     * This method is used to get all transactions for a Binance's account from a single symbol<br>
+     *
+     * @param quoteCurrency: this indicates the symbol from fetch details es. BTC will fetch all transactions on Bitcoin
+     * @param dateFormat:    this indicates the format of date that you want to have es. HH:mm:ss -> 21:22:08
+     * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
+     * @return list of custom object {@link Transaction} as {@link ArrayList}
+     * @implNote if {@link #runningTrader} is false will return null
+     **/
+    @Override
+    public ArrayList<Transaction> getTransactionsList(String quoteCurrency, String dateFormat,
+                                                      boolean forceRefresh) throws Exception {
+        if (runningTrader)
+            return super.getTransactionsList(quoteCurrency, dateFormat, forceRefresh);
         return null;
     }
 
@@ -395,12 +400,13 @@ public class AndroidBinanceTrader extends BinanceTraderBot implements AndroidCor
 
     /**
      * This method is used to place an order<br>
-     * @param symbol: this indicates the symbol for the order es. BTCBUSD
+     *
+     * @param symbol:   this indicates the symbol for the order es. BTCBUSD
      * @param quantity: this indicates quantity of that symbol is wanted to trade es. 10
-     * @param side: this indicates the side of the order (BUY or SELL)
-     * **/
+     * @param side:     this indicates the side of the order (BUY or SELL)
+     **/
     @Override
-    protected void placeAnOrder(String symbol, double quantity, String side) throws Exception {
+    protected void placeAnOrder(String symbol, double quantity, Side side) throws Exception {
         super.placeAnOrder(symbol, quantity, side);
         this.side = side;
     }

@@ -1,6 +1,6 @@
 package com.tecknobit.traderbot.records.account;
 
-import com.tecknobit.apimanager.Tools.Formatters.JsonHelper;
+import com.tecknobit.apimanager.formatters.JsonHelper;
 import com.tecknobit.traderbot.records.portfolio.Cryptocurrency;
 import com.tecknobit.traderbot.records.portfolio.Cryptocurrency.TradingConfig;
 import com.tecknobit.traderbot.routines.android.ServerRequest;
@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.textualizeAssetPercent;
+import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
+import static com.tecknobit.apimanager.trading.TradingTools.textualizeAssetPercent;
 import static com.tecknobit.traderbot.records.portfolio.Cryptocurrency.TradingConfig.*;
 import static com.tecknobit.traderbot.routines.android.AndroidWorkflow.*;
 import static com.tecknobit.traderbot.routines.android.ServerRequest.*;

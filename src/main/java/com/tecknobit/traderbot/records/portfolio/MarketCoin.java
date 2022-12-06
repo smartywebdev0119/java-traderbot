@@ -2,8 +2,8 @@ package com.tecknobit.traderbot.records.portfolio;
 
 import org.json.JSONObject;
 
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.roundValue;
-import static com.tecknobit.apimanager.Tools.Trading.TradingTools.textualizeAssetPercent;
+import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
+import static com.tecknobit.apimanager.trading.TradingTools.textualizeAssetPercent;
 
 /**
  * The {@code MarketCoin} class defines market coin object
