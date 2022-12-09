@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
-import static com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager.ReturnFormat.LIBRARY_OBJECT;
 import static com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Candle.Granularity._1d;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.USD_CURRENCY;
 import static java.lang.Math.abs;
@@ -541,8 +540,7 @@ public class CoinbaseAutoTraderBot extends CoinbaseTraderBot implements AutoTrad
             tradingConfig = fetchTradingConfig(tradingConfig);
         }
         int daysGap = tradingConfig.getDaysGap();
-        ArrayList<Ticker> tickers = coinbaseProductsManager.getAllTickers(LIBRARY_OBJECT);
-        for (Ticker ticker : tickers) {
+        for (Ticker ticker : coinbaseProductsManager.getAllTickers()) {
             String symbol = ticker.getProductId();
             String quoteAsset = ticker.getQuoteAsset();
             if (quoteCurrencies.isEmpty() || quoteContained(quoteAsset)) {

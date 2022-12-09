@@ -85,10 +85,11 @@ public class ServerRequest {
      * @param secretKey : secret key used in server requests
      * @param authToken : identifier of server trader to log in and requests operations
      * @param token     : identifier of user to log in and requests operations
-     * @param host: host value
-     * @param port: port value
+     * @param host:     host value
+     * @param port:     port value
      **/
-    public ServerRequest(String ivSpec, String secretKey, String authToken, String token, String host, int port) throws Exception {
+    public ServerRequest(String ivSpec, String secretKey, String authToken, String token, String host,
+                         int port) throws Exception {
         this(ivSpec, secretKey, host, port);
         this.authToken = authToken;
         this.token = token;

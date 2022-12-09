@@ -19,7 +19,6 @@ import com.tecknobit.traderbot.records.portfolio.MarketCoin;
 import com.tecknobit.traderbot.records.portfolio.Transaction;
 import com.tecknobit.traderbot.routines.interfaces.TraderCoreRoutines;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.BUY;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
 import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
 
 /**
  * The {@code BinanceTraderBot} class is trader for {@link BinanceManager} library.<br>
@@ -530,20 +530,19 @@ public class BinanceTraderBot extends TraderCoreRoutines {
             double lastPrice = lastPrices.get(symbol).getLastPrice();
             double balance = lastPrice * testQuantity;
             for (Filter filter : exchangeInformation.getFiltersList()) {
-                ArrayList<FilterDetails> filters = filter.getFilterDetails();
+                HashMap<String, FilterDetails> filters = filter.getFilterDetails();
                 if (filter.getFilterType().equals(LOT_SIZE)) {
-                    JSONObject lotSize = getFilter(filter.getFilterDetails(), LOT_SIZE);
-                    stepSize = lotSize.getDouble("stepSize");
-                    maxQty = lotSize.getDouble("maxQty");
-                    minQty = lotSize.getDouble("minQty");
+                    stepSize = Double.parseDouble(filters.get("stepSize").getValue());
+                    maxQty = Double.parseDouble(filters.get("maxQty").getValue());
+                    minQty = Double.parseDouble(filters.get("minQty").getValue());
                 } else if (filter.getFilterType().equals(MIN_NOTIONAL)) {
-                    minNotional = getFilter(filter.getFilterDetails(), MIN_NOTIONAL).getDouble("minNotional");
+                    minNotional = Double.parseDouble(filters.get("minNotional").getValue());
                     break;
                 }
             }
             double minNotionalQty = minNotional / lastPrice;
             if(balance == minNotional)
-                quantity = ceil(minNotional);
+                quantity = floor(minNotional);
             else if(balance > minNotional){
                 if(quantity < minQty)
                     quantity = minQty;
@@ -551,7 +550,7 @@ public class BinanceTraderBot extends TraderCoreRoutines {
                     quantity = maxQty;
                 else {
                     if ((quantity - minQty) % stepSize != 0)
-                        quantity = ceil(quantity);
+                        quantity = floor(quantity);
                     if (quantity < minNotionalQty)
                         quantity = ceil(minNotionalQty);
                 }
@@ -559,21 +558,6 @@ public class BinanceTraderBot extends TraderCoreRoutines {
             return quantity;
         }
         throw new Exception("Symbol does not exist");
-    }
-
-    /**
-     * Method to get a filter details
-     *
-     * @param filters: filters list
-     * @param type:    type of the filter to fetch
-     * @return filter details as {@link JSONObject}
-     **/
-    // TODO: 06/12/2022 TEST
-    private JSONObject getFilter(ArrayList<FilterDetails> filters, Filter.FilterType type) {
-        for (FilterDetails filter : filters)
-            if (filter.getKey().equals(type.name()))
-                return new JSONObject(filter.toString());
-        return new JSONObject();
     }
 
     /**
