@@ -200,4 +200,4 @@ and application performance and session will be tracked by <a href="https://anal
 So all data saved concern TraderBot service offered by Tecknobit and **no-any other data** will be saved. <br>
 Regards and good use!
 
-Copyright © 2022 Tecknobit
+Copyright © 2023 Tecknobit
