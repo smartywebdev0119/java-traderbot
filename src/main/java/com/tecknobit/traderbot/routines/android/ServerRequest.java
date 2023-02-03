@@ -153,7 +153,7 @@ public class ServerRequest {
             String messageToSent = message.toString();
             if (ciphered) {
                 assert clientCipher != null;
-                messageToSent = clientCipher.encryptRequest(messageToSent);
+                messageToSent = clientCipher.encrypt(messageToSent);
             }
             printWriter.println(messageToSent);
             printWriter.flush();
@@ -172,7 +172,7 @@ public class ServerRequest {
             message.put("ope", operation);
             message.put(AUTH_TOKEN_KEY, authToken);
             assert clientCipher != null;
-            String messageToSent = clientCipher.encryptRequest(message.toString()) + "#" + token;
+            String messageToSent = clientCipher.encrypt(message.toString()) + "#" + token;
             printWriter.println(messageToSent);
             printWriter.flush();
         } catch (NullPointerException ignored) {
@@ -220,7 +220,7 @@ public class ServerRequest {
             if (ciphered) {
                 assert clientCipher != null;
                 try{
-                    response = clientCipher.decryptResponse(response);
+                    response = clientCipher.decrypt(response);
                 }catch (BadPaddingException e){
                     response = "{\"status_code\": -1}";
                 }

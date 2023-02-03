@@ -1,7 +1,9 @@
 package com.tecknobit.traderbot.routines.android;
 
+import com.tecknobit.apimanager.annotations.Wrapper;
+import com.tecknobit.apimanager.apis.QRCodeHelper;
+import com.tecknobit.apimanager.exceptions.SaveData;
 import com.tecknobit.apimanager.formatters.JsonHelper;
-import com.tecknobit.traderbot.exceptions.SaveData;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;
 import com.tecknobit.traderbot.records.android.Routine;
@@ -14,9 +16,11 @@ import com.tecknobit.traderbot.routines.interfaces.TraderCoreRoutines;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.traderbot.records.account.TecknobitBot.TraderManager.*;
@@ -781,6 +785,8 @@ public class AndroidWorkflow implements RoutineMessages {
          **/
         private BotDetails botDetails;
 
+        private final QRCodeHelper qrCodeHelper;
+
         /**
          * Constructor to init {@link Credentials}
          *
@@ -790,7 +796,7 @@ public class AndroidWorkflow implements RoutineMessages {
          * @param token:     instance that memorizes identifier of user to log in and requests operations
          * @param ivSpec:    instance initialization vector used in server requests
          * @param secretKey: is instance secret key used in server requests
-         * @implNote this constructor must call to log in
+         * @implNote this constructor must call to log-in
          **/
         public Credentials(String authToken, String email, String password, String token, String ivSpec, String secretKey) {
             if (!alreadyInstantiated)
@@ -803,6 +809,7 @@ public class AndroidWorkflow implements RoutineMessages {
             this.token = token;
             this.ivSpec = ivSpec;
             this.secretKey = secretKey;
+            qrCodeHelper = new QRCodeHelper();
         }
 
         /**
@@ -830,6 +837,7 @@ public class AndroidWorkflow implements RoutineMessages {
             token = null;
             ivSpec = null;
             secretKey = null;
+            qrCodeHelper = null;
         }
 
         /**
@@ -862,6 +870,10 @@ public class AndroidWorkflow implements RoutineMessages {
                 token = hCredentials.getString(TOKEN_KEY);
                 ivSpec = hCredentials.getString(IV_SPEC_KEY);
                 secretKey = hCredentials.getString(SECRET_KEY);
+                if (token != null)
+                    qrCodeHelper = new QRCodeHelper();
+                else
+                    qrCodeHelper = null;
             } else
                 throw new IllegalArgumentException("Credentials cannot be null");
         }
@@ -885,12 +897,17 @@ public class AndroidWorkflow implements RoutineMessages {
                 if (response != null) {
                     switch (response.getInt(STATUS_CODE)) {
                         case SUCCESSFUL_RESPONSE:
-                            throw new SaveData(new JSONObject().put(TOKEN_KEY, response.getString(TOKEN_KEY))
-                                    .put(AUTH_TOKEN_KEY, response.getString(AUTH_TOKEN_KEY))
-                                    .put(IV_SPEC_KEY, response.getString(IV_SPEC_KEY))
-                                    .put(SECRET_KEY, response.getString(SECRET_KEY))
-                                    .put(EMAIL_KEY, email)
-                                    .put(PASSWORD_KEY, password));
+                            throw new SaveData("credentials data of Tecknobit's account anywhere that you retain safe,\n" +
+                                    "they will needed in login operations here for traders and also for your Android's device.\n" +
+                                    "Next restart you will have to insert these credentials in Credentials object to start \n" +
+                                    "normal workflow of the trader.\n" +
+                                    "################################### TECKNOBIT'S CREDENTIALS ######################################\n" +
+                                    new JSONObject().put(TOKEN_KEY, response.getString(TOKEN_KEY))
+                                            .put(AUTH_TOKEN_KEY, response.getString(AUTH_TOKEN_KEY))
+                                            .put(IV_SPEC_KEY, response.getString(IV_SPEC_KEY))
+                                            .put(SECRET_KEY, response.getString(SECRET_KEY))
+                                            .put(EMAIL_KEY, email)
+                                            .put(PASSWORD_KEY, password).toString(4));
                         case GENERIC_ERROR_RESPONSE:
                             throw new IllegalAccessException("Email not available");
                         default:
@@ -956,6 +973,56 @@ public class AndroidWorkflow implements RoutineMessages {
                 return true;
             int length = password.length();
             return length < MIN_TOKEN_LENGTH || length > MAX_TOKEN_LENGTH;
+        }
+
+        /**
+         * Method to create a QRCode with credentials to scan and login in your account
+         *
+         * @param port: port where host the QRCode file
+         * @throws IOException when an error occurred
+         * @apiNote <ul>
+         * <li>
+         * if you need access by localhost you can find the QRCode in localhost:{@code "port"}
+         * </li>
+         * <li>
+         * if you need access by an external network you can find the QRCode in {@code "external_network_address"}:{@code "port"}
+         * </li>
+         * </ul>
+         **/
+        @Wrapper
+        public void startQRCodeLoginSystem(int port) throws IOException {
+            File htmlQrcode = File.createTempFile("qrcode", "html");
+            htmlQrcode.deleteOnExit();
+            InputStreamReader inputStreamReader = new InputStreamReader(Objects.requireNonNull(this.getClass()
+                    .getClassLoader().getResourceAsStream("qrcode.html")));
+            try (FileWriter fileWriter = new FileWriter(htmlQrcode)) {
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String line;
+                while ((line = bufferedReader.readLine()) != null)
+                    fileWriter.write(line);
+            }
+            startQRCodeLoginSystem(port, htmlQrcode);
+        }
+
+        /**
+         * Method to create a QRCode with credentials to scan and login in your account
+         *
+         * @param port:       port where host the QRCode file
+         * @param qrcodePage: HTML page to contain the QRCode
+         * @throws IOException when an error occurred
+         * @apiNote <ul>
+         * <li>
+         * if you need access by localhost you can find the QRCode in localhost:{@code "port"}
+         * </li>
+         * <li>
+         * if you need access by an external network you can find the QRCode in {@code "external_network_address"}:{@code "port"}
+         * </li>
+         * </ul>
+         **/
+        @Wrapper
+        public void startQRCodeLoginSystem(int port, File qrcodePage) throws IOException {
+            qrCodeHelper.hostQRCode(port, new JSONObject().put(AUTH_TOKEN_KEY, authToken).put(TOKEN_KEY, "Tecknobit"),
+                    "qrf.png", 300, true, qrcodePage);
         }
 
         /**

@@ -182,7 +182,7 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      **/
-    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
+    @Wrapper
     public abstract ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception;
 
     /**
@@ -201,7 +201,7 @@ public abstract class TraderCoreRoutines {
      * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      **/
-    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
+    @Wrapper
     public abstract ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception;
 
     /**

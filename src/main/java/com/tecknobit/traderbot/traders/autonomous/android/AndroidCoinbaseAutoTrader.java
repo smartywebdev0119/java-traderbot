@@ -30,7 +30,6 @@ import static com.tecknobit.traderbot.routines.android.ServerRequest.PORT;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.*;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.BUY;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.Side.SELL;
-import static java.lang.System.currentTimeMillis;
 import static java.text.DateFormat.getDateTimeInstance;
 
 /**
@@ -87,10 +86,35 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      int timeout, boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials, int refreshTime) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, null, sendStatsReport,
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, null, sendStatsReport,
+                printRoutineMessages, baseCurrency, credentials, refreshTime);
+    }
+
+    /**
+     * Constructor to init {@link AndroidCoinbaseAutoTrader}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret            : your Coinbase's secret key
+     * @param passphrase           : your Coinbase's api passphrase
+     * @param defaultErrorMessage  : custom error to show when is not a request error
+     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
+     * @param timeout              : custom timeout for request
+     * @param sendStatsReport      : flag to insert to send or not reports
+     * @param printRoutineMessages : flag to insert to print or not routine messages
+     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
+     * @param refreshTime:         is time in seconds to set to refresh data
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote these keys will NOT store by library anywhere.
+     **/
+    public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
+                                     int timeout, ArrayList<String> quoteCurrencies, boolean sendStatsReport,
+                                     boolean printRoutineMessages, String baseCurrency, Credentials credentials,
+                                     int refreshTime) throws Exception {
+        super(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, quoteCurrencies, null, sendStatsReport,
                 printRoutineMessages, baseCurrency);
         setRefreshTime(refreshTime);
-        initCredentials(credentials);
+        initCredentials(credentials, botDetails, baseCurrency, quoteCurrencies);
         traderAccount = new TraderAccount(credentials);
         androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
                 printRoutineMessages);
@@ -117,9 +141,33 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout, boolean sendStatsReport,
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                      int refreshTime) throws Exception {
-        super(apiKey, apiSecret, passphrase, timeout, null, sendStatsReport, printRoutineMessages, baseCurrency);
+        this(apiKey, apiSecret, passphrase, timeout, null, sendStatsReport, printRoutineMessages, baseCurrency,
+                credentials, refreshTime);
+    }
+
+    /**
+     * Constructor to init {@link AndroidCoinbaseAutoTrader}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret            : your Coinbase's secret key
+     * @param passphrase           : your Coinbase's api passphrase
+     * @param timeout              : custom timeout for request
+     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
+     * @param sendStatsReport      : flag to insert to send or not reports
+     * @param printRoutineMessages : flag to insert to print or not routine messages
+     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
+     * @param refreshTime:         is time in seconds to set to refresh data
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote these keys will NOT store by library anywhere.
+     **/
+    public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout,
+                                     ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
+                                     String baseCurrency, Credentials credentials, int refreshTime) throws Exception {
+        super(apiKey, apiSecret, passphrase, timeout, quoteCurrencies, null, sendStatsReport, printRoutineMessages,
+                baseCurrency);
         setRefreshTime(refreshTime);
-        initCredentials(credentials);
+        initCredentials(credentials, botDetails, baseCurrency, quoteCurrencies);
         traderAccount = new TraderAccount(credentials);
         androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
                 printRoutineMessages);
@@ -146,10 +194,33 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials, int refreshTime) throws Exception {
-        super(apiKey, apiSecret, passphrase, defaultErrorMessage, null, sendStatsReport, printRoutineMessages,
-                baseCurrency);
+        this(apiKey, apiSecret, passphrase, defaultErrorMessage, null, sendStatsReport, printRoutineMessages,
+                baseCurrency, credentials, refreshTime);
+    }
+
+    /**
+     * Constructor to init {@link AndroidCoinbaseAutoTrader}
+     *
+     * @param apiKey:              your Coinbase's api key
+     * @param apiSecret            : your Coinbase's secret key
+     * @param passphrase           : your Coinbase's api passphrase
+     * @param defaultErrorMessage  : custom error to show when is not a request error
+     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
+     * @param sendStatsReport      : flag to insert to send or not reports
+     * @param printRoutineMessages : flag to insert to print or not routine messages
+     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
+     * @param refreshTime:         is time in seconds to set to refresh data
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote these keys will NOT store by library anywhere.
+     **/
+    public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
+                                     ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
+                                     String baseCurrency, Credentials credentials, int refreshTime) throws Exception {
+        super(apiKey, apiSecret, passphrase, defaultErrorMessage, quoteCurrencies, null, sendStatsReport,
+                printRoutineMessages, baseCurrency);
         setRefreshTime(refreshTime);
-        initCredentials(credentials);
+        initCredentials(credentials, botDetails, baseCurrency, quoteCurrencies);
         traderAccount = new TraderAccount(credentials);
         androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
                 printRoutineMessages);
@@ -175,90 +246,8 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, boolean sendStatsReport,
                                      boolean printRoutineMessages, String baseCurrency, Credentials credentials,
                                      int refreshTime) throws Exception {
-        super(apiKey, apiSecret, passphrase, null, sendStatsReport, printRoutineMessages, baseCurrency);
-        long timestamp = currentTimeMillis();
-        setRefreshTime(refreshTime);
-        initCredentials(credentials);
-        traderAccount = new TraderAccount(credentials);
-        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
-                printRoutineMessages);
-        transactionDateFormat = getDateTimeInstance();
-        walletList = traderAccount.getWalletCryptocurrencies();
-        workflowHandler();
-    }
-
-    /**
-     * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     *
-     * @param apiKey:              your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param timeout              : custom timeout for request
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh data
-     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by library anywhere.
-     **/
-    public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                                     int timeout, ArrayList<String> quoteCurrencies, boolean sendStatsReport,
-                                     boolean printRoutineMessages, String baseCurrency, Credentials credentials,
-                                     int refreshTime) throws Exception {
-        this(apiKey, apiSecret, passphrase, defaultErrorMessage, timeout, sendStatsReport, printRoutineMessages, baseCurrency,
+        this(apiKey, apiSecret, passphrase, (ArrayList<String>) null, sendStatsReport, printRoutineMessages, baseCurrency,
                 credentials, refreshTime);
-        this.quoteCurrencies = quoteCurrencies;
-    }
-
-    /**
-     * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     *
-     * @param apiKey:              your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param timeout              : custom timeout for request
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh data
-     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by library anywhere.
-     **/
-    public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, int timeout,
-                                     ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
-                                     String baseCurrency, Credentials credentials, int refreshTime) throws Exception {
-        this(apiKey, apiSecret, passphrase, timeout, sendStatsReport, printRoutineMessages, baseCurrency, credentials,
-                refreshTime);
-        this.quoteCurrencies = quoteCurrencies;
-    }
-
-    /**
-     * Constructor to init {@link AndroidCoinbaseAutoTrader}
-     *
-     * @param apiKey:              your Coinbase's api key
-     * @param apiSecret            : your Coinbase's secret key
-     * @param passphrase           : your Coinbase's api passphrase
-     * @param defaultErrorMessage  : custom error to show when is not a request error
-     * @param quoteCurrencies      : is a list of quote currencies used in past orders es (USD or EUR)
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh data
-     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by library anywhere.
-     **/
-    public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, String defaultErrorMessage,
-                                     ArrayList<String> quoteCurrencies, boolean sendStatsReport, boolean printRoutineMessages,
-                                     String baseCurrency, Credentials credentials, int refreshTime) throws Exception {
-        this(apiKey, apiSecret, passphrase, defaultErrorMessage, sendStatsReport, printRoutineMessages, baseCurrency,
-                credentials, refreshTime);
-        this.quoteCurrencies = quoteCurrencies;
     }
 
     /**
@@ -279,8 +268,16 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     public AndroidCoinbaseAutoTrader(String apiKey, String apiSecret, String passphrase, ArrayList<String> quoteCurrencies,
                                      boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                      Credentials credentials, int refreshTime) throws Exception {
-        this(apiKey, apiSecret, passphrase, sendStatsReport, printRoutineMessages, baseCurrency, credentials, refreshTime);
-        this.quoteCurrencies = quoteCurrencies;
+        super(apiKey, apiSecret, passphrase, quoteCurrencies, null, sendStatsReport, printRoutineMessages,
+                baseCurrency);
+        setRefreshTime(refreshTime);
+        initCredentials(credentials, botDetails, baseCurrency, quoteCurrencies);
+        traderAccount = new TraderAccount(credentials);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        transactionDateFormat = getDateTimeInstance();
+        walletList = traderAccount.getWalletCryptocurrencies();
+        workflowHandler();
     }
 
     /**
@@ -292,20 +289,6 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
     protected void initTrader() throws Exception {
         printAndroidDisclaimer();
         super.initTrader();
-    }
-
-    /**
-     * This method is used to init a {@link Credentials} object to start {@link AndroidWorkflow}
-     * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * **/
-    @Override
-    public void initCredentials(Credentials credentials) throws Exception {
-        checkCredentialsValidity(credentials);
-        credentials.setBotDetails(botDetails);
-        if(credentials.getToken() == null)
-            credentials.sendRegistrationRequest(HOST, PORT);
-        else
-            credentials.sendLoginRequest(baseCurrency, HOST, PORT, quoteCurrencies);
     }
 
     /**
@@ -435,8 +418,8 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * @implNote if {@link #runningTrader} is false will return null
      **/
+    @Wrapper
     @Override
-    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
         return getAllTransactions(null, forceRefresh);
     }
@@ -464,8 +447,8 @@ public class AndroidCoinbaseAutoTrader extends CoinbaseAutoTraderBot implements 
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * @implNote if {@link #runningTrader} is false will return null
      **/
+    @Wrapper
     @Override
-    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
         return getTransactionsList(quoteCurrency, null, forceRefresh);
     }

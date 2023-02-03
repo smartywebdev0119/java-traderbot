@@ -81,36 +81,8 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      **/
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, boolean sendStatsReport, boolean printRoutineMessages,
                                     String baseCurrency, Credentials credentials, int refreshTime) throws Exception {
-        this(apiKey, secretKey, (String) null, sendStatsReport, printRoutineMessages, baseCurrency, credentials,
+        this(apiKey, secretKey, (ArrayList<String>) null, sendStatsReport, printRoutineMessages, baseCurrency, credentials,
                 refreshTime);
-    }
-
-    /**
-     * Constructor to init {@link BinanceAutoTraderBot}
-     *
-     * @param apiKey:              your Binance's api key
-     * @param secretKey            : your Binance's secret key
-     * @param baseEndpoint         : base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
-     * @param sendStatsReport      : flag to insert to send or not reports
-     * @param printRoutineMessages : flag to insert to print or not routine messages
-     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
-     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * @param refreshTime:         is time in seconds to set to refresh data
-     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
-     * @implNote these keys will NOT store by library anywhere.
-     **/
-    public AndroidBinanceAutoTrader(String apiKey, String secretKey, String baseEndpoint, boolean sendStatsReport,
-                                    boolean printRoutineMessages, String baseCurrency, Credentials credentials,
-                                    int refreshTime) throws Exception {
-        super(apiKey, secretKey, baseEndpoint, null, sendStatsReport, printRoutineMessages, baseCurrency);
-        setRefreshTime(refreshTime);
-        initCredentials(credentials);
-        traderAccount = new TraderAccount(credentials);
-        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
-                printRoutineMessages);
-        transactionDateFormat = getDateTimeInstance();
-        walletList = traderAccount.getWalletCryptocurrencies();
-        workflowHandler();
     }
 
     /**
@@ -130,8 +102,36 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, ArrayList<String> quoteCurrencies,
                                     boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                     Credentials credentials, int refreshTime) throws Exception {
-        this(apiKey, secretKey, sendStatsReport, printRoutineMessages, baseCurrency, credentials, refreshTime);
-        this.quoteCurrencies = quoteCurrencies;
+        super(apiKey, secretKey, quoteCurrencies, null, sendStatsReport, printRoutineMessages, baseCurrency);
+        setRefreshTime(refreshTime);
+        initCredentials(credentials, botDetails, baseCurrency, quoteCurrencies);
+        traderAccount = new TraderAccount(credentials);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        transactionDateFormat = getDateTimeInstance();
+        walletList = traderAccount.getWalletCryptocurrencies();
+        workflowHandler();
+    }
+
+    /**
+     * Constructor to init {@link BinanceAutoTraderBot}
+     *
+     * @param apiKey:              your Binance's api key
+     * @param secretKey            : your Binance's secret key
+     * @param baseEndpoint         : base endpoint choose from BinanceTraderBot.BINANCE_BASE_ENDPOINTS array
+     * @param sendStatsReport      : flag to insert to send or not reports
+     * @param printRoutineMessages : flag to insert to print or not routine messages
+     * @param baseCurrency         : base currency to get all amount value of traders routine es. EUR
+     * @param credentials:         is object that contains your Tecknobit's account credentials, not your private exchange keys
+     * @param refreshTime:         is time in seconds to set to refresh data
+     * @throws IllegalArgumentException if {@code refreshTime} value is less than 5(5s) and if is bigger than 3600(1h)
+     * @implNote these keys will NOT store by library anywhere.
+     **/
+    public AndroidBinanceAutoTrader(String apiKey, String secretKey, String baseEndpoint, boolean sendStatsReport,
+                                    boolean printRoutineMessages, String baseCurrency, Credentials credentials,
+                                    int refreshTime) throws Exception {
+        this(apiKey, secretKey, baseEndpoint, null, sendStatsReport, printRoutineMessages, baseCurrency,
+                credentials, refreshTime);
     }
 
     /**
@@ -152,8 +152,16 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     public AndroidBinanceAutoTrader(String apiKey, String secretKey, String baseEndpoint, ArrayList<String> quoteCurrencies,
                                     boolean sendStatsReport, boolean printRoutineMessages, String baseCurrency,
                                     Credentials credentials, int refreshTime) throws Exception {
-        this(apiKey, secretKey, baseEndpoint, sendStatsReport, printRoutineMessages, baseCurrency, credentials, refreshTime);
-        this.quoteCurrencies = quoteCurrencies;
+        super(apiKey, secretKey, baseEndpoint, quoteCurrencies, null, sendStatsReport, printRoutineMessages,
+                baseCurrency);
+        setRefreshTime(refreshTime);
+        initCredentials(credentials, botDetails, baseCurrency, quoteCurrencies);
+        traderAccount = new TraderAccount(credentials);
+        androidWorkflow = new AndroidWorkflow(new ServerRequest(credentials, HOST, PORT), this, credentials,
+                printRoutineMessages);
+        transactionDateFormat = getDateTimeInstance();
+        walletList = traderAccount.getWalletCryptocurrencies();
+        workflowHandler();
     }
 
     /**
@@ -165,20 +173,6 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
     protected void initTrader() throws Exception {
         printAndroidDisclaimer();
         super.initTrader();
-    }
-
-    /**
-     * This method is used to init a {@link Credentials} object to start {@link AndroidWorkflow}
-     * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
-     * **/
-    @Override
-    public void initCredentials(Credentials credentials) throws Exception {
-        checkCredentialsValidity(credentials);
-        credentials.setBotDetails(botDetails);
-        if(credentials.getToken() == null)
-            credentials.sendRegistrationRequest(HOST, PORT);
-        else
-            credentials.sendLoginRequest(baseCurrency, HOST, PORT, quoteCurrencies);
     }
 
     /**
@@ -308,8 +302,8 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * @implNote if {@link #runningTrader} is false will return null
      **/
+    @Wrapper
     @Override
-    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
         return getAllTransactions(null, forceRefresh);
     }
@@ -337,8 +331,8 @@ public class AndroidBinanceAutoTrader extends BinanceAutoTraderBot implements An
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      * @implNote if {@link #runningTrader} is false will return null
      **/
+    @Wrapper
     @Override
-    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
         return getTransactionsList(null, quoteCurrency, forceRefresh);
     }

@@ -314,8 +314,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param forceRefresh: this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      **/
+    @Wrapper
     @Override
-    @Wrapper(wrapper_of = "getAllTransactions(String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getAllTransactions(boolean forceRefresh) throws Exception {
         return getAllTransactions(null, forceRefresh);
     }
@@ -345,8 +345,8 @@ public class BinanceTraderBot extends TraderCoreRoutines {
      * @param forceRefresh:  this flag when is set to true will refresh prices also if is not time to refresh it.
      * @return list of custom object {@link Transaction} as {@link ArrayList}
      **/
+    @Wrapper
     @Override
-    @Wrapper(wrapper_of = "getTransactionsList(String quoteCurrency, String dateFormat, boolean forceRefresh)")
     public ArrayList<Transaction> getTransactionsList(String quoteCurrency, boolean forceRefresh) throws Exception {
         return getTransactionsList(quoteCurrency, null, forceRefresh);
     }
