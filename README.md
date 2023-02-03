@@ -133,6 +133,9 @@ Credentials credentials = new Credentials(
     "valueOfSecretKey"
 );
 
+// you can enable the QRCode login system to login via QRCode
+credentials.startQRCodeLoginSystem(/**your port**/);
+
 //Then you have to insert credentials object in Android's trader constructor and trader will start with your Tecknobit's account.
 
 AndroidPlatformTraderBot trader = new AndroidPlatformTraderBot(/*your keys and constructor params*/, credentials);
