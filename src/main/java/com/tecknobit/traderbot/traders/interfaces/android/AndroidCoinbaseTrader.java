@@ -1,8 +1,8 @@
 package com.tecknobit.traderbot.traders.interfaces.android;
 
 import com.tecknobit.apimanager.annotations.Wrapper;
-import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
-import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Ticker;
+import com.tecknobit.coinbasemanager.exchangepro.CoinbaseManager;
+import com.tecknobit.coinbasemanager.exchangepro.products.records.Ticker;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;
 import com.tecknobit.traderbot.records.portfolio.Asset;

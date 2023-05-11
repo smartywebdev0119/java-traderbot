@@ -1,7 +1,7 @@
 package com.tecknobit.traderbot.traders.autonomous.android;
 
 import com.tecknobit.apimanager.annotations.Wrapper;
-import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
+import com.tecknobit.coinbasemanager.exchangepro.CoinbaseManager;
 import com.tecknobit.traderbot.orders.MarketOrder;
 import com.tecknobit.traderbot.records.account.BotDetails;
 import com.tecknobit.traderbot.records.account.TraderAccount;

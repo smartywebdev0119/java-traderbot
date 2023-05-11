@@ -1,8 +1,8 @@
 package com.tecknobit.traderbot.traders.autonomous.interfaces;
 
-import com.tecknobit.coinbasemanager.managers.exchangepro.CoinbaseManager;
-import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Candle.Granularity;
-import com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Ticker;
+import com.tecknobit.coinbasemanager.exchangepro.CoinbaseManager;
+import com.tecknobit.coinbasemanager.exchangepro.products.records.Candle.Granularity;
+import com.tecknobit.coinbasemanager.exchangepro.products.records.Ticker;
 import com.tecknobit.traderbot.orders.MarketOrder;
 import com.tecknobit.traderbot.records.account.TraderAccount;
 import com.tecknobit.traderbot.records.portfolio.Coin;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.tecknobit.apimanager.trading.TradingTools.roundValue;
-import static com.tecknobit.coinbasemanager.managers.exchangepro.products.records.Candle.Granularity._1d;
+import static com.tecknobit.coinbasemanager.exchangepro.products.records.Candle.Granularity._1d;
 import static com.tecknobit.traderbot.routines.interfaces.TraderBotConstants.USD_CURRENCY;
 import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;

@@ -785,6 +785,9 @@ public class AndroidWorkflow implements RoutineMessages {
          **/
         private BotDetails botDetails;
 
+        /**
+         * {@code qrCodeHelper} is instance useful to manage the QRCODE's login
+         **/
         private final QRCodeHelper qrCodeHelper;
 
         /**
@@ -1019,10 +1022,11 @@ public class AndroidWorkflow implements RoutineMessages {
          * </li>
          * </ul>
          **/
-        @Wrapper
         public void startQRCodeLoginSystem(int port, File qrcodePage) throws IOException {
-            qrCodeHelper.hostQRCode(port, new JSONObject().put(AUTH_TOKEN_KEY, authToken).put(TOKEN_KEY, "Tecknobit"),
-                    "qrf.png", 300, true, qrcodePage);
+            if (qrCodeHelper != null) {
+                qrCodeHelper.hostQRCode(port, new JSONObject().put(AUTH_TOKEN_KEY, authToken).put(TOKEN_KEY, "Tecknobit"),
+                        "qrf.png", 300, true, qrcodePage);
+            }
         }
 
         /**

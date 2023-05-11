@@ -22,9 +22,7 @@ public interface AndroidCoreRoutines extends TraderManager, RoutineMessages {
      *
      * @param credentials: is object that contains your Tecknobit's account credentials, not your private exchange keys
      * @throws IllegalArgumentException if {@code credentials} is null
-     * @deprecated this method will be removed in the next version update
      **/
-    @Deprecated
     default void checkCredentialsValidity(Credentials credentials) {
         if (credentials == null)
             throw new IllegalArgumentException("Credentials object cannot be null");
@@ -57,8 +55,7 @@ public interface AndroidCoreRoutines extends TraderManager, RoutineMessages {
      **/
     default void initCredentials(Credentials credentials, BotDetails botDetails, String baseCurrency,
                                  ArrayList<String> quoteCurrencies) throws Exception {
-        if (credentials == null)
-            throw new IllegalArgumentException("Credentials object cannot be null");
+        checkCredentialsValidity(credentials);
         credentials.setBotDetails(botDetails);
         if (credentials.getToken() == null)
             credentials.sendRegistrationRequest(HOST, PORT);
